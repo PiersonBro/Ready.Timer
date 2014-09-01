@@ -11,20 +11,20 @@ import UIKit
 class ViewController: UIViewController {
     var tickerView: TickerView
     
-    required init(coder aDecoder: NSCoder!) {
-        self.tickerView = TickerView(frame: CGRect())
+    required init(coder aDecoder: NSCoder) {
+        tickerView = TickerView(frame: CGRect())
         super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tickerView.setTranslatesAutoresizingMaskIntoConstraints(false)
-        let xConstriant = NSLayoutConstraint(item: self.tickerView, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let yConstraint = NSLayoutConstraint(item: self.tickerView, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1, constant: 0)
-        let widthConstriant = NSLayoutConstraint(item: self.tickerView, attribute: .Width, relatedBy: .Equal, toItem: self.view, attribute: .Width, multiplier: 1, constant: 0)
-        let heightConstriant = NSLayoutConstraint(item: self.tickerView, attribute: .Height, relatedBy: .Equal, toItem: self.tickerView, attribute: .Width, multiplier: 1, constant: 0)
-        
-        self.view.addSubview(self.tickerView)
+        tickerView.setTranslatesAutoresizingMaskIntoConstraints(false)
+        let xConstriant = NSLayoutConstraint(item: tickerView, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
+        let yConstraint = NSLayoutConstraint(item: tickerView, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 1, constant: 0)
+        let widthConstriant = NSLayoutConstraint(item: tickerView, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 1, constant: 0)
+        let heightConstriant = NSLayoutConstraint(item: tickerView, attribute: .Height, relatedBy: .Equal, toItem: tickerView, attribute: .Width, multiplier: 1, constant: 0)
+
+        view.addSubview(tickerView)
         NSLayoutConstraint.activateConstraints([xConstriant, yConstraint, widthConstriant, heightConstriant])
     }
 
