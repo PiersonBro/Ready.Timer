@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TeamPolicy</key>
+	<dict>
+		<key>Speeches</key>
+		<array>
+			<string>1 AC</string>
+			<string>CX</string>
+			<string>1 NC</string>
+			<string>CX</string>
+			<string>2 AC</string>
+			<string>CX</string>
+			<string>2 NC</string>
+			<string>CX</string>
+			<string>1 NR</string>
+			<string>1 AR</string>
+			<string>2 NR</string>
+			<string>2 AR</string>
+		</array>
+		<key>Duration of Constructive</key>
+		<integer>8</integer>
+		<key>Duration of Rebuttal</key>
+		<integer>5</integer>
+		<key>Total Prep Time</key>
+		<integer>5</integer>
+		<key>Duration Of Cross Examination</key>
+		<integer>3</integer>
+	</dict>
+	<key>Parli</key>
+	<dict>
+		<key>Speeches</key>
+		<array>
+			<string>PM C</string>
+			<string>LO C</string>
+			<string>MOG C</string>
+			<string>MO C</string>
+			<string>LO R</string>
+			<string>PM R</string>
+		</array>
+		<key>Duration of Constructive</key>
+		<integer>7</integer>
+		<key>Duration of Rebuttal</key>
+		<integer>5</integer>
+		<key>Total Prep Time</key>
+		<integer>0</integer>
+	</dict>
+	<key>LincolnDouglas</key>
+	<dict>
+		<key> Speeches </key>
+		<array>
+			<string>AC</string>
+			<string>CX</string>
+			<string>NC</string>
+			<string>CX</string>
+			<string>1 AR</string>
+			<string>NR</string>
+			<string>2 AR</string>
+		</array>
+		<key>Duration Of AC </key>
+		<integer>6</integer>
+		<key>Duraton of NC </key>
+		<integer>6</integer>
+		<key>Duration of 1 AR </key>
+		<integer>4</integer>
+		<key>Duration of NR</key>
+		<integer>6</integer>
+		<key>Duration of 2 AR </key>
+		<integer>3</integer>
+		<key>Duration of Cross Examination</key>
+		<integer>3</integer>
+		<key>Total Prep Time</key>
+		<integer>3</integer>
+	</dict>
+</dict>
+</plist>
