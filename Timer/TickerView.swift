@@ -36,6 +36,10 @@ class TickerView: UIView {
         assert(false == true, "Don't use this")
     }
     
+    required init(coder aDecoder: NSCoder) {
+        fatalError("Initializer Not Supported")
+    }
+
     override init(frame: CGRect) {
         self.bottommostLabel = UILabel()
         self.rightmostLabel = UILabel()
@@ -73,13 +77,13 @@ class TickerView: UIView {
     
     override func drawRect(rect: CGRect) {
         let mask = CAShapeLayer()
-        mask.frame = self.frame
+        mask.frame = bounds;
         let point = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
         let bezierPath = UIBezierPath()
         bezierPath.moveToPoint(point)
         bezierPath.addArcWithCenter(point, radius: rect.size.width * 0.5, startAngle:CGFloat(M_PI), endAngle: CGFloat(M_PI) * 2, clockwise: true)
         mask.path = bezierPath.CGPath
-        self.layer.mask = mask
+        layer.mask = mask
         
         let leftLineShapeLayer = CAShapeLayer()
         let leftLinePath = UIBezierPath()
