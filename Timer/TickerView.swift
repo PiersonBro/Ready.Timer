@@ -81,7 +81,7 @@ class TickerView: UIView {
         let point = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
         let bezierPath = UIBezierPath()
         bezierPath.moveToPoint(point)
-        bezierPath.addArcWithCenter(point, radius: rect.size.width * 0.5, startAngle:CGFloat(M_PI), endAngle: CGFloat(M_PI) * 2, clockwise: true)
+        bezierPath.addArcWithCenter(point, radius: rect.size.width / 2, startAngle:CGFloat(M_PI), endAngle: CGFloat(M_PI) * 2, clockwise: true)
         mask.path = bezierPath.CGPath
         layer.mask = mask
         
