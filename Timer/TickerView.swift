@@ -87,15 +87,15 @@ class TickerView: UIView {
         speechIndexToUpdate = 0;
         super.init(frame: frame)
         
-        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount), xMultiplier: LabelPositions.Center.xMultiplier, yMultiplier: LabelPositions.Center.yMultiplier)
+        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", xMultiplier: LabelPositions.Center.xMultiplier, yMultiplier: LabelPositions.Center.yMultiplier)
         self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(speechCount)
         topmostLabel.index = speechCount
 
-        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount), xMultiplier: LabelPositions.Left.xMultiplier, yMultiplier: LabelPositions.Left.yMultiplier)
+        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Left.xMultiplier, yMultiplier: LabelPositions.Left.yMultiplier)
         leftmostLabel.index = speechCount
-        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount), xMultiplier: LabelPositions.Bottom.xMultiplier, yMultiplier: LabelPositions.Bottom.yMultiplier)
+        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Bottom.xMultiplier, yMultiplier: LabelPositions.Bottom.yMultiplier)
         bottommostLabel.index = speechCount
-        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount), xMultiplier: LabelPositions.Right.xMultiplier, yMultiplier: LabelPositions.Right.yMultiplier)
+        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Right.xMultiplier, yMultiplier: LabelPositions.Right.yMultiplier)
         rightmostLabel.index = speechCount
        
         animator = UIDynamicAnimator(referenceView: self)
@@ -207,7 +207,7 @@ class TickerView: UIView {
             let result = LabelPositions.labelPositionsForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             let center = LabelPositions.Center
             let layer = label.layer.presentationLayer() as CALayer
-            println(layer.position)
+
             if (result!.xMultiplier == center.xMultiplier && result!.yMultiplier == center.yMultiplier) {
                 self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
             } else if  (result!.xMultiplier == LabelPositions.Right.xMultiplier && result!.yMultiplier == LabelPositions.Right.yMultiplier) {
@@ -216,7 +216,20 @@ class TickerView: UIView {
         }
         
         if (self.dataSource.stringShouldBeChanged(currentlyInvisibleLabel.index)) {
-            let speechName = dataSource.stringForIndex(++speechCount)
+            let optionalSpeechName = dataSource.stringForIndex(++speechCount)
+            var speechName = ""
+            
+            if let name = optionalSpeechName {
+                speechName = name
+            } else {
+                delegate.tickerViewDidRotateToLastSpeech(speechCount)
+                speechCount = 0
+                let firstName = dataSource.stringForIndex(speechCount)
+                if firstName != nil {
+                    speechName = firstName!
+                }
+            }
+            
             setConstraintIdentifierForLabel(currentlyInvisibleLabel, identifierName: speechName)
             currentlyInvisibleLabel.index = speechCount
             currentlyInvisibleLabel.text = speechName
@@ -275,11 +288,12 @@ class TickerView: UIView {
 
 protocol TickerViewDataSource {
     // Index - Starts from Zero .
-    func stringForIndex(index: Int) -> String
+    func stringForIndex(index: Int) -> String?
     func stringShouldBeChanged(index: Int) -> Bool
 }
 
 protocol TickerViewDelegate {
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int)
     func tickerViewDidRotateStringAtIndexToRightPosition(index: Int)
+    func tickerViewDidRotateToLastSpeech(index: Int)
 }

@@ -12,11 +12,12 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     let tickerView: TickerView?
     let timerLabel: UILabel
     let debateRoundManager: DebateRoundManager?
+    var tickerViewIsOnLastSpeech: Bool
     
     required init(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
-        
+        tickerViewIsOnLastSpeech = false
         super.init(coder: aDecoder)
         tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
     }
@@ -51,7 +52,11 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         tickerView!.rotateToPreviousSegment()
     }
     
-    func stringForIndex(index: Int) -> String {
+    func stringForIndex(index: Int) -> String? {
+        if index >= debateRoundManager!.speechCount {
+            // We are at the end of the Debate Round.
+            return nil
+        }
         let speech = debateRoundManager!.getSpeechAtIndex(index)
         return speech.name
     }
@@ -62,8 +67,6 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
         let speech = debateRoundManager!.getSpeechAtIndex(index)
-        println(speech.speechType)
-        println(speech.name)
         timerLabel.text = "\(speech.speechType.durationOfSpeech()):00"
     }
     
@@ -74,5 +77,9 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         }
         
         return false
+    }
+    
+    func tickerViewDidRotateToLastSpeech(index: Int) {
+        tickerViewIsOnLastSpeech = true
     }
 }
