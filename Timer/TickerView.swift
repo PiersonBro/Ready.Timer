@@ -222,7 +222,7 @@ class TickerView: UIView {
             if let name = optionalSpeechName {
                 speechName = name
             } else {
-                // TODO: ADD Delegate Call here...
+                delegate.tickerViewDidRotateToLastSpeech(speechCount)
                 speechCount = 0
                 let firstName = dataSource.stringForIndex(speechCount)
                 if firstName != nil {
@@ -295,4 +295,5 @@ protocol TickerViewDataSource {
 protocol TickerViewDelegate {
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int)
     func tickerViewDidRotateStringAtIndexToRightPosition(index: Int)
+    func tickerViewDidRotateToLastSpeech(index: Int)
 }

@@ -12,11 +12,12 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     let tickerView: TickerView?
     let timerLabel: UILabel
     let debateRoundManager: DebateRoundManager?
+    var tickerViewIsOnLastSpeech: Bool
     
     required init(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
-        
+        tickerViewIsOnLastSpeech = false
         super.init(coder: aDecoder)
         tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
     }
@@ -76,5 +77,9 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         }
         
         return false
+    }
+    
+    func tickerViewDidRotateToLastSpeech(index: Int) {
+        tickerViewIsOnLastSpeech = true
     }
 }
