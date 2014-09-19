@@ -134,6 +134,7 @@ class DebateRoundManager {
     let debateType: DebateType
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
+    let speechCount: Int
     
     init(type: DebateType) {
         debateType = type
@@ -142,6 +143,7 @@ class DebateRoundManager {
         let rawSpeechType: String = debateType.toRaw() as NSString
         debateRoundData = debates[rawSpeechType] as [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
+        speechCount = speeches.count
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
