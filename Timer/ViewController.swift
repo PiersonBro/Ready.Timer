@@ -26,18 +26,23 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         super.viewDidLoad()
         
         tickerView?.setTranslatesAutoresizingMaskIntoConstraints(false)
+       
         let xConstraint = NSLayoutConstraint(item: tickerView!, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
         let yConstraint = NSLayoutConstraint(item: tickerView!, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 2, constant: 0)
         let widthConstraint = NSLayoutConstraint(item: tickerView!, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 1, constant: 0)
         let heightConstraint = NSLayoutConstraint(item: tickerView!, attribute: .Height, relatedBy: .Equal, toItem: tickerView, attribute: .Width, multiplier: 1, constant: 0)
         view.addSubview(tickerView!)
         NSLayoutConstraint.activateConstraints([xConstraint, yConstraint, widthConstraint, heightConstraint])
-
+        
         timerLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
         timerLabel.font = UIFont.systemFontOfSize(160)
         view.addSubview(timerLabel)
         let labelConstraints = NSLayoutConstraint.generateConstraints(timerLabel, toItem: view, xMultiplier: 1, yMultiplier: 0.5)
         NSLayoutConstraint.activateConstraints([labelConstraints.xConstraint, labelConstraints.yConstraint])
+        
+        let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .ExtraLight))
+        
+        
     }
 
     override func didReceiveMemoryWarning() {

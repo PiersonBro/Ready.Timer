@@ -130,6 +130,23 @@ struct Speech {
     var consumed: Bool
 }
 
+struct PrepTimeManager {
+    init?(typeOfSpeech: DebateType, debateRoundData: [NSObject : AnyObject]) {
+        switch typeOfSpeech {
+            case .Parli:
+                return nil
+            case .TeamPolicy, .LincolnDouglas:
+                let number: NSNumber = debateRoundData[PListKey.TotalPrepTime.rawValue] as NSNumber
+                let intValue = number.integerValue
+                totalTime = Double(intValue)  * 60
+                usedTime = 0
+        }
+    }
+    
+    let usedTime: NSTimeInterval
+    let totalTime: NSTimeInterval
+}
+
 class DebateRoundManager {
     let debateType: DebateType
     private var speeches: [Speech]
