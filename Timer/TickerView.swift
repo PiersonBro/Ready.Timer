@@ -98,7 +98,7 @@ class TickerView: UIView {
         rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Right.xMultiplier, yMultiplier: LabelPositions.Right.yMultiplier)
         rightmostLabel.index = speechCount
        
-        animator = UIDynamicAnimator(referenceView: self)
+        animator = UIDynamicAnimator(referenceView: self)!
         layer.masksToBounds = true
         backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
     }
@@ -161,7 +161,7 @@ class TickerView: UIView {
             animator.addBehavior(snapBehavior)
         }
         
-        let item = UIDynamicItemBehavior(items: labels)
+        let item = UIDynamicItemBehavior(items: labels)!
         item.resistance = 150
         animator.addBehavior(item)
         labelConstraintsNeedUpdate = true
