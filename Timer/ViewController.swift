@@ -44,11 +44,9 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         super.didReceiveMemoryWarning()
     }
 
-    @IBAction func clockwise(sender: AnyObject) {
         tickerView!.rotateToNextSegment()
     }
     
-    @IBAction func counterClockwise(sender: AnyObject) {
         tickerView!.rotateToPreviousSegment()
     }
     
