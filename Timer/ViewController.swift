@@ -33,39 +33,47 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         super.viewDidLoad()
         
         tickerView?.setTranslatesAutoresizingMaskIntoConstraints(false)
-        let xConstraint = NSLayoutConstraint(item: tickerView!, attribute: .CenterX, relatedBy: .Equal, toItem: view, attribute: .CenterX, multiplier: 1, constant: 0)
-        let yConstraint = NSLayoutConstraint(item: tickerView!, attribute: .CenterY, relatedBy: .Equal, toItem: view, attribute: .CenterY, multiplier: 2, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: tickerView!, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 1, constant: 0)
-        let heightConstraint = NSLayoutConstraint(item: tickerView!, attribute: .Height, relatedBy: .Equal, toItem: tickerView, attribute: .Width, multiplier: 1, constant: 0)
         view.addSubview(tickerView!)
-        NSLayoutConstraint.activateConstraints([xConstraint, yConstraint, widthConstraint, heightConstraint])
+        layout(self.tickerView!, view) { (tickerView, view) in
+            tickerView.centerX == view.centerX
+            tickerView.centerY == view.centerY * 2
+            tickerView.width == view.width
+            tickerView.height == tickerView.width
+        }
 
         timerLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
         timerLabel.font = UIFont.systemFontOfSize(160)
         view.addSubview(timerLabel)
-        let labelConstraints = NSLayoutConstraint.generateConstraints(timerLabel, toItem: view, xMultiplier: 1, yMultiplier: 0.5)
-        NSLayoutConstraint.activateConstraints([labelConstraints.xConstraint, labelConstraints.yConstraint])
+        layout(timerLabel, view) { (timerLabel, view) in
+            timerLabel.centerX == view.centerX
+            timerLabel.centerY == view.centerY / 2
+        }
         
-        // FIXME: Mispoisitioned Constraints
-        let buttonConstraints = NSLayoutConstraint.generateConstraints(clockwiseButton, toItem: view, xMultiplier: 1.5, yMultiplier: 0.4)
-        let widthConstraintClockwise = NSLayoutConstraint(item: clockwiseButton, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
-        let heightConstraintClockwise = NSLayoutConstraint(item: clockwiseButton, attribute: .Height, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
-        clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        view.addSubview(clockwiseButton)
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Clockwise"
-        NSLayoutConstraint.activateConstraints([buttonConstraints.xConstraint , buttonConstraints.yConstraint, widthConstraintClockwise, heightConstraintClockwise])
+        clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.addSubview(clockwiseButton)
+        layout(clockwiseButton, view) { (clockwiseButton, view) in
+            // FIXME: Mispoisitioned Constraints
+            clockwiseButton.centerX == view.centerX * 1.5
+            clockwiseButton.centerY == view.centerY * 0.4
+            
+            clockwiseButton.width == view.width * 0.2
+            clockwiseButton.height == clockwiseButton.width
+        }
         
-        // FIXME: Mispoisitioned Constraints
-        let counterClockwiseButtonConstraints = NSLayoutConstraint.generateConstraints(counterClockwiseButton, toItem: view, xMultiplier: 0.4, yMultiplier: 0.4)
-        let widthConstraintCounterClockwise = NSLayoutConstraint(item: counterClockwiseButton, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
-        let heightConstraintCounterClockwise = NSLayoutConstraint(item: counterClockwiseButton, attribute: .Height, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
-
-        counterClockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        view.addSubview(counterClockwiseButton)
         counterClockwiseButton.addTarget(self, action: "counterClockwise:", forControlEvents: .TouchUpInside)
         counterClockwiseButton.labelText = "Counterclockwise"
-        NSLayoutConstraint.activateConstraints([counterClockwiseButtonConstraints.xConstraint, counterClockwiseButtonConstraints.yConstraint, widthConstraintCounterClockwise, heightConstraintCounterClockwise])
+        counterClockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.addSubview(counterClockwiseButton)
+        layout(counterClockwiseButton, view) { (counterClockwiseButton, view) in
+            // FIXME: Mispoisitioned Constraints
+            counterClockwiseButton.centerX == view.centerX * 0.4
+            counterClockwiseButton.centerY == view.centerY * 0.4
+            
+            counterClockwiseButton.width == view.width * 0.2
+            counterClockwiseButton.height == counterClockwiseButton.width
+        }
     }
 
     override func didReceiveMemoryWarning() {
