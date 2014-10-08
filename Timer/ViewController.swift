@@ -13,11 +13,17 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     let timerLabel: UILabel
     let debateRoundManager: DebateRoundManager?
     var tickerViewIsOnLastSpeech: Bool
+ 
+    let clockwiseButton: CircleButton
+    let counterClockwiseButton: CircleButton
     
     required init(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
         tickerViewIsOnLastSpeech = false
+        clockwiseButton = CircleButton(frame: CGRect())
+        counterClockwiseButton = CircleButton(frame: CGRect())
+      
         super.init(coder: aDecoder)
         tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
     }
@@ -38,15 +44,38 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         view.addSubview(timerLabel)
         let labelConstraints = NSLayoutConstraint.generateConstraints(timerLabel, toItem: view, xMultiplier: 1, yMultiplier: 0.5)
         NSLayoutConstraint.activateConstraints([labelConstraints.xConstraint, labelConstraints.yConstraint])
+        
+        // FIXME: Mispoisitioned Constraints
+        let buttonConstraints = NSLayoutConstraint.generateConstraints(clockwiseButton, toItem: view, xMultiplier: 1.5, yMultiplier: 0.4)
+        let widthConstraintClockwise = NSLayoutConstraint(item: clockwiseButton, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
+        let heightConstraintClockwise = NSLayoutConstraint(item: clockwiseButton, attribute: .Height, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
+        clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.addSubview(clockwiseButton)
+        clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
+        clockwiseButton.labelText = "Clockwise"
+        NSLayoutConstraint.activateConstraints([buttonConstraints.xConstraint , buttonConstraints.yConstraint, widthConstraintClockwise, heightConstraintClockwise])
+        
+        // FIXME: Mispoisitioned Constraints
+        let counterClockwiseButtonConstraints = NSLayoutConstraint.generateConstraints(counterClockwiseButton, toItem: view, xMultiplier: 0.4, yMultiplier: 0.4)
+        let widthConstraintCounterClockwise = NSLayoutConstraint(item: counterClockwiseButton, attribute: .Width, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
+        let heightConstraintCounterClockwise = NSLayoutConstraint(item: counterClockwiseButton, attribute: .Height, relatedBy: .Equal, toItem: view, attribute: .Width, multiplier: 0.2, constant: 0)
+
+        counterClockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.addSubview(counterClockwiseButton)
+        counterClockwiseButton.addTarget(self, action: "counterClockwise:", forControlEvents: .TouchUpInside)
+        counterClockwiseButton.labelText = "Counterclockwise"
+        NSLayoutConstraint.activateConstraints([counterClockwiseButtonConstraints.xConstraint, counterClockwiseButtonConstraints.yConstraint, widthConstraintCounterClockwise, heightConstraintCounterClockwise])
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
+    func clockwise(sender: AnyObject) {
         tickerView!.rotateToNextSegment()
     }
     
+    func counterClockwise(sender: AnyObject) {
         tickerView!.rotateToPreviousSegment()
     }
     
