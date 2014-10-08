@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Cartography
 
 class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate {
     let tickerView: TickerView?
