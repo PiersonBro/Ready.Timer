@@ -8,6 +8,7 @@
 
 import UIKit
 import QuartzCore
+import Cartography
 
 private struct LabelPositions {
     static let Center: (xMultiplier: CGFloat, yMultiplier: CGFloat) = (xMultiplier: 1, yMultiplier: 0.5)
@@ -108,10 +109,21 @@ class TickerView: UIView {
         label.textColor = UIColor.cyanColor()
         label.text = text
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
-        let  constraints = NSLayoutConstraint.generateConstraints(label, toItem: self, xMultiplier: xMultiplier, yMultiplier: yMultiplier)
         addSubview(label)
-        NSLayoutConstraint.activateConstraints([constraints.xConstraint, constraints.yConstraint])
+        layoutLabel(label, xMultiplier: Float(xMultiplier), yMultiplier: Float(yMultiplier))
+        
         return label
+    }
+    
+    func layoutLabel(label: TickerLabel, xMultiplier: Float, yMultiplier: Float) {
+        var yConstraint: NSLayoutConstraint? = nil
+        var xConstraint: NSLayoutConstraint? = nil
+        layout(label, self) { (label, view) in
+            xConstraint = label.centerX == view.centerX * xMultiplier
+            yConstraint = label.centerY == view.centerY * yMultiplier
+        }
+        xConstraint?.identifier = "X constraint for label: \(label.hash)"
+        yConstraint?.identifier = "Y constraint for label: \(label.hash)"
     }
     
     override func drawRect(rect: CGRect) {
@@ -242,17 +254,12 @@ class TickerView: UIView {
                 labelConstraintsNeedUpdate = false
                 let oldConstraints = constraints() as [NSLayoutConstraint]
                 enumerateLabels(labels, block: { (label, nextLabel) in
-                    var xMultiplier = CGFloat(0)
-                    var yMultiplier = CGFloat(0)
                     let newConstraints = self.constraintsForLabel(nextLabel, constraints: oldConstraints)
                     let oldConstraints = self.constraintsForLabel(label, constraints: oldConstraints)
-                    xMultiplier = newConstraints.xConstraint.multiplier
-                    yMultiplier = newConstraints.yConstraint.multiplier
-                    
-                    let (xConstraint, yConstraint) = NSLayoutConstraint.generateConstraints(label, toItem:self, xMultiplier:xMultiplier , yMultiplier: yMultiplier)
+                    let xMultiplier = newConstraints.xConstraint.multiplier
+                    let yMultiplier = newConstraints.yConstraint.multiplier
                     NSLayoutConstraint.deactivateConstraints([oldConstraints.xConstraint, oldConstraints.yConstraint])
-                    NSLayoutConstraint.activateConstraints([xConstraint, yConstraint])
-                    
+                    self.layoutLabel(label, xMultiplier: Float(xMultiplier), yMultiplier: Float(yMultiplier))
             })
             makeDataSourceCalls()
         }
