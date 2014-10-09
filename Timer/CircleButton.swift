@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Cartography
 
 class CircleButton: UIControl {
     private let label: UILabel
@@ -41,14 +42,11 @@ class CircleButton: UIControl {
         label.adjustsFontSizeToFitWidth = true
 
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
-        
-        let xConstraint = NSLayoutConstraint(item: label, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1, constant: 0)
-        let yConstraint = NSLayoutConstraint(item: label, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: label, attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 1, constant: 0)
-        let heightConstraint = NSLayoutConstraint(item: label, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 1, constant: 0)
-        
         addSubview(label)
-        NSLayoutConstraint.activateConstraints([xConstraint, yConstraint,  widthConstraint, heightConstraint])
+        layout(label, self) { (label, view) in
+            label.center == view.center
+            label.size == view.size
+        }
     }
     
     required init(coder aDecoder: NSCoder) {
