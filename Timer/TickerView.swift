@@ -11,23 +11,27 @@ import QuartzCore
 import Cartography
 
 private struct LabelPositions {
-    static let Center: (xMultiplier: CGFloat, yMultiplier: CGFloat) = (xMultiplier: 1, yMultiplier: 0.5)
-    static let Right: (xMultiplier: CGFloat, yMultiplier: CGFloat) = (xMultiplier: 1.5, yMultiplier: 0.7)
-    static let Left: (xMultiplier: CGFloat, yMultiplier: CGFloat) = (xMultiplier: 0.5, yMultiplier: 0.7)
-    static let Bottom: (xMultiplier: CGFloat, yMultiplier: CGFloat) = (xMultiplier: 1, yMultiplier:1.5)
+    static let Center: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 1, yMultiplier: 0.5)
+    static let Right: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 1.5, yMultiplier: 0.7)
+    static let Left: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 0.5, yMultiplier: 0.7)
+    static let Bottom: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 1, yMultiplier:1.5)
     
-    static func labelPositionsForMultipliers(xMultiplier: CGFloat, yMultiplier: CGFloat) -> (xMultiplier: CGFloat, yMultiplier: CGFloat)? {
+    static func labelPositionsForMultipliers(xMultiplier: CGFloat, yMultiplier: CGFloat) -> (xMultiplier: Float, yMultiplier: Float)? {
+        return labelPositionsForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
+    }
+    
+    static func labelPositionsForMultipliers(xMultiplier: Float, yMultiplier: Float) -> (xMultiplier: Float, yMultiplier: Float)? {
         switch (xMultiplier, yMultiplier) {
-            case (LabelPositions.Center.xMultiplier, LabelPositions.Center.yMultiplier):
-                return LabelPositions.Center
-            case (LabelPositions.Right.xMultiplier, LabelPositions.Right.yMultiplier):
-                return LabelPositions.Right
-            case (LabelPositions.Left.xMultiplier, LabelPositions.Left.yMultiplier):
-                return LabelPositions.Left
-            case (LabelPositions.Bottom.xMultiplier, LabelPositions.Bottom.yMultiplier):
-                return LabelPositions.Bottom
-            default:
-                return nil
+        case (LabelPositions.Center.xMultiplier, LabelPositions.Center.yMultiplier):
+            return LabelPositions.Center
+        case (LabelPositions.Right.xMultiplier, LabelPositions.Right.yMultiplier):
+            return LabelPositions.Right
+        case (LabelPositions.Left.xMultiplier, LabelPositions.Left.yMultiplier):
+            return LabelPositions.Left
+        case (LabelPositions.Bottom.xMultiplier, LabelPositions.Bottom.yMultiplier):
+            return LabelPositions.Bottom
+        default:
+            return nil
         }
     }
 }
@@ -106,13 +110,13 @@ class TickerView: UIView {
         contentMode = .Redraw
     }
     
-    func configureLabel(label: TickerLabel, text: String, xMultiplier: CGFloat, yMultiplier: CGFloat) -> TickerLabel {
+    func configureLabel(label: TickerLabel, text: String, xMultiplier: Float, yMultiplier: Float) -> TickerLabel {
         label.font = UIFont.systemFontOfSize(30)
         label.textColor = UIColor.cyanColor()
         label.text = text
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
-        layoutLabel(label, xMultiplier: Float(xMultiplier), yMultiplier: Float(yMultiplier))
+        layoutLabel(label, xMultiplier: xMultiplier, yMultiplier: yMultiplier)
         
         return label
     }
@@ -235,14 +239,17 @@ class TickerView: UIView {
             let result = LabelPositions.labelPositionsForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             let center = LabelPositions.Center
             let layer = label.layer.presentationLayer() as CALayer
-
-            if (result!.xMultiplier == center.xMultiplier && result!.yMultiplier == center.yMultiplier) {
-                self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
-            } else if  (result!.xMultiplier == LabelPositions.Right.xMultiplier && result!.yMultiplier == LabelPositions.Right.yMultiplier) {
-                self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(label.index)
+            if let result = result {
+                if (result.xMultiplier == center.xMultiplier && result.yMultiplier == center.yMultiplier) {
+                    self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
+                } else if  (result.xMultiplier == LabelPositions.Right.xMultiplier && result.yMultiplier == LabelPositions.Right.yMultiplier) {
+                    self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(label.index)
+                }
+            } else {
+                println(constraints.xConstraint.multiplier)
+                println(constraints.yConstraint.multiplier)
             }
         }
-        
         if (self.dataSource.stringShouldBeChanged(currentlyInvisibleLabel.index)) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             var speechName = ""
