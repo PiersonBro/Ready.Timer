@@ -102,6 +102,8 @@ class TickerView: UIView {
         animator = UIDynamicAnimator(referenceView: self)
         layer.masksToBounds = true
         backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
+        // FIXME: This leads to janky rotation animations, and should be fixed before release.
+        contentMode = .Redraw
     }
     
     func configureLabel(label: TickerLabel, text: String, xMultiplier: CGFloat, yMultiplier: CGFloat) -> TickerLabel {
@@ -127,6 +129,18 @@ class TickerView: UIView {
     }
     
     override func drawRect(rect: CGRect) {
+        let layers = self.layer.sublayers as [CALayer]
+        for subLayer in layers {
+            if subLayer.name != nil {
+                switch subLayer.name! {
+                    case "leftLineShapeLayer":
+                        subLayer.removeFromSuperlayer()
+                    case "rightLineShapeLayer":
+                        subLayer.removeFromSuperlayer()
+                default: println("sublayer.name is \(subLayer.name!)")
+                }
+            }
+        }
         let mask = CAShapeLayer()
         mask.frame = bounds;
         let point = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
@@ -137,6 +151,7 @@ class TickerView: UIView {
         layer.mask = mask
         
         let leftLineShapeLayer = CAShapeLayer()
+        leftLineShapeLayer.name = "leftLineShapeLayer"
         let leftLinePath = UIBezierPath()
         leftLinePath.moveToPoint(CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMaxY(rect)))
         leftLinePath.addLineToPoint(CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMinY(rect)))
@@ -148,6 +163,7 @@ class TickerView: UIView {
         layer.addSublayer(leftLineShapeLayer)
         
         let rightLineShapeLayer = CAShapeLayer()
+        rightLineShapeLayer.name = "rightLineShapeLayer"
         let rightLinePath = UIBezierPath()
         rightLinePath.moveToPoint(CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMaxY(rect)))
         rightLinePath.addLineToPoint(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)))
@@ -255,6 +271,7 @@ class TickerView: UIView {
                 let oldConstraints = constraints() as [NSLayoutConstraint]
                 enumerateLabels(labels, block: { (label, nextLabel) in
                     let newConstraints = self.constraintsForLabel(nextLabel, constraints: oldConstraints)
+                 
                     let oldConstraints = self.constraintsForLabel(label, constraints: oldConstraints)
                     let xMultiplier = newConstraints.xConstraint.multiplier
                     let yMultiplier = newConstraints.yConstraint.multiplier
