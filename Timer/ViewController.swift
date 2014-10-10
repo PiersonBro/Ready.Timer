@@ -37,26 +37,18 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         layout(self.tickerView!, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
-            tickerView.width == view.width
+            tickerView.width == view.width * 1
             tickerView.height == tickerView.width
         }
 
-        timerLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
-        timerLabel.font = UIFont.systemFontOfSize(160)
-        view.addSubview(timerLabel)
-        layout(timerLabel, view) { (timerLabel, view) in
-            timerLabel.centerX == view.centerX
-            timerLabel.centerY == view.centerY / 2
-        }
-        
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Clockwise"
         clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(clockwiseButton)
-        layout(clockwiseButton, view) { (clockwiseButton, view) in
+        layout(clockwiseButton, view, tickerView!) { (clockwiseButton, view, tickerView) in
             // FIXME: Mispoisitioned Constraints
             clockwiseButton.centerX == view.centerX * 1.5
-            clockwiseButton.centerY == view.centerY * 0.4
+            clockwiseButton.centerY == tickerView.top - 100
             
             clockwiseButton.width == view.width * 0.2
             clockwiseButton.height == clockwiseButton.width
@@ -66,13 +58,21 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         counterClockwiseButton.labelText = "Counterclockwise"
         counterClockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(counterClockwiseButton)
-        layout(counterClockwiseButton, view) { (counterClockwiseButton, view) in
+        layout(counterClockwiseButton, view, tickerView!) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispoisitioned Constraints
             counterClockwiseButton.centerX == view.centerX * 0.4
-            counterClockwiseButton.centerY == view.centerY * 0.4
-            
+            counterClockwiseButton.centerY == tickerView.top - 100
+
             counterClockwiseButton.width == view.width * 0.2
             counterClockwiseButton.height == counterClockwiseButton.width
+        }
+        
+        timerLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        timerLabel.font = UIFont.systemFontOfSize(160)
+        view.addSubview(timerLabel)
+        layout(timerLabel, view) { (timerLabel, view) in
+            timerLabel.centerX == view.centerX
+            timerLabel.centerY == view.centerY / 2
         }
     }
 
