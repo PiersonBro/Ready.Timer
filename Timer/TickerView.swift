@@ -43,6 +43,9 @@ class TickerView: UIView {
     private let topmostLabel: TickerLabel
     private let leftmostLabel: TickerLabel
 
+    private let leftDivider: UIView
+    private let rightDivider: UIView
+    
     private var currentlyInvisibleLabel: TickerLabel {
         var invisibleLabel: TickerLabel? = nil
             let mask: CAShapeLayer = layer.mask as CAShapeLayer
@@ -83,6 +86,11 @@ class TickerView: UIView {
         topmostLabel = TickerLabel(frame: CGRect())
         leftmostLabel = TickerLabel(frame: CGRect())
         
+        leftDivider = UIView(frame: CGRect())
+        leftDivider.backgroundColor = UIColor.blackColor()
+        rightDivider = UIView(frame: CGRect())
+        rightDivider.backgroundColor = UIColor.blackColor()
+        
         animator = UIDynamicAnimator()
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         labelConstraintsNeedUpdate = false
@@ -92,17 +100,33 @@ class TickerView: UIView {
         speechIndexToUpdate = 0;
         super.init(frame: frame)
         
-        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", xMultiplier: LabelPositions.Center.xMultiplier, yMultiplier: LabelPositions.Center.yMultiplier)
+        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", poisitions:LabelPositions.Center)
         self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(speechCount)
         topmostLabel.index = speechCount
 
-        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Left.xMultiplier, yMultiplier: LabelPositions.Left.yMultiplier)
+        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", poisitions: LabelPositions.Left)
         leftmostLabel.index = speechCount
-        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Bottom.xMultiplier, yMultiplier: LabelPositions.Bottom.yMultiplier)
+        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", poisitions: LabelPositions.Bottom)
         bottommostLabel.index = speechCount
-        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", xMultiplier: LabelPositions.Right.xMultiplier, yMultiplier: LabelPositions.Right.yMultiplier)
+        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", poisitions: LabelPositions.Right)
         rightmostLabel.index = speechCount
        
+        addSubview(leftDivider)
+        layout(leftDivider, self) { (leftDivider, view) in
+            leftDivider.centerX == view.centerX * 0.7
+            leftDivider.centerY == view.centerY
+            leftDivider.height == view.height
+            leftDivider.width == view.width / 64
+        }
+        
+        addSubview(rightDivider)
+        layout(rightDivider, self) { (rightDivider, view) in
+            rightDivider.centerX == view.centerX  * 1.35
+            rightDivider.centerY == view.centerY
+            rightDivider.height == view.height
+            rightDivider.width == view.width / 64
+        }
+        
         animator = UIDynamicAnimator(referenceView: self)
         layer.masksToBounds = true
         backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
@@ -110,13 +134,15 @@ class TickerView: UIView {
         contentMode = .Redraw
     }
     
-    func configureLabel(label: TickerLabel, text: String, xMultiplier: Float, yMultiplier: Float) -> TickerLabel {
-        label.font = UIFont.systemFontOfSize(30)
+    private func configureLabel(label: TickerLabel, text: String, poisitions: (xMultiplier: Float, yMultiplier: Float)) -> TickerLabel {
+        label.font = UIFont.systemFontOfSize(40)
+        label.textAlignment = .Center
+        label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor.cyanColor()
         label.text = text
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
-        layoutLabel(label, xMultiplier: xMultiplier, yMultiplier: yMultiplier)
+        layoutLabel(label, xMultiplier: poisitions.xMultiplier, yMultiplier: poisitions.yMultiplier)
         
         return label
     }
@@ -145,6 +171,7 @@ class TickerView: UIView {
                 }
             }
         }
+        
         let mask = CAShapeLayer()
         mask.frame = bounds;
         let point = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
