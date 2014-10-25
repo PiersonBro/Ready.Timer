@@ -292,7 +292,6 @@ class TickerView: UIView {
                 }
             }
             
-            setConstraintIdentifierForLabel(currentlyInvisibleLabel, identifierName: speechName)
             currentlyInvisibleLabel.index = speechCount
             currentlyInvisibleLabel.text = speechName
         }
@@ -335,12 +334,6 @@ class TickerView: UIView {
         }
         
         return (xConstraint!, yConstraint!)
-    }
-    
-    func setConstraintIdentifierForLabel(label: TickerLabel, identifierName: String) {
-        let (xConstraint, yConstraint) = constraintsForLabel(label, constraints: constraints() as [NSLayoutConstraint])
-        xConstraint.identifier = "X constraint for label: \(label.hash)"
-        yConstraint.identifier = "Y constraint for label: \(label.hash)"
     }
 }
 
