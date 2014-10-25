@@ -87,9 +87,9 @@ class TickerView: UIView {
         leftmostLabel = TickerLabel(frame: CGRect())
         
         leftDivider = UIView(frame: CGRect())
-        leftDivider.backgroundColor = UIColor.blackColor()
+        leftDivider.backgroundColor = UIColor.redColor()
         rightDivider = UIView(frame: CGRect())
-        rightDivider.backgroundColor = UIColor.blackColor()
+        rightDivider.backgroundColor = UIColor.blueColor()
         
         animator = UIDynamicAnimator()
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
