@@ -48,7 +48,7 @@ class TickerView: UIView {
     
     private var currentlyInvisibleLabel: TickerLabel {
         var invisibleLabel: TickerLabel? = nil
-            let mask: CAShapeLayer = layer.mask as CAShapeLayer
+            let mask = layer.mask as CAShapeLayer
             let bezierPath: UIBezierPath = UIBezierPath(CGPath: mask.path)
             for label in labels {
                 if !bezierPath.containsPoint(label.center) {
@@ -167,7 +167,7 @@ class TickerView: UIView {
                         subLayer.removeFromSuperlayer()
                     case "rightLineShapeLayer":
                         subLayer.removeFromSuperlayer()
-                default: println("sublayer.name is \(subLayer.name!)")
+                    default: println("sublayer.name is \(subLayer.name!)")
                 }
             }
         }
@@ -237,7 +237,7 @@ class TickerView: UIView {
         
         enumerateLabels(reversedLabels ?? labels) { (label, nextLabel) in
             let snapBehavior = UISnapBehavior(item: label, snapToPoint: nextLabel.center)
-            snapBehaviors += [snapBehavior]
+            snapBehaviors.append(snapBehavior)
         }
         
         return snapBehaviors
@@ -246,7 +246,6 @@ class TickerView: UIView {
       func enumerateLabels(labelsToEnumerate: [TickerLabel], block: (label: TickerLabel, nextLabel: TickerLabel) -> Void) {
         for var i = 0; i < labelsToEnumerate.count; ++i {
             let label = labelsToEnumerate[i]
-
             var nextLabel: TickerLabel? = nil
             let nextIndex = i + 1
            
@@ -277,6 +276,7 @@ class TickerView: UIView {
                 println(constraints.yConstraint.multiplier)
             }
         }
+
         if (self.dataSource.stringShouldBeChanged(currentlyInvisibleLabel.index)) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             var speechName = ""
@@ -300,7 +300,7 @@ class TickerView: UIView {
     override func updateConstraints() {
         if labelConstraintsNeedUpdate {
                 labelConstraintsNeedUpdate = false
-                let oldConstraints = constraints() as [NSLayoutConstraint]
+                let unmodifiedConstraints = constraints() as [NSLayoutConstraint]
                 enumerateLabels(labels, block: { (label, nextLabel) in
                     let newConstraints = self.constraintsForLabel(nextLabel, constraints: oldConstraints)
                  
@@ -319,18 +319,20 @@ class TickerView: UIView {
     func constraintsForLabel(label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
         var yConstraint: NSLayoutConstraint? = nil
         var xConstraint: NSLayoutConstraint? = nil
-       
+        var yConstraint: NSLayoutConstraint? = nil
+        
         for constraint in constraints {
             if (xConstraint != nil && yConstraint != nil) {
                 break
             }
             
             switch constraint.identifier ?? "" {
-                case "X constraint for label: \(label.hash)":
-                xConstraint = constraint
-                case "Y constraint for label: \(label.hash)":
-                yConstraint = constraint
-                default: print("")
+                case ("X constraint for label: \(label.hash)"):
+                    xConstraint = constraint
+                case ("Y constraint for label: \(label.hash)"):
+                    yConstraint = constraint
+                default:
+                    break
             }
         }
         
