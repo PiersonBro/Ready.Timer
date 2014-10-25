@@ -10,30 +10,53 @@ import UIKit
 import QuartzCore
 import Cartography
 
-private struct LabelPositions {
-    static let Center: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 1, yMultiplier: 0.5)
-    static let Right: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 1.5, yMultiplier: 0.7)
-    static let Left: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 0.5, yMultiplier: 0.7)
-    static let Bottom: (xMultiplier: Float, yMultiplier: Float) = (xMultiplier: 1, yMultiplier:1.5)
-    
-    static func labelPositionsForMultipliers(xMultiplier: CGFloat, yMultiplier: CGFloat) -> (xMultiplier: Float, yMultiplier: Float)? {
-        return labelPositionsForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
+private typealias PositionTuple = (xMultiplier: Float, yMultiplier: Float)
+private enum Position {
+    case Center(PositionTuple)
+    case Right(PositionTuple)
+    case Left(PositionTuple)
+    case Bottom(PositionTuple)
+
+    // Convenience access to the associated values of the enum.
+    var positionTuple: PositionTuple {
+        switch (self) {
+            case .Center(let xMultiplier, let yMultiplier):
+                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
+            case .Right(let xMultiplier, let yMultiplier):
+                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
+            case .Left(let xMultiplier, let yMultiplier):
+                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
+            case .Bottom(let xMultiplier, let yMultiplier):
+                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
+        }
     }
     
-    static func labelPositionsForMultipliers(xMultiplier: Float, yMultiplier: Float) -> (xMultiplier: Float, yMultiplier: Float)? {
+    static func positionForMultipliers(xMultiplier: CGFloat, yMultiplier: CGFloat) -> Position? {
+        return positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
+    }
+    
+    static func positionForMultipliers(xMultiplier: Float, yMultiplier: Float) -> Position? {
         switch (xMultiplier, yMultiplier) {
-        case (LabelPositions.Center.xMultiplier, LabelPositions.Center.yMultiplier):
-            return LabelPositions.Center
-        case (LabelPositions.Right.xMultiplier, LabelPositions.Right.yMultiplier):
-            return LabelPositions.Right
-        case (LabelPositions.Left.xMultiplier, LabelPositions.Left.yMultiplier):
-            return LabelPositions.Left
-        case (LabelPositions.Bottom.xMultiplier, LabelPositions.Bottom.yMultiplier):
-            return LabelPositions.Bottom
+        case (self.staticCenter.positionTuple.xMultiplier, self.staticCenter.positionTuple.yMultiplier):
+            return self.staticCenter
+        case (self.staticRight.positionTuple.xMultiplier, self.staticRight.positionTuple.yMultiplier):
+            return self.staticRight
+        case (self.staticLeft.positionTuple.xMultiplier, self.staticLeft.positionTuple.yMultiplier):
+            return self.staticLeft
+        case (self.staticBottom.positionTuple.xMultiplier, self.staticBottom.positionTuple.yMultiplier):
+            return self.staticBottom
         default:
             return nil
         }
     }
+}
+
+private extension Position {
+    static let staticCenter: Position = Position.Center((xMultiplier: 1, yMultiplier: 0.5))
+    static let staticRight: Position = Position.Right((xMultiplier: 1.5, yMultiplier: 0.7))
+    static let staticLeft: Position = Position.Left((xMultiplier: 0.5, yMultiplier: 0.7))
+    static let staticBottom: Position = Position.Bottom((xMultiplier: 1, yMultiplier: 1.5))
+
 }
 
 class TickerView: UIView {
@@ -100,15 +123,15 @@ class TickerView: UIView {
         speechIndexToUpdate = 0;
         super.init(frame: frame)
         
-        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", poisitions:LabelPositions.Center)
+        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
         self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(speechCount)
         topmostLabel.index = speechCount
 
-        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", poisitions: LabelPositions.Left)
+        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
         leftmostLabel.index = speechCount
-        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", poisitions: LabelPositions.Bottom)
+        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticBottom)
         bottommostLabel.index = speechCount
-        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", poisitions: LabelPositions.Right)
+        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
         rightmostLabel.index = speechCount
        
         addSubview(leftDivider)
@@ -134,7 +157,7 @@ class TickerView: UIView {
         contentMode = .Redraw
     }
     
-    private func configureLabel(label: TickerLabel, text: String, poisitions: (xMultiplier: Float, yMultiplier: Float)) -> TickerLabel {
+    private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
         label.font = UIFont.systemFontOfSize(40)
         label.textAlignment = .Center
         label.adjustsFontSizeToFitWidth = true
@@ -142,18 +165,26 @@ class TickerView: UIView {
         label.text = text
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
-        layoutLabel(label, xMultiplier: poisitions.xMultiplier, yMultiplier: poisitions.yMultiplier)
+        layoutLabel(label, position: positions)
         
         return label
     }
     
-    func layoutLabel(label: TickerLabel, xMultiplier: Float, yMultiplier: Float) {
-        var yConstraint: NSLayoutConstraint? = nil
+   private func layoutLabel(label: TickerLabel, position: Position) {
         var xConstraint: NSLayoutConstraint? = nil
-        layout(label, self) { (label, view) in
-            xConstraint = label.centerX == view.centerX * xMultiplier
-            yConstraint = label.centerY == view.centerY * yMultiplier
+        var yConstraint: NSLayoutConstraint? = nil
+        var widthConstraint: NSLayoutConstraint? = nil
+    
+        layout([label, self, rightDivider, leftDivider]) { (layoutProxies) in
+            let label = layoutProxies[0]
+            let view = layoutProxies[1]
+            let rightDivider = layoutProxies[2]
+            let leftDivider = layoutProxies[3]
+            
+            xConstraint = label.centerX == view.centerX * position.positionTuple.xMultiplier
+            yConstraint = label.centerY == view.centerY * position.positionTuple.yMultiplier
         }
+    
         xConstraint?.identifier = "X constraint for label: \(label.hash)"
         yConstraint?.identifier = "Y constraint for label: \(label.hash)"
     }
@@ -261,15 +292,17 @@ class TickerView: UIView {
     
     func makeDataSourceCalls() {
         for label in labels  {
-            let constraints = self.constraintsForLabel(label, constraints: self.constraints() as [NSLayoutConstraint])
-            let result = LabelPositions.labelPositionsForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
-            let center = LabelPositions.Center
-            let layer = label.layer.presentationLayer() as CALayer
+            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints() as [NSLayoutConstraint])
+            let result = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
+            
             if let result = result {
-                if (result.xMultiplier == center.xMultiplier && result.yMultiplier == center.yMultiplier) {
-                    self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
-                } else if  (result.xMultiplier == LabelPositions.Right.xMultiplier && result.yMultiplier == LabelPositions.Right.yMultiplier) {
-                    self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(label.index)
+                switch (result) {
+                    case .Bottom(let xMultiplier, let yMultiplier):
+                        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
+                    case .Right(let xMultiplier, let yMultiplier):
+                        self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(label.index)
+                    default:
+                        break
                 }
             } else {
                 println(constraints.xConstraint.multiplier)
@@ -302,13 +335,14 @@ class TickerView: UIView {
                 labelConstraintsNeedUpdate = false
                 let unmodifiedConstraints = constraints() as [NSLayoutConstraint]
                 enumerateLabels(labels, block: { (label, nextLabel) in
-                    let newConstraints = self.constraintsForLabel(nextLabel, constraints: oldConstraints)
-                 
-                    let oldConstraints = self.constraintsForLabel(label, constraints: oldConstraints)
+                    let oldConstraints = self.positioningConstraintsForLabel(label, constraints: unmodifiedConstraints)
+                    let newConstraints = self.positioningConstraintsForLabel(nextLabel, constraints: unmodifiedConstraints)
                     let xMultiplier = newConstraints.xConstraint.multiplier
                     let yMultiplier = newConstraints.yConstraint.multiplier
-                    NSLayoutConstraint.deactivateConstraints([oldConstraints.xConstraint, oldConstraints.yConstraint])
-                    self.layoutLabel(label, xMultiplier: Float(xMultiplier), yMultiplier: Float(yMultiplier))
+                    let newPosition = Position.positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
+                    
+                    NSLayoutConstraint.deactivateConstraints(self.constraintsForLabel(label, superviewConstraints: unmodifiedConstraints))
+                    self.layoutLabel(label, position:newPosition!)
             })
             makeDataSourceCalls()
         }
@@ -316,8 +350,18 @@ class TickerView: UIView {
         super.updateConstraints()
     }
     
-    func constraintsForLabel(label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
-        var yConstraint: NSLayoutConstraint? = nil
+    func constraintsForLabel(label: TickerLabel, superviewConstraints: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
+        var labelConstraints = [NSLayoutConstraint]()
+        for constraint in superviewConstraints {
+            let identifierNSString: NSString = constraint.identifier ?? "" as NSString
+            if (identifierNSString.containsString(label.hash.description)) {
+                labelConstraints.append(constraint)
+            }
+        }
+        return labelConstraints
+    }
+    
+    func positioningConstraintsForLabel(label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
         var xConstraint: NSLayoutConstraint? = nil
         var yConstraint: NSLayoutConstraint? = nil
         
