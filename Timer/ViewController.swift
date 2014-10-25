@@ -49,7 +49,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(clockwiseButton)
         layout(clockwiseButton, view, tickerView!) { (clockwiseButton, view, tickerView) in
-            // FIXME: Mispoisitioned Constraints
+            // FIXME: Mispositioned Constraints
             clockwiseButton.centerX == view.centerX * 1.5
             clockwiseButton.centerY == tickerView.top - 100
             
@@ -62,7 +62,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         counterClockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(counterClockwiseButton)
         layout(counterClockwiseButton, view, tickerView!) { (counterClockwiseButton, view, tickerView) in
-            // FIXME: Mispoisitioned Constraints
+            // FIXME: Mispositioned Constraints
             counterClockwiseButton.centerX == view.centerX * 0.4
             counterClockwiseButton.centerY == tickerView.top - 100
 
