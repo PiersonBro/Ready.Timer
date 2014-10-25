@@ -34,11 +34,14 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         
         tickerView?.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(tickerView!)
-        layout(self.tickerView!, view) { (tickerView, view) in
+       
+        layout(tickerView!, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
-            tickerView.width == view.width * 1
+            tickerView.width == view.width * 1 ~ 750
+            tickerView.width == view.width * 0.8 ~ 500
             tickerView.height == tickerView.width
+            tickerView.height <= view.height * 0.8
         }
 
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
