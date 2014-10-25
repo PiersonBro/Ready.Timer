@@ -298,7 +298,6 @@ class TickerView: UIView {
     }
     
     override func updateConstraints() {
-        super.updateConstraints()
         if labelConstraintsNeedUpdate {
                 labelConstraintsNeedUpdate = false
                 let oldConstraints = constraints() as [NSLayoutConstraint]
@@ -313,6 +312,8 @@ class TickerView: UIView {
             })
             makeDataSourceCalls()
         }
+        
+        super.updateConstraints()
     }
     
     func constraintsForLabel(label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
