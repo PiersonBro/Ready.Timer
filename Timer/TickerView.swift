@@ -320,7 +320,7 @@ class TickerView: UIView {
         var xConstraint: NSLayoutConstraint? = nil
        
         for constraint in constraints {
-            if (yConstraint != nil && xConstraint != nil) {
+            if (xConstraint != nil && yConstraint != nil) {
                 break
             }
             
