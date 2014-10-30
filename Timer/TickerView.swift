@@ -59,7 +59,7 @@ private extension Position {
 
 }
 
-class TickerView: UIView {
+class TickerView: UIView, UIDynamicAnimatorDelegate {
     // Subviews
     private let bottommostLabel: TickerLabel
     private let rightmostLabel: TickerLabel
@@ -150,6 +150,7 @@ class TickerView: UIView {
         }
         
         animator = UIDynamicAnimator(referenceView: self)
+        animator.delegate = self
         layer.masksToBounds = true
         backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
@@ -256,6 +257,10 @@ class TickerView: UIView {
         animator.addBehavior(item)
         labelConstraintsNeedUpdate = true
         setNeedsUpdateConstraints()
+    }
+    
+    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
+        animator.removeAllBehaviors()
     }
     
     func snapBehaviorsForLabelsAscending(ascending: Bool) -> [UISnapBehavior] {
