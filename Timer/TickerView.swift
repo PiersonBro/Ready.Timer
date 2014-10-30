@@ -135,7 +135,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
        
         addSubview(leftDivider)
         layout(leftDivider, self) { (leftDivider, view) in
-            leftDivider.centerX == view.centerX * 0.7
+            leftDivider.centerX == view.centerX * 0.6
             leftDivider.centerY == view.centerY
             leftDivider.height == view.height
             leftDivider.width == view.width / 64
@@ -143,7 +143,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         
         addSubview(rightDivider)
         layout(rightDivider, self) { (rightDivider, view) in
-            rightDivider.centerX == view.centerX  * 1.35
+            rightDivider.centerX == view.centerX * 1.40
             rightDivider.centerY == view.centerY
             rightDivider.height == view.height
             rightDivider.width == view.width / 64
