@@ -83,7 +83,7 @@ class TickerView: UIView {
             return invisibleLabel!
     }
     
-    private var labelConstraintsNeedUpdate: Bool
+    private var labelConstraintsNeedUpdate: Bool = false
 
     private var speechCount: Int
     private var speechIndexToUpdate: Int
@@ -116,7 +116,6 @@ class TickerView: UIView {
         
         animator = UIDynamicAnimator()
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
-        labelConstraintsNeedUpdate = false
         speechCount = 0
         self.dataSource = dataSource
         self.delegate = delegate
@@ -156,17 +155,18 @@ class TickerView: UIView {
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
     }
-    
+
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
         label.font = UIFont.systemFontOfSize(40)
         label.textAlignment = .Center
         label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor.cyanColor()
         label.text = text
+        
         label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
         layoutLabel(label, position: positions)
-        
+
         return label
     }
     
@@ -198,7 +198,7 @@ class TickerView: UIView {
                         subLayer.removeFromSuperlayer()
                     case "rightLineShapeLayer":
                         subLayer.removeFromSuperlayer()
-                    default: println("sublayer.name is \(subLayer.name!)")
+                    default: break
                 }
             }
         }
@@ -246,7 +246,7 @@ class TickerView: UIView {
     
     func rotateWithSnapBehaviors(snapBehaviors: [UISnapBehavior]) {
         animator.removeAllBehaviors()
-
+        
         for snapBehavior in snapBehaviors {
             animator.addBehavior(snapBehavior)
         }
@@ -329,7 +329,6 @@ class TickerView: UIView {
             currentlyInvisibleLabel.text = speechName
         }
     }
-    
     override func updateConstraints() {
         if labelConstraintsNeedUpdate {
                 labelConstraintsNeedUpdate = false
