@@ -157,7 +157,7 @@ class TickerView: UIView {
     }
 
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
-        label.font = UIFont.systemFontOfSize(40)
+        label.font = UIFont.systemFontOfSize(60)
         label.textAlignment = .Center
         label.adjustsFontSizeToFitWidth = true
         label.textColor = UIColor.cyanColor()
