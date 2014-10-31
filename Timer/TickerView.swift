@@ -65,23 +65,25 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private let rightmostLabel: TickerLabel
     private let topmostLabel: TickerLabel
     private let leftmostLabel: TickerLabel
-
-    private let leftDivider: UIView
-    private let rightDivider: UIView
     
     private var currentlyInvisibleLabel: TickerLabel {
         var invisibleLabel: TickerLabel? = nil
-            let mask = layer.mask as CAShapeLayer
-            let bezierPath: UIBezierPath = UIBezierPath(CGPath: mask.path)
-            for label in labels {
-                if !bezierPath.containsPoint(label.center) {
-                    invisibleLabel = label
-                    break
-                }
+        let mask = layer.mask as CAShapeLayer
+        let bezierPath: UIBezierPath = UIBezierPath(CGPath: mask.path)
+        for label in labels {
+            if !bezierPath.containsPoint(label.center) {
+                invisibleLabel = label
+                break
             }
-            
-            return invisibleLabel!
+        }
+        
+        return invisibleLabel!
     }
+    
+    private let leftDivider: UIView
+    private let rightDivider: UIView
+    private let leftEdgeDivider: UIView
+    private let rightEdgeDivider: UIView
     
     private var labelConstraintsNeedUpdate: Bool = false
 
@@ -110,9 +112,10 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         leftmostLabel = TickerLabel(frame: CGRect())
         
         leftDivider = UIView(frame: CGRect())
-        leftDivider.backgroundColor = UIColor.redColor()
         rightDivider = UIView(frame: CGRect())
-        rightDivider.backgroundColor = UIColor.blueColor()
+        leftEdgeDivider = UIView(frame: CGRect())
+        rightEdgeDivider = UIView(frame: CGRect())
+        
         
         animator = UIDynamicAnimator()
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
@@ -121,18 +124,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         self.delegate = delegate
         speechIndexToUpdate = 0;
         super.init(frame: frame)
-        
-        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
-        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(speechCount)
-        topmostLabel.index = speechCount
 
-        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
-        leftmostLabel.index = speechCount
-        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticBottom)
-        bottommostLabel.index = speechCount
-        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
-        rightmostLabel.index = speechCount
-       
         addSubview(leftDivider)
         layout(leftDivider, self) { (leftDivider, view) in
             leftDivider.centerX == view.centerX * 0.6
@@ -149,6 +141,34 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
             rightDivider.width == view.width / 64
         }
         
+        addSubview(leftEdgeDivider)
+        layout(leftEdgeDivider, self) { (leftEdgeDivider, view) in
+            leftEdgeDivider.centerX == view.centerX * 0.1
+            leftEdgeDivider.centerY == view.centerY
+            leftEdgeDivider.height == view.height
+            leftEdgeDivider.width == view.width / 64
+        }
+        
+        addSubview(rightEdgeDivider)
+        layout(rightEdgeDivider, self) { (rightEdgeDivider, view) in
+            rightEdgeDivider.centerX == view.centerX * 1.9
+            rightEdgeDivider.centerY == view.centerY
+            rightEdgeDivider.height == view.height
+            rightEdgeDivider.width == view.width / 64
+        }
+        
+
+        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
+        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(speechCount)
+        topmostLabel.index = speechCount
+
+        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
+        leftmostLabel.index = speechCount
+        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticBottom)
+        bottommostLabel.index = speechCount
+        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
+        rightmostLabel.index = speechCount
+       
         animator = UIDynamicAnimator(referenceView: self)
         animator.delegate = self
         layer.masksToBounds = true
@@ -158,9 +178,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     }
 
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
-        label.font = UIFont.systemFontOfSize(60)
-        label.textAlignment = .Center
-        label.adjustsFontSizeToFitWidth = true
+        label.font = UIFont.systemFontOfSize(50)
         label.textColor = UIColor.cyanColor()
         label.text = text
         
@@ -174,20 +192,39 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
    private func layoutLabel(label: TickerLabel, position: Position) {
         var xConstraint: NSLayoutConstraint? = nil
         var yConstraint: NSLayoutConstraint? = nil
-        var widthConstraint: NSLayoutConstraint? = nil
+        var leftConstraint: NSLayoutConstraint? = nil
+        var rightConstraint: NSLayoutConstraint? = nil
     
-        layout([label, self, rightDivider, leftDivider]) { (layoutProxies) in
+        layout([label, rightDivider, leftDivider, rightEdgeDivider, leftEdgeDivider]) { (layoutProxies) in
             let label = layoutProxies[0]
-            let view = layoutProxies[1]
-            let rightDivider = layoutProxies[2]
-            let leftDivider = layoutProxies[3]
+            let rightDivider = layoutProxies[1]
+            let leftDivider = layoutProxies[2]
+            let rightEdgeDivider = layoutProxies[3]
+            let leftEdgeDivider = layoutProxies[4]
             
-            xConstraint = label.centerX == view.centerX * position.positionTuple.xMultiplier
-            yConstraint = label.centerY == view.centerY * position.positionTuple.yMultiplier
+            xConstraint = label.centerX == label.superview!.centerX * position.positionTuple.xMultiplier ~ 750
+            yConstraint = label.centerY == label.superview!.centerY * position.positionTuple.yMultiplier
+            
+            switch position {
+            case .Center:
+                leftConstraint = label.left >= leftDivider.right
+                rightConstraint = label.right <= rightDivider.left
+            case .Bottom:
+                leftConstraint = label.left <= leftDivider.right
+                rightConstraint = label.right <= rightDivider.left
+            case .Right:
+                leftConstraint = label.left == rightDivider.right
+                rightConstraint = label.right == rightEdgeDivider.right
+            case .Left:
+                leftConstraint = label.left == leftEdgeDivider.left
+                rightConstraint = label.right == leftDivider.left
+            }
         }
     
         xConstraint?.identifier = "X constraint for label: \(label.hash)"
         yConstraint?.identifier = "Y constraint for label: \(label.hash)"
+        leftConstraint?.identifier = "Left Constraint for label: \(label.hash)"
+        rightConstraint?.identifier = "Right Constraint for label: \(label.hash)"
     }
     
     override func drawRect(rect: CGRect) {
@@ -244,7 +281,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     func rotateToPreviousSegment() {
         rotateWithSnapBehaviors(snapBehaviorsForLabelsAscending(false))
     }
-    
+
     func rotateWithSnapBehaviors(snapBehaviors: [UISnapBehavior]) {
         animator.removeAllBehaviors()
         
