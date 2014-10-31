@@ -53,8 +53,8 @@ private enum Position {
 
 private extension Position {
     static let staticCenter: Position = Position.Center((xMultiplier: 1, yMultiplier: 0.5))
-    static let staticRight: Position = Position.Right((xMultiplier: 1.5, yMultiplier: 0.7))
-    static let staticLeft: Position = Position.Left((xMultiplier: 0.5, yMultiplier: 0.7))
+    static let staticRight: Position = Position.Right((xMultiplier: 1.5, yMultiplier: 0.8))
+    static let staticLeft: Position = Position.Left((xMultiplier: 0.5, yMultiplier: 0.8))
     static let staticBottom: Position = Position.Bottom((xMultiplier: 1, yMultiplier: 1.5))
 
 }
