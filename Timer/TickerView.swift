@@ -309,9 +309,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
                     default:
                         break
                 }
-            } else {
-                println(constraints.xConstraint.multiplier)
-                println(constraints.yConstraint.multiplier)
             }
         }
 
