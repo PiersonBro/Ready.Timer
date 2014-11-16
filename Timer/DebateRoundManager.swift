@@ -127,7 +127,14 @@ enum SpeechType: Printable {
 struct Speech {
     let speechType: SpeechType
     let name: String
-    var consumed: Bool
+    var timerController: TimerController
+    var consumed: Bool = false
+    
+    init(speechType: SpeechType, name: String) {
+       self.name = name
+       self.speechType = speechType
+       timerController = TimerController(duration: self.speechType.durationOfSpeech())
+    }
 }
 
 class DebateRoundManager {
@@ -152,7 +159,7 @@ class DebateRoundManager {
        
         for speechName: String in stringOfSpeeches {
             let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
-            let newSpeech = Speech(speechType: speechType, name: speechName, consumed: false)
+            let newSpeech = Speech(speechType: speechType, name: speechName)
             speeches.append(newSpeech)
         }
         
