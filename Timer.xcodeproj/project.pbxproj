@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2001A4EE1A04A11700E9E153 /* TimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2001A4ED1A04A11700E9E153 /* TimerController.swift */; };
 		2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; };
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
@@ -19,6 +20,7 @@
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
 		20C99BA119A02E2E00477D3B /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BA019A02E2E00477D3B /* TimerTests.swift */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
+		20F0A8471A11713C00717EAA /* TimerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F0A8461A11713C00717EAA /* TimerControllerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +66,13 @@
 			remoteGlobalIDString = 20C99B8719A02E2E00477D3B;
 			remoteInfo = Timer;
 		};
+		20F0A8491A11734D00717EAA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 54C96A10195063CD000CDD27;
+			remoteInfo = "Cartography-iOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -81,21 +90,23 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2001A4ED1A04A11700E9E153 /* TimerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
-		205C661619AD657900E14B30 /* DebateRoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebateRoundManager.swift; sourceTree = "<group>"; };
+		205C661619AD657900E14B30 /* DebateRoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DebateRoundManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20C99B8819A02E2E00477D3B /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B8C19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99B8D19A02E2E00477D3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		20C99B8F19A02E2E00477D3B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		20C99B8F19A02E2E00477D3B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20C99B9219A02E2E00477D3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		20C99B9419A02E2E00477D3B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		20C99B9A19A02E2E00477D3B /* TimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99BA019A02E2E00477D3B /* TimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		20F0A8461A11713C00717EAA /* TimerControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; name = TimerControllerTests.swift; path = ../TimerControllerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +166,7 @@
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
 				205C661619AD657900E14B30 /* DebateRoundManager.swift */,
+				2001A4ED1A04A11700E9E153 /* TimerController.swift */,
 				20BB1A4E19D2758600568046 /* CircleButton.swift */,
 				20C99B9119A02E2E00477D3B /* Main.storyboard */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
@@ -176,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				20C99BA019A02E2E00477D3B /* TimerTests.swift */,
+				20F0A8461A11713C00717EAA /* TimerControllerTests.swift */,
 				20C99B9E19A02E2E00477D3B /* Supporting Files */,
 			);
 			path = TimerTests;
@@ -223,6 +236,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				20F0A84A1A11734D00717EAA /* PBXTargetDependency */,
 				20C99B9C19A02E2E00477D3B /* PBXTargetDependency */,
 			);
 			name = TimerTests;
@@ -352,6 +366,7 @@
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
 				205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
+				2001A4EE1A04A11700E9E153 /* TimerController.swift in Sources */,
 				20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -361,6 +376,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				20C99BA119A02E2E00477D3B /* TimerTests.swift in Sources */,
+				20F0A8471A11713C00717EAA /* TimerControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,6 +392,11 @@
 			isa = PBXTargetDependency;
 			target = 20C99B8719A02E2E00477D3B /* Timer */;
 			targetProxy = 20C99B9B19A02E2E00477D3B /* PBXContainerItemProxy */;
+		};
+		20F0A84A1A11734D00717EAA /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "Cartography-iOS";
+			targetProxy = 20F0A8491A11734D00717EAA /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
