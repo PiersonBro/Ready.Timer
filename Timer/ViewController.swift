@@ -7,31 +7,36 @@
 //
 
 import UIKit
+import QuartzCore
 import Cartography
 
 class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate {
     let tickerView: TickerView?
     let timerLabel: UILabel
     let debateRoundManager: DebateRoundManager?
-    var tickerViewIsOnLastSpeech: Bool
- 
+    var currentSpeech: Speech?
+    let doubleTapGestureRecognizer: UITapGestureRecognizer
+    let startButton: CircleButton
     let clockwiseButton: CircleButton
-    let counterClockwiseButton: CircleButton
     
     required init(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
-        tickerViewIsOnLastSpeech = false
+        startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
-        counterClockwiseButton = CircleButton(frame: CGRect())
-      
+        doubleTapGestureRecognizer = UITapGestureRecognizer()
         super.init(coder: aDecoder)
         tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
+        doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
     }
+    
+    //MARK: ViewController Lifecycle.
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.addGestureRecognizer(doubleTapGestureRecognizer)
+
         tickerView?.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(tickerView!)
        
@@ -44,24 +49,23 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
             tickerView.height <= view.height * 0.8
         }
 
+        startButton.addTarget(self, action: "timerButtonPressed", forControlEvents: .TouchUpInside)
+        startButton.labelText = "Start"
+        startButton.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.addSubview(startButton)
+        layout(startButton, view, tickerView!) { (startButton, view, tickerView) in
+            // FIXME: Mispositioned Constraints
+            startButton.centerX == view.centerX * 1.5
+            startButton.centerY == tickerView.top - 100
+            startButton.width == view.width * 0.2
+            startButton.height == startButton.width
+        }
+        
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Clockwise"
         clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(clockwiseButton)
-        layout(clockwiseButton, view, tickerView!) { (clockwiseButton, view, tickerView) in
-            // FIXME: Mispositioned Constraints
-            clockwiseButton.centerX == view.centerX * 1.5
-            clockwiseButton.centerY == tickerView.top - 100
-            
-            clockwiseButton.width == view.width * 0.2
-            clockwiseButton.height == clockwiseButton.width
-        }
-        
-        counterClockwiseButton.addTarget(self, action: "counterClockwise:", forControlEvents: .TouchUpInside)
-        counterClockwiseButton.labelText = "Counterclockwise"
-        counterClockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
-        view.addSubview(counterClockwiseButton)
-        layout(counterClockwiseButton, view, tickerView!) { (counterClockwiseButton, view, tickerView) in
+        layout(clockwiseButton, view, tickerView!) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             counterClockwiseButton.centerX == view.centerX * 0.4
             counterClockwiseButton.centerY == tickerView.top - 100
@@ -82,15 +86,86 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+    
+    //MARK: TimerButton
 
-    func clockwise(sender: AnyObject) {
-        tickerView!.rotateToNextSegment()
+    func timerButtonPressed() {
+        changeTimerToState(.CurrentState)
     }
     
-    func counterClockwise(sender: AnyObject) {
-        tickerView!.rotateToPreviousSegment()
+    enum TimerButtonState: String {
+        case Start = "Start"
+        case Cancel = "Cancel"
+        case Pause = "Pause"
+        case Resume = "Resume"
+        case CurrentState = ""
     }
     
+    func changeTimerToState(state: TimerButtonState) {
+        switch state {
+            case .Start:
+                startButton.labelText = TimerButtonState.Start.rawValue
+            case .Cancel:
+                startButton.labelText = TimerButtonState.Cancel.rawValue
+            case .Pause:
+                startButton.labelText = TimerButtonState.Pause.rawValue
+            case .Resume:
+                startButton.labelText = TimerButtonState.Resume.rawValue
+            case .CurrentState:
+                break
+        }
+        
+        if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
+                startButton.labelText = "Cancel"
+                currentSpeech?.timerController.activateWithBlock({ (elapsedTime) in
+                    self.timerLabel.text = elapsedTime
+                }, completionBlock: { (completionStatus) in
+                    switch completionStatus {
+                        case .Finished:
+                            // Calling this will also mark the speech as consumed, yay side effects.
+                            self.tickerView?.rotateToNextSegment()
+                            self.startButton.labelText = "Start"
+                        case .Reset:
+                            self.timerLabel.text = "\(self.currentSpeech!.speechType.durationOfSpeech()):00"
+                        case .Paused:
+                            break
+                        }
+                })
+        } else if (startButton.labelText == "Cancel") {
+                startButton.labelText = "Start"
+                currentSpeech?.timerController.concludeWithStatus(.Reset)
+        } else if (startButton.labelText == "Pause") {
+                startButton.labelText = "Resume"
+                currentSpeech?.timerController.concludeWithStatus(.Paused)
+        }
+    }
+    
+    func tapped() {
+        changeTimerToState(.Pause)
+    }
+    
+    //MARK: Debug
+    func clockwise(sender: CircleButton) {
+        if let currentSpeech = currentSpeech {
+            if currentSpeech.timerController.status != .Running {
+                tickerView!.rotateToNextSegment()
+            } else {
+                // FIXME: Add a better denied animation here.
+                let animation = CAKeyframeAnimation(keyPath: "transform")
+                let initialValue = NSValue(CATransform3D: CATransform3DMakeTranslation(-6.0, 0.0, 0.0))
+                let finalValue = NSValue(CATransform3D: CATransform3DMakeTranslation(6.0, 0.0, 0.0))
+                animation.values = [initialValue, finalValue]
+                animation.autoreverses = true
+                animation.duration = 0.5
+                animation.repeatCount = 2.0
+                clockwiseButton.layer.addAnimation(animation, forKey:nil)
+            }
+        } else {
+            tickerView!.rotateToNextSegment()
+        }
+    }
+    
+    //MARK: TickerView DataSource and Delegate
     func stringForIndex(index: Int) -> String? {
         if index >= debateRoundManager!.speechCount {
             // We are at the end of the Debate Round.
@@ -107,6 +182,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
         let speech = debateRoundManager!.getSpeechAtIndex(index)
         timerLabel.text = "\(speech.speechType.durationOfSpeech()):00"
+        currentSpeech = speech
     }
     
     func stringShouldBeChanged(index: Int) -> Bool {
@@ -119,6 +195,5 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     }
     
     func tickerViewDidRotateToLastSpeech(index: Int) {
-        tickerViewIsOnLastSpeech = true
     }
 }
