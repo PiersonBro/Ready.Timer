@@ -154,7 +154,7 @@ class DebateRoundManager {
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
-        let stringOfSpeeches: [String] = (debateRoundData[PListKey.Speeches.rawValue] as NSArray) as [String]
+        let stringOfSpeeches = (debateRoundData[PListKey.Speeches.rawValue] as [AnyObject]) as [String]
         var speeches: [Speech] = []
        
         for speechName: String in stringOfSpeeches {
