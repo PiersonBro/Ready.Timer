@@ -137,6 +137,12 @@ struct Speech {
     }
 }
 
+extension Speech: Printable {
+    var description: String {
+        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(timerController) \n consumed: \(consumed)"
+    }
+}
+
 class DebateRoundManager {
     let debateType: DebateType
     private var speeches: [Speech]
