@@ -137,6 +137,12 @@ struct Speech {
     }
 }
 
+extension Speech: Printable {
+    var description: String {
+        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(timerController) \n consumed: \(consumed)"
+    }
+}
+
 class DebateRoundManager {
     let debateType: DebateType
     private var speeches: [Speech]
@@ -147,16 +153,16 @@ class DebateRoundManager {
         debateType = type
         let path = NSBundle.mainBundle().pathForResource(PListKey.NameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        let rawSpeechType: String = debateType.rawValue as NSString
+        let rawSpeechType = debateType.rawValue as NSString
         debateRoundData = debates[rawSpeechType] as [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
-        let stringOfSpeeches: [String] = (debateRoundData[PListKey.Speeches.rawValue] as NSArray) as [String]
+        let stringOfSpeeches = (debateRoundData[PListKey.Speeches.rawValue] as [AnyObject]) as [String]
         var speeches: [Speech] = []
-       
+
         for speechName: String in stringOfSpeeches {
             let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
             let newSpeech = Speech(speechType: speechType, name: speechName)
