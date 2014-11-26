@@ -12,7 +12,9 @@ import Foundation
     private lazy var timer: NSTimer = {
         return NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
     }()
+    // The original amount of timer passed to the timer, in seconds.
     private let initialDuration: NSTimeInterval
+    // The duration of the timer in seconds.
     private var duration: NSTimeInterval
     private var block: ((elapsedTime: String) -> ())?
     private var completionBlock: ((completionStatus: CompletionStatus) -> ())?
@@ -29,15 +31,15 @@ import Foundation
     
     private var completionStatus: CompletionStatus?
     
-    // Read only enum, the consumer can't set these states themselves.
+    /// Read only enum, the consumer can't set these states themselves.
     public enum Status: String {
-        // The timer is currently running.
+        /// The timer is currently running.
         case Running = "Running"
-        // The timer is finished.
+        /// The timer is finished.
         case Finished = "Finished"
         // The timer is suspended, with the duration maintained.
         case Paused = "Paused"
-        // Reset actually maps to Inactive as this is the initial state of the object before activateWithBlock is called.
+        /// Reset actually maps to Inactive as this is the initial state of the object before activateWithBlock is called.
         case Inactive = "Inactive"
     }
     
@@ -55,6 +57,10 @@ import Foundation
         }
     }
     
+    /// Initialize a TimerController object.
+    /// This doesn't start the timer instead,call activateWithBlock.
+    ///
+    /// Duration - In Minutes
     public init(duration: Int) {
         self.duration = Double(duration) * 60 + 1
         initialDuration = self.duration
