@@ -50,7 +50,7 @@ import Foundation
                 rawValue = "Inactive"
             }
             return Status(rawValue:rawValue)!
-        } else if timerDidStart || timer.valid {
+        } else if timerDidStart && timer.valid {
             return .Running
         } else {
             return .Inactive
