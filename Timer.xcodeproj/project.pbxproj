@@ -19,7 +19,6 @@
 		20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8F19A02E2E00477D3B /* ViewController.swift */; };
 		20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9119A02E2E00477D3B /* Main.storyboard */; };
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
-		20C99BA119A02E2E00477D3B /* TimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BA019A02E2E00477D3B /* TimerTests.swift */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
 /* End PBXBuildFile section */
 
@@ -105,7 +104,6 @@
 		20C99B9419A02E2E00477D3B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		20C99B9A19A02E2E00477D3B /* TimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		20C99BA019A02E2E00477D3B /* TimerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerTests.swift; sourceTree = "<group>"; };
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 /* End PBXFileReference section */
 
@@ -187,7 +185,6 @@
 		20C99B9D19A02E2E00477D3B /* TimerTests */ = {
 			isa = PBXGroup;
 			children = (
-				20C99BA019A02E2E00477D3B /* TimerTests.swift */,
 				206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */,
 				20C99B9E19A02E2E00477D3B /* Supporting Files */,
 			);
@@ -375,7 +372,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20C99BA119A02E2E00477D3B /* TimerTests.swift in Sources */,
 				206C4AB91A195AAD00FC4913 /* TimerControllerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
