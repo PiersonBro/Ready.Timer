@@ -166,7 +166,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     //MARK: Debug
     func clockwise(sender: CircleButton) {
         if let currentSpeech = currentSpeech {
-            if currentSpeech.timerController.status != .Running {
+            if currentSpeech.timerController.status != .Running && currentSpeech.timerController.status != .Paused {
                 tickerView!.rotateToNextSegment()
             } else {
                 // FIXME: Add a better denied animation here.
