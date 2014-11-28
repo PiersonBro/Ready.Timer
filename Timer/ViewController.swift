@@ -10,7 +10,7 @@ import UIKit
 import QuartzCore
 import Cartography
 
-class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate {
+class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate, UIGestureRecognizerDelegate {
     let tickerView: TickerView?
     let timerLabel: UILabel
     let debateRoundManager: DebateRoundManager?
@@ -29,6 +29,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        doubleTapGestureRecognizer.delegate = self
     }
     
     //MARK: ViewController Lifecycle.
@@ -140,8 +141,24 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         }
     }
     
+    // MARK: Gesture Recognizers
+    
     func tapped() {
-        changeTimerToState(.Pause)
+        if let currentSpeech = currentSpeech {
+            if currentSpeech.timerController.status == .Running {
+                changeTimerToState(.Pause)
+            } else {
+                return
+            }
+        }
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        if touch.view == view || touch.view == timerLabel {
+            return true
+        } else {
+            return false
+        }
     }
     
     //MARK: Debug
