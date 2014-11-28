@@ -66,10 +66,10 @@ import Foundation
     }
     
     /// Initialize a TimerController object.
-    /// This doesn't start the timer instead,call activateWithBlock.
+    /// This doesn't start the timer, instead call activateWithBlock.
     ///
-    /// Duration - In Minutes, meaning that duration is multiplied by 60.
-    ///            If you need to have a timer in seconds just divde seconds by 60.
+    /// durationInMinutes - In Minutes --meaning that duration is multiplied by 60.
+    ///            If you need to have a timer in seconds just divide seconds by 60.
     public init(durationInMinutes: Double) {
         duration = durationInMinutes * 60 + 1
         initialDuration = self.duration
