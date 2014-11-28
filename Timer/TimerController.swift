@@ -12,65 +12,87 @@ import Foundation
     private lazy var timer: NSTimer = {
         return NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
     }()
+    // The original amount of timer passed to the timer, in seconds.
     private let initialDuration: NSTimeInterval
+    // The duration of the timer in seconds.
     private var duration: NSTimeInterval
     private var block: ((elapsedTime: String) -> ())?
-    private var completionBlock: ((completionStatus: CompletionStatus) -> ())?
+    private var conclusionBlock: ((conclusionStatus: ConclusionStatusRead) -> ())?
     private var timerDidStart: Bool = false
     
-    public enum CompletionStatus: String {
-        // The timer is completely finished. It's not coming back, ever.
-        case Finished = "Finished"
-        // Temporarily pause the timer, holding on to the blocks given in activateWithBlock.
+    /// The cases of ConclusionStatus that can be set by the TimerController consumer.
+    public enum ConclusionStatusWrite: String {
+        /// Temporarily pause the timer, holding on to the blocks given in activateWithBlock.
         case Paused = "Paused"
-        // Reset the timer so it was like activateWithBlock was never called.
+        /// Reset the timer so it was like activateWithBlock was never called.
         case Reset = "Reset"
     }
     
-    private var completionStatus: CompletionStatus?
+    // The cases unique to ConclusionStatusRead (which at this point is only .Finished) can be read by consumers of TimerController, but cannot be set by them.
+    public enum ConclusionStatusRead: String {
+        case Finished = "Finished"
+        case Paused = "Paused"
+        case Reset = "Reset"
+    }
     
-    // Read only enum, the consumer can't set these states themselves.
+    public typealias ConclusionStatus = ConclusionStatusRead
+    
+    private var conclusionStatus: ConclusionStatus?
+    
+    /// Read only enum, the consumer can't set these states themselves.
     public enum Status: String {
-        // The timer is currently running.
+        /// The timer is currently running.
         case Running = "Running"
-        // The timer is finished.
+        /// The timer is finished.
         case Finished = "Finished"
         // The timer is suspended, with the duration maintained.
         case Paused = "Paused"
-        // Reset actually maps to Inactive as this is the initial state of the object before activateWithBlock is called.
+        /// Reset actually maps to Inactive as this is the initial state of the object before activateWithBlock is called.
         case Inactive = "Inactive"
     }
     
     public var status: Status {
-        if let completionStatus = completionStatus {
-            var rawValue = completionStatus.rawValue
-            if completionStatus == .Reset {
+        if let conclusionStatus = conclusionStatus {
+            var rawValue = conclusionStatus.rawValue
+            if conclusionStatus == .Reset {
                 rawValue = "Inactive"
             }
             return Status(rawValue:rawValue)!
-        } else if timerDidStart || timer.valid {
+        } else if timerDidStart && timer.valid {
             return .Running
         } else {
             return .Inactive
         }
     }
     
-    public init(duration: Int) {
-        self.duration = Double(duration) * 60 + 1
+    /// Initialize a TimerController object.
+    /// This doesn't start the timer instead,call activateWithBlock.
+    ///
+    /// Duration - In Minutes, meaning that duration is multiplied by 60.
+    ///            If you need to have a timer in seconds just divde seconds by 60.
+    public init(durationInMinutes: Double) {
+        duration = durationInMinutes * 60 + 1
         initialDuration = self.duration
     }
 
-    func activateWithBlock(block: (elapsedTime: String) -> (), completionBlock: (completionStatus: CompletionStatus) -> ()) {
+    public func activateWithBlock(block: (elapsedTime: String) -> (), conclusionBlock: (conclusionStatus: ConclusionStatus) -> ()) {
+        if conclusionStatus != nil {
+            conclusionStatus = nil
+        }
+        
         self.block = block
-        self.completionBlock = completionBlock
+        self.conclusionBlock = conclusionBlock
         
         NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
         timerDidStart = true
     }
     
-    func concludeWithStatus(status: CompletionStatus) {
-        completionStatus = status
-        completionBlock!(completionStatus: status)
+    public func concludeWithStatus(status: ConclusionStatusWrite) {
+        concludeWithStatus(ConclusionStatus(rawValue:status.rawValue)!)
+    }
+    
+    private func concludeWithStatus(status: ConclusionStatusRead) {
+        conclusionStatus = status
 
         switch status {
             case .Finished:
@@ -82,11 +104,13 @@ import Foundation
         }
         timer.invalidate()
         timer = NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
+        conclusionBlock!(conclusionStatus: status)
     }
     
     func timerFired(timer: NSTimer) {
+        let time = duration--
         if duration != -1 {
-             self.block!(elapsedTime: formattedStringForDuration(duration--))
+             self.block!(elapsedTime: formattedStringForDuration(time))
         } else {
             concludeWithStatus(.Finished)
         }
@@ -94,10 +118,10 @@ import Foundation
     
     private func formattedStringForDuration(duration: NSTimeInterval) -> String {
         let date = NSDate(timeInterval: duration, sinceDate: NSDate())
-        
         let calendar =  NSCalendar.currentCalendar()
         let unitFlags: NSCalendarUnit =  NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitSecond
         let components = calendar.components(unitFlags, fromDate:NSDate(), toDate:date, options: NSCalendarOptions.allZeros)
+        
         let minute = components.minute
         var second = ""
        
