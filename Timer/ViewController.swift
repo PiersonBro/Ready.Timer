@@ -119,7 +119,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
                 startButton.labelText = "Cancel"
                 currentSpeech?.timerController.activateWithBlock({ (elapsedTime) in
                     self.timerLabel.text = elapsedTime
-                }, completionBlock: { (completionStatus) in
+                }, conclusionBlock: { (completionStatus) in
                     switch completionStatus {
                         case .Finished:
                             // Calling this will also mark the speech as consumed, yay side effects.
