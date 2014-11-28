@@ -147,6 +147,8 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         if let currentSpeech = currentSpeech {
             if currentSpeech.timerController.status == .Running {
                 changeTimerToState(.Pause)
+            } else if currentSpeech.timerController.status == .Paused {
+                changeTimerToState(.Resume)
             } else {
                 return
             }
