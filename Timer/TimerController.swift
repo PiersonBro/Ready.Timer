@@ -70,13 +70,8 @@ import Foundation
     ///
     /// Duration - In Minutes, meaning that duration is multiplied by 60.
     ///            If you need to have a timer in seconds just divde seconds by 60.
-    public init(duration: Double) {
-        self.duration = duration * 60 + 1
-        initialDuration = self.duration
-    }
-    
-    public init(duration: Int) {
-        self.duration = Double(duration) * 60 + 1
+    public init(durationInMinutes: Double) {
+        duration = durationInMinutes * 60 + 1
         initialDuration = self.duration
     }
 

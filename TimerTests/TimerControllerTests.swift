@@ -14,7 +14,7 @@ class TimerControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         let duration: Double = (5 / 60)
-        timerController = TimerController(duration: duration)
+        timerController = TimerController(durationInMinutes: duration)
     }
     
     //MARK: Status
