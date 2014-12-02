@@ -182,7 +182,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         label.textColor = UIColor.cyanColor()
         label.text = text
         
-        label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
         layoutLabel(label, position: positions)
 

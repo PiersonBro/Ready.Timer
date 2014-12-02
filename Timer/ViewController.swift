@@ -38,9 +38,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         super.viewDidLoad()
         view.addGestureRecognizer(doubleTapGestureRecognizer)
 
-        tickerView?.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(tickerView!)
-       
         layout(tickerView!, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
@@ -52,7 +50,6 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
 
         startButton.addTarget(self, action: "timerButtonPressed", forControlEvents: .TouchUpInside)
         startButton.labelText = "Start"
-        startButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(startButton)
         layout(startButton, view, tickerView!) { (startButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
@@ -64,7 +61,6 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Clockwise"
-        clockwiseButton.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(clockwiseButton)
         layout(clockwiseButton, view, tickerView!) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
@@ -75,7 +71,6 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
             counterClockwiseButton.height == counterClockwiseButton.width
         }
         
-        timerLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
         timerLabel.font = UIFont.systemFontOfSize(160)
         view.addSubview(timerLabel)
         layout(timerLabel, view) { (timerLabel, view) in

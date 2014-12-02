@@ -41,7 +41,6 @@ class CircleButton: UIControl {
         label.textAlignment = .Center
         label.adjustsFontSizeToFitWidth = true
 
-        label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
         layout(label, self) { (label, view) in
             label.center == view.center
