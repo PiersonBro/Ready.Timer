@@ -38,7 +38,7 @@ class TimerControllerTests: XCTestCase {
         
         timerController.activateWithBlock({ elapsedTime in
             let string = strings[index]
-            XCTAssert(string == elapsedTime, "elasped time should be \(strings[index]) was \(elapsedTime)")
+            XCTAssert(string == elapsedTime, "Elapsed time should be \(strings[index]) was \(elapsedTime)")
             XCTAssert(self.timerController.status == .Running, "It should be running every time this block is executed")
             index++
             }, conclusionBlock: { conclusionStatus in
