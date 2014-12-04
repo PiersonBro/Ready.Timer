@@ -71,8 +71,8 @@ import Foundation
     /// durationInMinutes - In Minutes --meaning that duration is multiplied by 60.
     ///            If you need to have a timer in seconds just divide seconds by 60.
     public init(durationInMinutes: Double) {
-        duration = durationInMinutes * 60 + 1
-        initialDuration = self.duration
+        duration = durationInMinutes * 60
+        initialDuration = duration
     }
 
     public func activateWithBlock(block: (elapsedTime: String) -> (), conclusionBlock: (conclusionStatus: ConclusionStatus) -> ()) {
@@ -109,28 +109,11 @@ import Foundation
     
     func timerFired(timer: NSTimer) {
         let time = duration--
+
         if duration != -1 {
-             self.block!(elapsedTime: formattedStringForDuration(time))
+             self.block!(elapsedTime: String.formattedStringForDuration(time))
         } else {
             concludeWithStatus(.Finished)
         }
-    }
-    
-    private func formattedStringForDuration(duration: NSTimeInterval) -> String {
-        let date = NSDate(timeInterval: duration, sinceDate: NSDate())
-        let calendar =  NSCalendar.currentCalendar()
-        let unitFlags: NSCalendarUnit =  NSCalendarUnit.CalendarUnitMinute | NSCalendarUnit.CalendarUnitSecond
-        let components = calendar.components(unitFlags, fromDate:NSDate(), toDate:date, options: NSCalendarOptions.allZeros)
-        
-        let minute = components.minute
-        var second = ""
-       
-        if components.second < 10 {
-            second = "0\(components.second)"
-        } else {
-            second = "\(components.second)"
-        }
-
-        return "\(minute):\(second)"
     }
 }
