@@ -74,6 +74,11 @@ import Foundation
         duration = durationInMinutes * 60
         initialDuration = duration
     }
+    
+    public init(durationInSeconds: Int) {
+        duration = Double(durationInSeconds)
+        initialDuration = duration
+    }
 
     public func activateWithBlock(block: (elapsedTime: String) -> (), conclusionBlock: (conclusionStatus: ConclusionStatus) -> ()) {
         if conclusionStatus != nil {
