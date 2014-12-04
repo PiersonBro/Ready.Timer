@@ -8,7 +8,7 @@
 
 import Foundation
 
-@objc public class TimerController {
+@objc public class TimerController: TimerProtocol {
     private lazy var timer: NSTimer = {
         return NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
     }()
@@ -16,55 +16,26 @@ import Foundation
     private let initialDuration: NSTimeInterval
     // The duration of the timer in seconds.
     private var duration: NSTimeInterval
-    private var block: ((elapsedTime: String) -> ())?
-    private var conclusionBlock: ((conclusionStatus: ConclusionStatusRead) -> ())?
+    private var block: StatusBlock?
+    private var conclusionBlock: ConclusionBlock?
     private var timerDidStart: Bool = false
-    
-    /// The cases of ConclusionStatus that can be set by the TimerController consumer.
-    public enum ConclusionStatusWrite: String {
-        /// Temporarily pause the timer, holding on to the blocks given in activateWithBlock.
-        case Paused = "Paused"
-        /// Reset the timer so it was like activateWithBlock was never called.
-        case Reset = "Reset"
-    }
-    
-    // The cases unique to ConclusionStatusRead (which at this point is only .Finished) can be read by consumers of TimerController, but cannot be set by them.
-    public enum ConclusionStatusRead: String {
-        case Finished = "Finished"
-        case Paused = "Paused"
-        case Reset = "Reset"
-    }
-    
-    public typealias ConclusionStatus = ConclusionStatusRead
-    
-    private var conclusionStatus: ConclusionStatus?
-    
-    /// Read only enum, the consumer can't set these states themselves.
-    public enum Status: String {
-        /// The timer is currently running.
-        case Running = "Running"
-        /// The timer is finished.
-        case Finished = "Finished"
-        // The timer is suspended, with the duration maintained.
-        case Paused = "Paused"
-        /// Reset actually maps to Inactive as this is the initial state of the object before activateWithBlock is called.
-        case Inactive = "Inactive"
-    }
-    
-    public var status: Status {
+        
+    public var status: TimerStatus {
         if let conclusionStatus = conclusionStatus {
             var rawValue = conclusionStatus.rawValue
             if conclusionStatus == .Reset {
                 rawValue = "Inactive"
             }
-            return Status(rawValue:rawValue)!
+            return TimerStatus(rawValue:rawValue)!
         } else if timerDidStart && timer.valid {
             return .Running
         } else {
             return .Inactive
         }
     }
-    
+
+    private var conclusionStatus: ConclusionStatus?
+
     /// Initialize a TimerController object.
     /// This doesn't start the timer, instead call activateWithBlock.
     ///
@@ -80,10 +51,8 @@ import Foundation
         initialDuration = duration
     }
 
-    public func activateWithBlock(block: (elapsedTime: String) -> (), conclusionBlock: (conclusionStatus: ConclusionStatus) -> ()) {
-        if conclusionStatus != nil {
-            conclusionStatus = nil
-        }
+    public func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock) {
+        conclusionStatus = nil
         
         self.block = block
         self.conclusionBlock = conclusionBlock
@@ -109,7 +78,8 @@ import Foundation
         }
         timer.invalidate()
         timer = NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
-        conclusionBlock!(conclusionStatus: status)
+
+        conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil))
     }
     
     func timerFired(timer: NSTimer) {
