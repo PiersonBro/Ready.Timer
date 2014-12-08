@@ -31,7 +31,7 @@ public enum TimerStatus: String {
     case Running = "Running"
     /// The timer is finished.
     case Finished = "Finished"
-    // The timer is suspended, with the duration maintained.
+    // The timer is suspended, with the current duration maintained. Call activate with block to resume the timer.
     case Paused = "Paused"
     /// Reset actually maps to Inactive as this is the initial state of the object before activateWithBlock is called.
     case Inactive = "Inactive"
