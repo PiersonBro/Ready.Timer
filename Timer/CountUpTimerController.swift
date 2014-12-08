@@ -10,7 +10,7 @@ import Foundation
 
 @objc public class CountUpTimerController: TimerProtocol {
     /// The how much time can elapse before the timer is finished, in seconds.
-    private let upperLimit: Double?
+    private let upperLimit: NSTimeInterval?
     private var duration: NSTimeInterval = 0
     private var statusBlock: StatusBlock?
     private var conclusionBlock: ConclusionBlock?
@@ -33,12 +33,12 @@ import Foundation
     
     private var conclusionStatus: ConclusionStatus?
     
-    public init(upperLimitInMinutes: Double?) {
+    public init(upperLimitInMinutes: NSTimeInterval?) {
         upperLimit = upperLimitInMinutes
     }
     
     public init(upperLimitInSeconds: Int) {
-        upperLimit = Double(upperLimitInSeconds)
+        upperLimit = NSTimeInterval(upperLimitInSeconds)
     }
     
     public func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock) {

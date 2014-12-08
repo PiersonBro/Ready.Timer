@@ -41,13 +41,13 @@ import Foundation
     ///
     /// durationInMinutes - In Minutes --meaning that duration is multiplied by 60.
     ///            If you need to have a timer in seconds just divide seconds by 60.
-    public init(durationInMinutes: Double) {
+    public init(durationInMinutes: NSTimeInterval) {
         duration = durationInMinutes * 60
         initialDuration = duration
     }
     
     public init(durationInSeconds: Int) {
-        duration = Double(durationInSeconds)
+        duration = NSTimeInterval(durationInSeconds)
         initialDuration = duration
     }
 

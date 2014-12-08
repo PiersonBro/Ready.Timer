@@ -133,7 +133,7 @@ struct Speech {
     init(speechType: SpeechType, name: String) {
        self.name = name
        self.speechType = speechType
-       timerController = TimerController(durationInMinutes: Double(speechType.durationOfSpeech()))
+       timerController = TimerController(durationInMinutes: NSTimeInterval(speechType.durationOfSpeech()))
     }
 }
 

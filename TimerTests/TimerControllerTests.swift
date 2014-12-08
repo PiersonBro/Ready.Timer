@@ -13,7 +13,7 @@ class TimerControllerTests: XCTestCase {
     var timerController: TimerController!
     override func setUp() {
         super.setUp()
-        let duration: Double = (5 / 60)
+        let duration: NSTimeInterval = (5 / 60)
         timerController = TimerController(durationInMinutes: duration)
     }
     
