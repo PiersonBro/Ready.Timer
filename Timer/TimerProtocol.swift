@@ -16,14 +16,14 @@ public enum ConclusionStatusWrite: String {
     case Reset = "Reset"
 }
 
-// The cases unique to ConclusionStatusRead (which at this point is only .Finished) can be read by consumers of TimerProtocol, but cannot be set by them.
-public enum ConclusionStatusRead: String {
+
+/// Includes all the cases of ConclusionStatusWrite, as well as .Finished
+/// --which can not be set by consumers of TimerProtocol, only read.
+public enum ConclusionStatus: String {
     case Finished = "Finished"
     case Paused = "Paused"
     case Reset = "Reset"
 }
-
-public typealias ConclusionStatus = ConclusionStatusRead
 
 /// Read only enum, the consumer can't set these states themselves.
 public enum TimerStatus: String {

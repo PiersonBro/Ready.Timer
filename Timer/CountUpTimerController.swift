@@ -61,10 +61,10 @@ import Foundation
     }
     
     public func concludeWithStatus(status: ConclusionStatusWrite) {
-        concludeWithStatus(ConclusionStatusRead(rawValue: status.rawValue)!)
+        concludeWithStatus(ConclusionStatus(rawValue: status.rawValue)!)
     }
 
-    private func concludeWithStatus(status: ConclusionStatusRead) {
+    private func concludeWithStatus(status: ConclusionStatus) {
         switch status {
             case .Finished:
                 break

@@ -65,7 +65,7 @@ import Foundation
         concludeWithStatus(ConclusionStatus(rawValue:status.rawValue)!)
     }
     
-    private func concludeWithStatus(status: ConclusionStatusRead) {
+    private func concludeWithStatus(status: ConclusionStatus) {
         conclusionStatus = status
 
         switch status {
