@@ -160,6 +160,11 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     //MARK: Debug
     func clockwise(sender: CircleButton) {
+        let transitionViewController = TransitionViewController(nibName: nil, bundle: nil)
+        self.presentViewController(transitionViewController, animated: true, completion: nil)
+    }
+    
+    func rotateToNextSpeechIfPossible() {
         if let currentSpeech = currentSpeech {
             if currentSpeech.timerController.status != .Running && currentSpeech.timerController.status != .Paused {
                 tickerView!.rotateToNextSegment()
