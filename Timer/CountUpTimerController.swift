@@ -11,7 +11,6 @@ import Foundation
 @objc public class CountUpTimerController: TimerProtocol {
     /// The how much time can elapse before the timer is finished, in seconds.
     private let upperLimit: Double?
-    private var globalCounter: GlobalCounter = GlobalCounter()
     private var duration: NSTimeInterval = 0
     private var statusBlock: StatusBlock?
     private var conclusionBlock: ConclusionBlock?

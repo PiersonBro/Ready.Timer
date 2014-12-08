@@ -52,10 +52,6 @@ public protocol TimerProtocol {
     func concludeWithStatus(status: ConclusionStatusWrite)
 }
 
-public class GlobalCounter {
-    var sequentialNumber: Int = 0
-}
-
 public extension String {
 
     public static func formattedStringForDuration(duration: NSTimeInterval) -> String {
