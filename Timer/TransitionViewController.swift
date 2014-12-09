@@ -13,7 +13,7 @@ class TransitionViewController: UIViewController {
     let effect: UIBlurEffect
     let backgroundView: UIVisualEffectView
     let contentView: UIVisualEffectView
-    var label: UILabel?
+    let label: UILabel = UILabel(frame: CGRect())
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         effect = UIBlurEffect(style: .Light)
@@ -54,6 +54,23 @@ class TransitionViewController: UIViewController {
             dismissButton.center == dismissButton.superview!.center
             dismissButton.width == dismissButton.superview!.width / 2
         }
+        
+        contentView.addSubview(label)
+        layout(label) { label in
+            label.centerX == label.superview!.centerX
+            label.centerY == label.superview!.centerY / 2
+            return
+        }
+        
+
+        label.text = "30:00"
+        label.font = UIFont.systemFontOfSize(160)
+        let countUpTimer = CountUpTimerController(upperLimitInSeconds: 30)
+        countUpTimer.activateWithBlock({ (elapsedTime) -> () in
+            self.label.text = elapsedTime
+        }, conclusionBlock: { (conclusionResult) -> () in
+            
+        })
     }
     
     func dismiss() {
