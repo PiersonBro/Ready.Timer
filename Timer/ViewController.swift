@@ -26,7 +26,9 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         clockwiseButton = CircleButton(frame: CGRect())
         doubleTapGestureRecognizer = UITapGestureRecognizer()
         super.init(coder: aDecoder)
+        // FIXME: Are you kidding me? This shouldn't have to be an optional, instead make dataSource and delegate optionals.
         tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
+        
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         doubleTapGestureRecognizer.numberOfTapsRequired = 2
         doubleTapGestureRecognizer.delegate = self
