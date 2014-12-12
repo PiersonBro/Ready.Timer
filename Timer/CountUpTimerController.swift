@@ -34,7 +34,7 @@ import Foundation
     private var conclusionStatus: ConclusionStatus?
     
     public init(upperLimitInMinutes: NSTimeInterval) {
-        upperLimit = upperLimitInMinutes
+        upperLimit = upperLimitInMinutes * 60
     }
     
     public init(upperLimitInSeconds: Int) {
