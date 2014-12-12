@@ -160,7 +160,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     //MARK: Debug
     func clockwise(sender: CircleButton) {
-        let transitionViewController = TransitionViewController(nibName: nil, bundle: nil)
+        let transitionViewController = TransitionViewController(countUpTimer: debateRoundManager.affPrepTime)
         self.presentViewController(transitionViewController, animated: true, completion: nil)
     }
     

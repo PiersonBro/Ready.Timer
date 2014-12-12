@@ -15,13 +15,15 @@ class TransitionViewController: UIViewController {
     let contentView: UIVisualEffectView
     let label: UILabel = UILabel(frame: CGRect())
     
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
-        effect = UIBlurEffect(style: .Light)
+    init(countUpTimer: CountUpTimerController) {
+        self.countUpTimer = countUpTimer
+        
+        let effect = UIBlurEffect(style: .Light)
         backgroundView = UIVisualEffectView(effect: effect)
         let vibrancyEffect = UIVibrancyEffect(forBlurEffect: effect)
         contentView = UIVisualEffectView(effect: vibrancyEffect)
-        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-        self.modalPresentationStyle = .Custom
+        super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .Custom
     }
     
     required init(coder aDecoder: NSCoder) {
