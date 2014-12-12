@@ -13,7 +13,7 @@ import Cartography
 class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate, UIGestureRecognizerDelegate {
     let tickerView: TickerView?
     let timerLabel: UILabel
-    let debateRoundManager: DebateRoundManager?
+    let debateRoundManager: DebateRoundManager
     var currentSpeech: Speech?
     let doubleTapGestureRecognizer: UITapGestureRecognizer
     let startButton: CircleButton
@@ -186,26 +186,26 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     //MARK: TickerView DataSource and Delegate
     func stringForIndex(index: Int) -> String? {
-        if index >= debateRoundManager!.speechCount {
+        if index >= debateRoundManager.speechCount {
             // We are at the end of the Debate Round.
             return nil
         }
-        let speech = debateRoundManager!.getSpeechAtIndex(index)
+        let speech = debateRoundManager.getSpeechAtIndex(index)
         return speech.name
     }
     
     func tickerViewDidRotateStringAtIndexToRightPosition(index: Int) {
-        debateRoundManager?.markSpeechAsConsumedAtIndex(index)
+        debateRoundManager.markSpeechAsConsumedAtIndex(index)
     }
     
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
-        let speech = debateRoundManager!.getSpeechAtIndex(index)
+        let speech = debateRoundManager.getSpeechAtIndex(index)
         timerLabel.text = "\(speech.speechType.durationOfSpeech()):00"
         currentSpeech = speech
     }
     
     func stringShouldBeChanged(index: Int) -> Bool {
-        let speech = debateRoundManager!.getSpeechAtIndex(index)
+        let speech = debateRoundManager.getSpeechAtIndex(index)
         if (speech.consumed) {
             return true
         }
