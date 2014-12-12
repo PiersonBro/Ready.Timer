@@ -15,42 +15,42 @@ enum DebateType: String {
 }
 
 private enum DurationKey: String {
-    case DurationOfRebuttalKey = "Duration of Rebuttal"
-    case DurationOfConstructiveKey = "Duration of Constructive"
-    case DurationOfCrossExaminationKey = "Duration of Cross Examination"
+    case DurationOfRebuttal = "Duration of Rebuttal"
+    case DurationOfConstructive = "Duration of Constructive"
+    case DurationOfCrossExamination = "Duration of Cross Examination"
     //MARK: Lincoln Douglas
-    case DurationOfACKey = "Duration of AC"
-    case DurationOfNCKey = "Duration of NC"
-    case DurationOf1ARKey = "Duration of 1 AR"
-    case DurationOfNRKey = "Duration of NR"
-    case DurationOf2ARKey = "Duration of 2 AR"
+    case DurationOfAC = "Duration of AC"
+    case DurationOfNC = "Duration of NC"
+    case DurationOf1AR = "Duration of 1 AR"
+    case DurationOfNR = "Duration of NR"
+    case DurationOf2AR = "Duration of 2 AR"
     
     static func durationKeyForSpeechName(speechName: NSString, debateType: DebateType) -> DurationKey {
         var durationOfSpeech: DurationKey? = nil
         switch debateType {
         case _, _, _:
             if speechName.containsString("C") && speechName.containsString("X") {
-                durationOfSpeech = .DurationOfCrossExaminationKey
+                durationOfSpeech = .DurationOfCrossExamination
             } else {
                 fallthrough
             }
         case .Parli, .TeamPolicy:
             if speechName.containsString("R") {
-                durationOfSpeech = .DurationOfRebuttalKey
+                durationOfSpeech = .DurationOfRebuttal
             } else if speechName.containsString("C") {
-                durationOfSpeech = .DurationOfConstructiveKey
+                durationOfSpeech = .DurationOfConstructive
             }
         case .LincolnDouglas:
-            if (DurationKey.DurationOfACKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOfACKey
-            } else if (DurationKey.DurationOfNCKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOfNCKey
-            } else if (DurationKey.DurationOf1ARKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOf1ARKey
-            } else if (DurationKey.DurationOfNRKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOfNRKey
-            } else if (DurationKey.DurationOf2ARKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOf2ARKey
+            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOfAC
+            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOfNC
+            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOf1AR
+            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOfNR
+            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOf2AR
             }
         }
         
@@ -101,23 +101,22 @@ enum SpeechType: Printable {
         let duration = (debateRoundData[durationOfSpeechKey.rawValue] as NSNumber).integerValue
         
         switch durationOfSpeechKey {
-            case .DurationOfConstructiveKey:
+            case .DurationOfConstructive:
                 speechType = .Constructive(duration: duration)
-            case .DurationOfRebuttalKey:
+            case .DurationOfRebuttal:
                 speechType = .Rebuttal(duration: duration)
-            case .DurationOfCrossExaminationKey:
+            case .DurationOfCrossExamination:
                 speechType = .CrossExamination(duration: duration)
-            case .DurationOfACKey:
+            case .DurationOfAC:
                 speechType = .Constructive(duration: duration)
-            case .DurationOfNCKey:
+            case .DurationOfNC:
                 speechType = .Constructive(duration: duration)
-            case .DurationOf1ARKey:
+            case .DurationOf1AR:
                 speechType = .Rebuttal(duration: duration)
-            case .DurationOfNRKey:
+            case .DurationOfNR:
                 speechType = .Rebuttal(duration: duration)
-            case .DurationOf2ARKey:
+            case .DurationOf2AR:
                 speechType = .Rebuttal(duration: duration)
-            
         }
 
         return speechType!
