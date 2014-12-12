@@ -144,6 +144,8 @@ extension Speech: Printable {
 class DebateRoundManager {
     let debateType: DebateType
     let speechCount: Int
+    let affPrepTime: CountUpTimerController
+    let negPrepTime: CountUpTimerController
     
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
@@ -155,6 +157,10 @@ class DebateRoundManager {
         debateRoundData = debates[debateType.rawValue] as [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
+        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as NSNumber).doubleValue
+        
+        affPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
+        negPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
