@@ -57,7 +57,7 @@ private enum DurationKey: String {
         return durationOfSpeech!
     }
 }
-
+// FIXME: Refator too hard to use.
 private enum PListKey: String {
     case NameOfPlist = "DebateType"
     case Speeches = "Speeches"
@@ -97,7 +97,6 @@ enum SpeechType: Printable {
     private static func typeOfSpeech(nameOfSpeech: NSString, debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> SpeechType {
         var speechType: SpeechType? = nil
         var durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
-        let durationRaw: NSNumber? = debateRoundData[durationOfSpeechKey.rawValue] as? NSNumber
         let duration = (debateRoundData[durationOfSpeechKey.rawValue] as NSNumber).integerValue
         
         switch durationOfSpeechKey {
@@ -144,16 +143,16 @@ extension Speech: Printable {
 
 class DebateRoundManager {
     let debateType: DebateType
+    let speechCount: Int
+    
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
-    let speechCount: Int
     
     init(type: DebateType) {
         debateType = type
         let path = NSBundle.mainBundle().pathForResource(PListKey.NameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        let rawSpeechType = debateType.rawValue as NSString
-        debateRoundData = debates[rawSpeechType] as [NSObject: AnyObject]
+        debateRoundData = debates[debateType.rawValue] as [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
     }
