@@ -64,7 +64,7 @@ private enum PListKey: String {
     case TotalPrepTime = "Total Prep Time"
 }
 
-enum SpeechType: Printable {
+enum SpeechType {
     case Constructive(duration: Int)
     case Rebuttal(duration: Int)
     case CrossExamination(duration: Int)
@@ -81,17 +81,6 @@ enum SpeechType: Printable {
         }
         
         return durationOfSpeech
-    }
-    
-    var description: String {
-        switch self {
-            case .Constructive(let duration):
-                return "Speech is of Type: Constructive it's duration is \(duration)"
-            case .Rebuttal(let duration):
-                return "Speech is of Type: Rebuttal it's duration is \(duration)"
-            case .CrossExamination(let duration):
-                return "Speech is of Type: Cross Examination it's duration is \(duration)"
-        }
     }
     
     private static func typeOfSpeech(nameOfSpeech: NSString, debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> SpeechType {
@@ -119,6 +108,19 @@ enum SpeechType: Printable {
         }
 
         return speechType!
+    }
+}
+
+extension SpeechType: Printable {
+    var description: String {
+        switch self {
+        case .Constructive(let duration):
+            return "Speech is of Type: Constructive it's duration is \(duration)"
+        case .Rebuttal(let duration):
+            return "Speech is of Type: Rebuttal it's duration is \(duration)"
+        case .CrossExamination(let duration):
+            return "Speech is of Type: Cross Examination it's duration is \(duration)"
+        }
     }
 }
 
