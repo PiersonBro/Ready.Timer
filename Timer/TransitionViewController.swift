@@ -74,7 +74,7 @@ class TransitionViewController: UIViewController {
             leftLabel.centerY == leftLabel.superview!.centerY / 2
         }
         
-        leftLabel.text = "0:30"
+        leftLabel.text = "0:00"
         leftLabel.font = UIFont.systemFontOfSize(160)
         countUpTimer.activateWithBlock({ elapsedTime in
             self.leftLabel.text = elapsedTime
@@ -99,7 +99,7 @@ class TransitionViewController: UIViewController {
             rightLabel.centerY == rightLabel.superview!.centerY / 2
         }
         
-        rightLabel.text = "0:30"
+        rightLabel.text = "0:00"
     }
 
     func dismiss() {
