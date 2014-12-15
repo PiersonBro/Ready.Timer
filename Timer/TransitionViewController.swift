@@ -28,6 +28,7 @@ class TransitionViewController: UIViewController {
         contentView = UIVisualEffectView(effect: vibrancyEffect)
         super.init(nibName: nil, bundle: nil)
         modalPresentationStyle = .Custom
+        view.backgroundColor = UIColor.clearColor()
     }
     
     required init(coder aDecoder: NSCoder) {
@@ -36,7 +37,6 @@ class TransitionViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.clearColor()
         
         view.addSubview(backgroundView)
         layout(backgroundView) { (backgroundView) in
