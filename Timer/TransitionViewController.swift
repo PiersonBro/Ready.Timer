@@ -56,14 +56,13 @@ class TransitionViewController: UIViewController {
     }
     
     func setupDismissButton() {
-        let dismissButton = UIButton.buttonWithType(.System) as UIButton
-        dismissButton.titleLabel!.text = "Dismiss"
-        dismissButton.setTitle("Dismiss", forState: .Normal)
-        dismissButton.addTarget(self, action: "dismiss", forControlEvents: .TouchUpInside)
+        let dismissButton = CircleButton(frame: CGRect())
+        dismissButton.labelText = "Stop Prep Time"
+        dismissButton.addTarget(self, action: "pauseAndDismiss", forControlEvents: .TouchUpInside)
         contentView.addSubview(dismissButton)
         layout(dismissButton) { dismissButton in
             dismissButton.center == dismissButton.superview!.center
-            dismissButton.width == dismissButton.superview!.width / 2
+            dismissButton.size == dismissButton.superview!.size / 4
         }
     }
     
@@ -101,8 +100,10 @@ class TransitionViewController: UIViewController {
         
         rightLabel.text = "0:00"
     }
-
-    func dismiss() {
+    
+    // MARK: Interactivity
+    func pauseAndDismiss() {
+        countUpTimer.concludeWithStatus(.Paused)
         dismissViewControllerAnimated(true, completion: nil)
     }
 }
