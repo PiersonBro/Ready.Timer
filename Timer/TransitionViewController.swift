@@ -39,13 +39,13 @@ class TransitionViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(backgroundView)
-        layout(backgroundView) { (backgroundView) in
+        layout(backgroundView) { backgroundView in
             backgroundView.size == backgroundView.superview!.size
             backgroundView.center == backgroundView.center
         }
         
         view.addSubview(contentView)
-        layout(contentView) { (contentView) in
+        layout(contentView) { contentView in
             contentView.size == contentView.superview!.size
             contentView.center == contentView.superview!.center
         }
