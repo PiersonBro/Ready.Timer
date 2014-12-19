@@ -125,9 +125,9 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
                             self.startButton.labelText = "Start"
                         case .Reset:
                             self.timerLabel.text = "\(self.currentSpeech!.speechType.durationOfSpeech()):00"
-                        case .Paused:
+                        default:
                             break
-                        }
+                    }
                 })
         } else if (startButton.labelText == "Cancel") {
                 startButton.labelText = "Start"
