@@ -14,12 +14,15 @@ import Foundation
     }()
     // The original amount of timer passed to the timer, in seconds.
     private let initialDuration: NSTimeInterval
+
     // The duration of the timer in seconds.
     private var duration: NSTimeInterval
     private var block: StatusBlock?
     private var conclusionBlock: ConclusionBlock?
     private var timerDidStart: Bool = false
-        
+    
+    private var pausedDuration: NSTimeInterval?
+    
     public var status: TimerStatus {
         if let conclusionStatus = conclusionStatus {
             var rawValue = conclusionStatus.rawValue
@@ -74,8 +77,11 @@ import Foundation
             case .Reset:
                 duration = initialDuration
             case .Paused:
-                break
+                pausedDuration = duration
+            case .ResetToPaused:
+                duration = pausedDuration ?? initialDuration
         }
+        
         timer.invalidate()
         timer = NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
 

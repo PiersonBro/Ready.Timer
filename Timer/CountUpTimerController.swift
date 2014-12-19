@@ -9,13 +9,15 @@
 import Foundation
 
 @objc public class CountUpTimerController: TimerProtocol {
-    /// The how much time can elapse before the timer is finished, in seconds.
-    private let upperLimit: NSTimeInterval
     private var duration: NSTimeInterval = 0
     private var statusBlock: StatusBlock?
     private var conclusionBlock: ConclusionBlock?
     private lazy var timer: NSTimer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
     private var timerDidStart: Bool = false
+    private var pausedDuration: NSTimeInterval?
+    
+    /// How much time can elapse before the timer is finished, in seconds.
+    public let upperLimit: NSTimeInterval
     
     public var status: TimerStatus {
         if let conclusionStatus = conclusionStatus {
@@ -56,7 +58,7 @@ import Foundation
         statusBlock!(elapsedTime: String.formattedStringForDuration(time))
         
         if time == upperLimit {
-                concludeWithStatus(.Finished)
+            concludeWithStatus(.Finished)
         }
     }
     
@@ -71,10 +73,13 @@ import Foundation
             case .Reset:
                 duration = 0.0
             case .Paused:
-                break
+                pausedDuration = duration
+            case .ResetToPaused:
+                duration = pausedDuration ?? 0
         }
         
         timer.invalidate()
+        timer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
         conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: duration))
     }
 }
