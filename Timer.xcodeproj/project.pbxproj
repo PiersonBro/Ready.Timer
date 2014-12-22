@@ -178,7 +178,7 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
-				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
+				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
 				20F473301A43F10B00E38D98 /* Position.swift */,
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
@@ -186,7 +186,6 @@
 				20767D651A2D94D000838580 /* Timers */,
 				20BB1A4E19D2758600568046 /* CircleButton.swift */,
 				20C99B9119A02E2E00477D3B /* Main.storyboard */,
-				2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
 				20C99B8B19A02E2E00477D3B /* Supporting Files */,
 			);
@@ -217,6 +216,15 @@
 				20C99B9F19A02E2E00477D3B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		20F7EEBE1A488E6E0047DB98 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
+				2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
