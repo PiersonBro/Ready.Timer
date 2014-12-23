@@ -9,14 +9,23 @@
 import UIKit
 import Cartography
 
+private extension Position {
+    static let staticLeft: Position = .Left((xMultiplier: 0.5, yMultiplier: 0.5))
+    static let staticMiddle: Position = .Center((xMultiplier: 1, yMultiplier: 0.5))
+    static let staticRight: Position = .Right((xMultiplier: 1.5, yMultiplier: 0.5))
+}
+
 class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     // MARK: Views
-    
-    let backgroundView: UIVisualEffectView
-    let contentView: UIVisualEffectView
+    let blurView: UIVisualEffectView
+    let contentView: UIView
     
     let leftLabel: UILabel = UILabel(frame: CGRect())
+    let middleLabel: UILabel = UILabel(frame: CGRect())
     let rightLabel: UILabel = UILabel(frame: CGRect())
+    
+    let leftDivider: UIView = UIView(frame: CGRect())
+    let rightDivider: UIView = UIView(frame: CGRect())
     
     let countUpTimer: CountUpTimerController
     let animator: UIDynamicAnimator
@@ -27,10 +36,8 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     init(countUpTimer: CountUpTimerController) {
         self.countUpTimer = countUpTimer
         
-        let effect = UIBlurEffect(style: .Light)
-        backgroundView = UIVisualEffectView(effect: effect)
-        let vibrancyEffect = UIVibrancyEffect(forBlurEffect: effect)
-        contentView = UIVisualEffectView(effect: vibrancyEffect)
+        blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
+        contentView = blurView.contentView
         
         animator = UIDynamicAnimator(referenceView: contentView)
         rightTapGestureRecognizer = UITapGestureRecognizer()
@@ -58,34 +65,64 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.addSubview(backgroundView)
-        layout(backgroundView) { backgroundView in
+        view.addSubview(blurView)
+        layout(blurView) { backgroundView in
             backgroundView.size == backgroundView.superview!.size
             backgroundView.center == backgroundView.center
         }
         
-        view.addSubview(contentView)
-        layout(contentView) { contentView in
+        view.addSubview(blurView)
+        layout(blurView) { contentView in
             contentView.size == contentView.superview!.size
             contentView.center == contentView.superview!.center
         }
+        
+        contentView.addSubview(leftDivider)
+        layout(leftDivider) { leftDivider in
+            leftDivider.centerX == leftDivider.superview!.centerX * 0.67
+            leftDivider.centerY == leftDivider.superview!.centerY * 0.5
+            leftDivider.height == leftDivider.superview!.height / 4
+            leftDivider.width == leftDivider.superview!.width / 64
+        }
+        
+        contentView.addSubview(rightDivider)
+        layout(rightDivider) { rightDivider in
+            rightDivider.centerY == rightDivider.superview!.centerY * 0.5
+            rightDivider.centerX == rightDivider.superview!.centerX * 1.35
+            rightDivider.height == rightDivider.superview!.height / 4
+            rightDivider.width == rightDivider.superview!.width / 64
+        }
 
         setupDismissButton()
-        setupLeftLabel()
-        setupRightLabel()
+        setupLabel(leftLabel, position: Position.staticLeft)
+        setupLabel(middleLabel, position: Position.staticMiddle)
+        setupLabel(rightLabel, position: Position.staticRight)
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        // We call this in viewDidAppear instead of viewDidLoad to be more accurate.
+        startTimerWithLabel(leftLabel)
     }
     
     func snapLabelToCenter(gestureRecognizer: UIGestureRecognizer) {
         let label = gestureRecognizer.view! as UILabel
-        let snapBehavior = UISnapBehavior(item: label, snapToPoint: CGPoint(x: contentView.center.x, y: label.center.y))
+        // FIXME: Use Autolayout
+        let point = CGPoint(x: blurView.center.x, y: label.center.y)
+        if point == label.center {
+            return
+        }
+        
+        let snapBehavior = UISnapBehavior(item: label, snapToPoint: point)
         animator.addBehavior(snapBehavior)
 
         if label == rightLabel {
             countUpTimer.concludeWithStatus(.ResetToPaused)
             startTimerWithLabel(label)
             fadeViewToBlack(leftLabel)
-        } else {
+            fadeViewToBlack(middleLabel)
+        } else if label == leftLabel {
             fadeViewToBlack(rightLabel)
+            fadeViewToBlack(middleLabel)
         }
     }
     
@@ -122,27 +159,47 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         }
     }
     
-    func setupLeftLabel() {
-        contentView.addSubview(leftLabel)
-        layout(leftLabel) { leftLabel in
-            leftLabel.centerX == leftLabel.superview!.centerX / 2
-            leftLabel.centerY == leftLabel.superview!.centerY / 2
+    func setupLabel(label: UILabel, position: Position) {
+        contentView.addSubview(label)
+        layout(label) { label in
+            label.centerX == label.superview!.centerX * position.positionTuple.xMultiplier ~ 750
+            label.centerY == label.superview!.centerY * position.positionTuple.yMultiplier
         }
+
+        label.text = {
+            switch position {
+                case .Right(_,_):
+                    return String.formattedStringForDuration(self.countUpTimer.pausedDuration ?? 0)
+                default:
+                    return "0:00"
+            }
+        }()
+        label.font = UIFont.systemFontOfSize(160)
+        label.textAlignment = .Center
+        label.baselineAdjustment = .AlignCenters
+        label.adjustsFontSizeToFitWidth = true
         
-        leftLabel.text = "0:00"
-        leftLabel.font = UIFont.systemFontOfSize(160)
-        startTimerWithLabel(leftLabel)
-    }
-    
-    func setupRightLabel() {
-        contentView.addSubview(rightLabel)
-        rightLabel.font = UIFont.systemFontOfSize(160)
-        layout(rightLabel) { rightLabel in
-            rightLabel.centerX == rightLabel.superview!.centerX * 1.5
-            rightLabel.centerY == rightLabel.superview!.centerY / 2
+        let descriptorLabel = UILabel(frame: CGRect())
+        
+        switch position {
+            case .Right(_,_):
+                constrain(label, rightDivider) { rightLabel, rightDivider in
+                    rightLabel.right == rightLabel.superview!.right
+                    rightLabel.left == rightDivider.right
+                }
+            case .Left(_, _):
+                constrain(label, leftDivider) { leftLabel, leftDivider in
+                    leftLabel.left == leftLabel.superview!.left
+                    leftLabel.right == leftDivider.left
+                }
+            case .Center(_, _):
+                constrain(label, leftDivider, rightDivider) { middleLabel, leftDivider, rightDivider  in
+                    middleLabel.right == rightDivider.left
+                    middleLabel.left == leftDivider.right
+                }
+            default:
+                break
         }
-        
-        rightLabel.text = "0:00"
     }
     
     // MARK: Interactivity

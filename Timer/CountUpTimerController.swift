@@ -14,7 +14,7 @@ import Foundation
     private var conclusionBlock: ConclusionBlock?
     private lazy var timer: NSTimer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
     private var timerDidStart: Bool = false
-    private var pausedDuration: NSTimeInterval?
+    public var pausedDuration: NSTimeInterval?
     
     /// How much time can elapse before the timer is finished, in seconds.
     public let upperLimit: NSTimeInterval
@@ -54,7 +54,7 @@ import Foundation
     }
     
     func timerFired(timer: NSTimer) {
-        let time = duration++
+        let time = ++duration
         statusBlock!(elapsedTime: String.formattedStringForDuration(time))
         
         if time == upperLimit {
@@ -67,6 +67,8 @@ import Foundation
     }
 
     private func concludeWithStatus(status: ConclusionStatus) {
+        timer.invalidate()
+        
         switch status {
             case .Finished:
                 break
@@ -78,7 +80,7 @@ import Foundation
                 duration = pausedDuration ?? 0
         }
         
-        timer.invalidate()
+
         timer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
         conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: duration))
     }

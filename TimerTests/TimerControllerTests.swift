@@ -33,7 +33,7 @@ class TimerControllerTests: XCTestCase {
     
     func testFinishedState() {
         let expectation = expectationWithDescription("The timer should have fired it's blocks")
-        let strings = ["0:05", "0:04", "0:03", "0:02", "0:01","0:00"]
+        let strings = ["0:04", "0:03", "0:02", "0:01","0:00"]
         var index = 0
         
         timerController.activateWithBlock({ elapsedTime in

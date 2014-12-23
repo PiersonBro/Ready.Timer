@@ -21,7 +21,7 @@ import Foundation
     private var conclusionBlock: ConclusionBlock?
     private var timerDidStart: Bool = false
     
-    private var pausedDuration: NSTimeInterval?
+    public var pausedDuration: NSTimeInterval?
     
     public var status: TimerStatus {
         if let conclusionStatus = conclusionStatus {
@@ -70,6 +70,7 @@ import Foundation
     
     private func concludeWithStatus(status: ConclusionStatus) {
         conclusionStatus = status
+        timer.invalidate()
 
         switch status {
             case .Finished:
@@ -82,14 +83,12 @@ import Foundation
                 duration = pausedDuration ?? initialDuration
         }
         
-        timer.invalidate()
         timer = NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
-
         conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil))
     }
     
     func timerFired(timer: NSTimer) {
-        let time = duration--
+        let time = --duration
 
         if duration != -1 {
              self.block!(elapsedTime: String.formattedStringForDuration(time))
