@@ -180,7 +180,20 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         label.adjustsFontSizeToFitWidth = true
         
         let descriptorLabel = UILabel(frame: CGRect())
-        
+        descriptorLabel.text = {
+            switch position {
+                case .Right(_,_): return "Tap to start timer"
+                case .Left(_,_): return "This timer already started"
+                case .Center(_,_): return "This timer will begin in 30 seconds"
+                default: return ""
+            }
+        }()
+        contentView.addSubview(descriptorLabel)
+        layout(descriptorLabel, label) { descriptorLabel, label in
+            descriptorLabel.top == label.bottom
+            descriptorLabel.centerX == label.centerX
+            return
+        }
         switch position {
             case .Right(_,_):
                 constrain(label, rightDivider) { rightLabel, rightDivider in
