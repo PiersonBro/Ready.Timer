@@ -20,18 +20,15 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     let blurView: UIVisualEffectView
     let contentView: UIView
     
-    let leftLabel: UILabel = UILabel(frame: CGRect())
     let middleLabel: UILabel = UILabel(frame: CGRect())
-    let rightLabel: UILabel = UILabel(frame: CGRect())
     
     let leftDivider: UIView = UIView(frame: CGRect())
     let rightDivider: UIView = UIView(frame: CGRect())
     
     let countUpTimer: CountUpTimerController
-    let animator: UIDynamicAnimator
-    
-    let rightTapGestureRecognizer: UITapGestureRecognizer
-    let leftTapGestureRecognizer: UITapGestureRecognizer
+
+    private let startPrepTimeString: String = "Start Pep Time"
+    private let stopPrepTimeString: String = "Stop Prep Time"
     
     init(countUpTimer: CountUpTimerController) {
         self.countUpTimer = countUpTimer
@@ -39,21 +36,8 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
         contentView = blurView.contentView
         
-        animator = UIDynamicAnimator(referenceView: contentView)
-        rightTapGestureRecognizer = UITapGestureRecognizer()
-        leftTapGestureRecognizer = UITapGestureRecognizer()
-        
         super.init(nibName: nil, bundle: nil)
         
-        rightTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "snapLabelToCenter:")
-        leftTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "snapLabelToCenter:")
-        
-        rightLabel.userInteractionEnabled = true
-        rightLabel.addGestureRecognizer(rightTapGestureRecognizer)
-        leftLabel.userInteractionEnabled = true
-        leftLabel.addGestureRecognizer(leftTapGestureRecognizer)
-        
-        animator.delegate = self
         modalPresentationStyle = .Custom
         view.backgroundColor = UIColor.clearColor()
     }
@@ -94,38 +78,9 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         }
 
         setupDismissButton()
-        setupLabel(leftLabel, position: Position.staticLeft)
         setupLabel(middleLabel, position: Position.staticMiddle)
-        setupLabel(rightLabel, position: Position.staticRight)
     }
 
-    override func viewDidAppear(animated: Bool) {
-        // We call this in viewDidAppear instead of viewDidLoad to be more accurate.
-        startTimerWithLabel(leftLabel)
-    }
-    
-    func snapLabelToCenter(gestureRecognizer: UIGestureRecognizer) {
-        let label = gestureRecognizer.view! as UILabel
-        // FIXME: Use Autolayout
-        let point = CGPoint(x: blurView.center.x, y: label.center.y)
-        if point == label.center {
-            return
-        }
-        
-        let snapBehavior = UISnapBehavior(item: label, snapToPoint: point)
-        animator.addBehavior(snapBehavior)
-
-        if label == rightLabel {
-            countUpTimer.concludeWithStatus(.ResetToPaused)
-            startTimerWithLabel(label)
-            fadeViewToBlack(leftLabel)
-            fadeViewToBlack(middleLabel)
-        } else if label == leftLabel {
-            fadeViewToBlack(rightLabel)
-            fadeViewToBlack(middleLabel)
-        }
-    }
-    
     func fadeViewToBlack(view: UILabel) {
         // FIXME: Use an actual animation
         view.alpha = 0.0
@@ -150,8 +105,8 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     func setupDismissButton() {
         let dismissButton = CircleButton(frame: CGRect())
-        dismissButton.labelText = "Stop Prep Time"
-        dismissButton.addTarget(self, action: "pauseAndDismiss", forControlEvents: .TouchUpInside)
+        dismissButton.labelText = startPrepTimeString
+        dismissButton.addTarget(self, action: "buttonTapped:", forControlEvents: .TouchUpInside)
         contentView.addSubview(dismissButton)
         layout(dismissButton) { dismissButton in
             dismissButton.center == dismissButton.superview!.center
@@ -168,7 +123,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
 
         label.text = {
             switch position {
-                case .Right(_,_):
+                case .Center(_,_):
                     return String.formattedStringForDuration(self.countUpTimer.pausedDuration ?? 0)
                 default:
                     return "0:00"
@@ -179,21 +134,6 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         label.baselineAdjustment = .AlignCenters
         label.adjustsFontSizeToFitWidth = true
         
-        let descriptorLabel = UILabel(frame: CGRect())
-        descriptorLabel.text = {
-            switch position {
-                case .Right(_,_): return "Tap to start timer"
-                case .Left(_,_): return "This timer already started"
-                case .Center(_,_): return "This timer will begin in 30 seconds"
-                default: return ""
-            }
-        }()
-        contentView.addSubview(descriptorLabel)
-        layout(descriptorLabel, label) { descriptorLabel, label in
-            descriptorLabel.top == label.bottom
-            descriptorLabel.centerX == label.centerX
-            return
-        }
         switch position {
             case .Right(_,_):
                 constrain(label, rightDivider) { rightLabel, rightDivider in
@@ -210,6 +150,18 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
                     middleLabel.right == rightDivider.left
                     middleLabel.left == leftDivider.right
                 }
+            default:
+                break
+        }
+    }
+    
+    @objc private func buttonTapped(circleButton: CircleButton) {
+        switch circleButton.labelText ?? "" {
+            case startPrepTimeString:
+                startTimerWithLabel(middleLabel)
+                circleButton.labelText = stopPrepTimeString
+            case stopPrepTimeString:
+               pauseAndDismiss()
             default:
                 break
         }
