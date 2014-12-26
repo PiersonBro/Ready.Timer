@@ -48,18 +48,26 @@ import Foundation
         
         statusBlock = block
         self.conclusionBlock = conclusionBlock
- 
+
+        if duration == upperLimit {
+            concludeWithStatus(.Finished)
+            return
+        }
+        
         NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
         timerDidStart = true
     }
     
     func timerFired(timer: NSTimer) {
         let time = ++duration
-        statusBlock!(elapsedTime: String.formattedStringForDuration(time))
+        
+        assert(time <= upperLimit, "The Time should never exceed the upper limit.")
         
         if time == upperLimit {
             concludeWithStatus(.Finished)
         }
+        
+        statusBlock!(elapsedTime: String.formattedStringForDuration(time))
     }
     
     public func concludeWithStatus(status: ConclusionStatusWrite) {
