@@ -81,11 +81,6 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         setupLabel(middleLabel, position: Position.staticMiddle)
     }
 
-    func fadeViewToBlack(view: UILabel) {
-        // FIXME: Use an actual animation
-        view.alpha = 0.0
-    }
-    
     func startTimerWithLabel(label: UILabel) {
         countUpTimer.activateWithBlock({ elapsedTime in
             label.text = elapsedTime
