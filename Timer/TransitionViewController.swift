@@ -22,6 +22,8 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     let middleLabel: UILabel = UILabel(frame: CGRect())
     
+    let circleButton: CircleButton = CircleButton(frame: CGRect())
+
     let leftDivider: UIView = UIView(frame: CGRect())
     let rightDivider: UIView = UIView(frame: CGRect())
     
@@ -29,6 +31,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
 
     private let startPrepTimeString: String = "Start Pep Time"
     private let stopPrepTimeString: String = "Stop Prep Time"
+    private let finishedPepTimeString: String = "Prep Time Expired"
     
     init(countUpTimer: CountUpTimerController) {
         self.countUpTimer = countUpTimer
@@ -77,7 +80,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
             rightDivider.width == rightDivider.superview!.width / 64
         }
 
-        setupDismissButton()
+        setupCircleButton()
         setupLabel(middleLabel, position: Position.staticMiddle)
     }
 
@@ -87,25 +90,27 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         }, conclusionBlock: { result in
             switch result.conclusionStatus {
                 case .Finished:
-                    println("Finished")
-                case .Paused:
-                    println("Paused")
-                case .Reset:
-                    println("Reset")
-                case .ResetToPaused:
-                    println("No need to do anything this is a stupid API")
+                    self.circleButton.labelText = self.finishedPepTimeString
+                default:
+                    break
             }
         })
     }
     
-    func setupDismissButton() {
-        let dismissButton = CircleButton(frame: CGRect())
-        dismissButton.labelText = startPrepTimeString
-        dismissButton.addTarget(self, action: "buttonTapped:", forControlEvents: .TouchUpInside)
-        contentView.addSubview(dismissButton)
-        layout(dismissButton) { dismissButton in
-            dismissButton.center == dismissButton.superview!.center
-            dismissButton.size == dismissButton.superview!.size / 4
+    func setupCircleButton() {
+        circleButton.labelText = {
+            if self.countUpTimer.status == .Finished {
+                return self.finishedPepTimeString
+            } else {
+                return self.startPrepTimeString
+            }
+        }()
+        
+        circleButton.addTarget(self, action: "buttonTapped:", forControlEvents: .TouchUpInside)
+        contentView.addSubview(circleButton)
+        layout(circleButton) { circleButton in
+            circleButton.center == circleButton.superview!.center
+            circleButton.size == circleButton.superview!.size / 4
         }
     }
     
@@ -119,7 +124,14 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         label.text = {
             switch position {
                 case .Center(_,_):
-                    return String.formattedStringForDuration(self.countUpTimer.pausedDuration ?? 0)
+                    let duration: NSTimeInterval = {
+                        if self.countUpTimer.status == .Finished {
+                            return self.countUpTimer.upperLimit
+                        } else {
+                            return self.countUpTimer.pausedDuration ?? 0
+                        }
+                    }()
+                    return String.formattedStringForDuration(duration)
                 default:
                     return "0:00"
             }
@@ -156,15 +168,14 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
                 startTimerWithLabel(middleLabel)
                 circleButton.labelText = stopPrepTimeString
             case stopPrepTimeString:
-               pauseAndDismiss()
+                countUpTimer.concludeWithStatus(.Paused)
+                dismissViewControllerAnimated(true, completion: nil)
+            case startPrepTimeString:
+                break
+            case finishedPepTimeString:
+                dismissViewControllerAnimated(true, completion: nil)
             default:
                 break
         }
-    }
-    
-    // MARK: Interactivity
-    func pauseAndDismiss() {
-        countUpTimer.concludeWithStatus(.Paused)
-        dismissViewControllerAnimated(true, completion: nil)
     }
 }
