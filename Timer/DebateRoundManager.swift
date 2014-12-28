@@ -15,56 +15,56 @@ enum DebateType: String {
 }
 
 private enum DurationKey: String {
-    case DurationOfRebuttalKey = "Duration of Rebuttal"
-    case DurationOfConstructiveKey = "Duration of Constructive"
-    case DurationOfCrossExaminationKey = "Duration of Cross Examination"
+    case DurationOfRebuttal = "Duration of Rebuttal"
+    case DurationOfConstructive = "Duration of Constructive"
+    case DurationOfCrossExamination = "Duration of Cross Examination"
     //MARK: Lincoln Douglas
-    case DurationOfACKey = "Duration of AC"
-    case DurationOfNCKey = "Duration of NC"
-    case DurationOf1ARKey = "Duration of 1 AR"
-    case DurationOfNRKey = "Duration of NR"
-    case DurationOf2ARKey = "Duration of 2 AR"
+    case DurationOfAC = "Duration of AC"
+    case DurationOfNC = "Duration of NC"
+    case DurationOf1AR = "Duration of 1 AR"
+    case DurationOfNR = "Duration of NR"
+    case DurationOf2AR = "Duration of 2 AR"
     
     static func durationKeyForSpeechName(speechName: NSString, debateType: DebateType) -> DurationKey {
         var durationOfSpeech: DurationKey? = nil
         switch debateType {
         case _, _, _:
             if speechName.containsString("C") && speechName.containsString("X") {
-                durationOfSpeech = .DurationOfCrossExaminationKey
+                durationOfSpeech = .DurationOfCrossExamination
             } else {
                 fallthrough
             }
         case .Parli, .TeamPolicy:
             if speechName.containsString("R") {
-                durationOfSpeech = .DurationOfRebuttalKey
+                durationOfSpeech = .DurationOfRebuttal
             } else if speechName.containsString("C") {
-                durationOfSpeech = .DurationOfConstructiveKey
+                durationOfSpeech = .DurationOfConstructive
             }
         case .LincolnDouglas:
-            if (DurationKey.DurationOfACKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOfACKey
-            } else if (DurationKey.DurationOfNCKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOfNCKey
-            } else if (DurationKey.DurationOf1ARKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOf1ARKey
-            } else if (DurationKey.DurationOfNRKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOfNRKey
-            } else if (DurationKey.DurationOf2ARKey.rawValue as NSString).containsString(speechName) {
-                durationOfSpeech = .DurationOf2ARKey
+            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOfAC
+            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOfNC
+            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOf1AR
+            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOfNR
+            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName) {
+                durationOfSpeech = .DurationOf2AR
             }
         }
         
         return durationOfSpeech!
     }
 }
-
+// FIXME: Refactor too hard to use.
 private enum PListKey: String {
     case NameOfPlist = "DebateType"
     case Speeches = "Speeches"
     case TotalPrepTime = "Total Prep Time"
 }
 
-enum SpeechType: Printable {
+enum SpeechType {
     case Constructive(duration: Int)
     case Rebuttal(duration: Int)
     case CrossExamination(duration: Int)
@@ -83,44 +83,44 @@ enum SpeechType: Printable {
         return durationOfSpeech
     }
     
-    var description: String {
-        switch self {
-            case .Constructive(let duration):
-                return "Speech is of Type: Constructive it's duration is \(duration)"
-            case .Rebuttal(let duration):
-                return "Speech is of Type: Rebuttal it's duration is \(duration)"
-            case .CrossExamination(let duration):
-                return "Speech is of Type: Cross Examination it's duration is \(duration)"
-        }
-    }
-    
     private static func typeOfSpeech(nameOfSpeech: NSString, debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> SpeechType {
         var speechType: SpeechType? = nil
         var durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
-        let durationRaw: NSNumber? = debateRoundData[durationOfSpeechKey.rawValue] as? NSNumber
         let duration = (debateRoundData[durationOfSpeechKey.rawValue] as NSNumber).integerValue
         
         switch durationOfSpeechKey {
-            case .DurationOfConstructiveKey:
+            case .DurationOfConstructive:
                 speechType = .Constructive(duration: duration)
-            case .DurationOfRebuttalKey:
+            case .DurationOfRebuttal:
                 speechType = .Rebuttal(duration: duration)
-            case .DurationOfCrossExaminationKey:
+            case .DurationOfCrossExamination:
                 speechType = .CrossExamination(duration: duration)
-            case .DurationOfACKey:
+            case .DurationOfAC:
                 speechType = .Constructive(duration: duration)
-            case .DurationOfNCKey:
+            case .DurationOfNC:
                 speechType = .Constructive(duration: duration)
-            case .DurationOf1ARKey:
+            case .DurationOf1AR:
                 speechType = .Rebuttal(duration: duration)
-            case .DurationOfNRKey:
+            case .DurationOfNR:
                 speechType = .Rebuttal(duration: duration)
-            case .DurationOf2ARKey:
+            case .DurationOf2AR:
                 speechType = .Rebuttal(duration: duration)
-            
         }
 
         return speechType!
+    }
+}
+
+extension SpeechType: Printable {
+    var description: String {
+        switch self {
+        case .Constructive(let duration):
+            return "Speech is of Type: Constructive it's duration is \(duration)"
+        case .Rebuttal(let duration):
+            return "Speech is of Type: Rebuttal it's duration is \(duration)"
+        case .CrossExamination(let duration):
+            return "Speech is of Type: Cross Examination it's duration is \(duration)"
+        }
     }
 }
 
@@ -133,7 +133,7 @@ struct Speech {
     init(speechType: SpeechType, name: String) {
        self.name = name
        self.speechType = speechType
-       timerController = TimerController(durationInMinutes: Double(speechType.durationOfSpeech()))
+       timerController = TimerController(durationInMinutes: NSTimeInterval(speechType.durationOfSpeech()))
     }
 }
 
@@ -145,18 +145,24 @@ extension Speech: Printable {
 
 class DebateRoundManager {
     let debateType: DebateType
+    let speechCount: Int
+    let affPrepTime: CountUpTimerController
+    let negPrepTime: CountUpTimerController
+    
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
-    let speechCount: Int
     
     init(type: DebateType) {
         debateType = type
         let path = NSBundle.mainBundle().pathForResource(PListKey.NameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        let rawSpeechType = debateType.rawValue as NSString
-        debateRoundData = debates[rawSpeechType] as [NSObject: AnyObject]
+        debateRoundData = debates[debateType.rawValue] as [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
+        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as NSNumber).doubleValue
+        
+        affPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
+        negPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {

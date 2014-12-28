@@ -14,12 +14,16 @@
 		205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* DebateRoundManager.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		206C4AB91A195AAD00FC4913 /* TimerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */; };
+		20767D5F1A2D726600838580 /* CountUpTimerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20767D5E1A2D726600838580 /* CountUpTimerController.swift */; };
+		20767D641A2D94C700838580 /* TimerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20767D631A2D94C700838580 /* TimerProtocol.swift */; };
+		2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
 		20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8D19A02E2E00477D3B /* AppDelegate.swift */; };
 		20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8F19A02E2E00477D3B /* ViewController.swift */; };
 		20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9119A02E2E00477D3B /* Main.storyboard */; };
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
+		20F473311A43F10B00E38D98 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F473301A43F10B00E38D98 /* Position.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,12 +93,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		2001A4ED1A04A11700E9E153 /* TimerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerController.swift; sourceTree = "<group>"; };
+		2001A4ED1A04A11700E9E153 /* TimerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TimerController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		205C661619AD657900E14B30 /* DebateRoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DebateRoundManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
-		206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerControllerTests.swift; sourceTree = "<group>"; };
+		206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TimerControllerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		20767D5E1A2D726600838580 /* CountUpTimerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = CountUpTimerController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		20767D631A2D94C700838580 /* TimerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerProtocol.swift; sourceTree = "<group>"; };
+		2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TransitionViewController.swift; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20C99B8819A02E2E00477D3B /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B8C19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -105,6 +112,7 @@
 		20C99B9A19A02E2E00477D3B /* TimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		20F473301A43F10B00E38D98 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Position.swift; path = ../Position.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +145,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		20767D651A2D94D000838580 /* Timers */ = {
+			isa = PBXGroup;
+			children = (
+				20767D5E1A2D726600838580 /* CountUpTimerController.swift */,
+				2001A4ED1A04A11700E9E153 /* TimerController.swift */,
+				20767D631A2D94C700838580 /* TimerProtocol.swift */,
+			);
+			name = Timers;
+			sourceTree = "<group>";
+		};
 		20C99B7F19A02E2E00477D3B = {
 			isa = PBXGroup;
 			children = (
@@ -160,11 +178,12 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
-				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
+				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
+				20F473301A43F10B00E38D98 /* Position.swift */,
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
 				205C661619AD657900E14B30 /* DebateRoundManager.swift */,
-				2001A4ED1A04A11700E9E153 /* TimerController.swift */,
+				20767D651A2D94D000838580 /* Timers */,
 				20BB1A4E19D2758600568046 /* CircleButton.swift */,
 				20C99B9119A02E2E00477D3B /* Main.storyboard */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
@@ -197,6 +216,15 @@
 				20C99B9F19A02E2E00477D3B /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		20F7EEBE1A488E6E0047DB98 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
+				2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */,
+			);
+			name = ViewControllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -358,12 +386,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20F473311A43F10B00E38D98 /* Position.swift in Sources */,
 				20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */,
+				20767D641A2D94C700838580 /* TimerProtocol.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
+				2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */,
 				205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
 				2001A4EE1A04A11700E9E153 /* TimerController.swift in Sources */,
+				20767D5F1A2D726600838580 /* CountUpTimerController.swift in Sources */,
 				20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

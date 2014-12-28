@@ -10,26 +10,11 @@ import UIKit
 import QuartzCore
 import Cartography
 
-private typealias PositionTuple = (xMultiplier: Float, yMultiplier: Float)
-private enum Position {
-    case Center(PositionTuple)
-    case Right(PositionTuple)
-    case Left(PositionTuple)
-    case Bottom(PositionTuple)
-
-    // Convenience access to the associated values of the enum.
-    var positionTuple: PositionTuple {
-        switch (self) {
-            case .Center(let xMultiplier, let yMultiplier):
-                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-            case .Right(let xMultiplier, let yMultiplier):
-                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-            case .Left(let xMultiplier, let yMultiplier):
-                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-            case .Bottom(let xMultiplier, let yMultiplier):
-                return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-        }
-    }
+private extension Position {
+    static let staticCenter: Position = Position.Center((xMultiplier: 1, yMultiplier: 0.5))
+    static let staticRight: Position = Position.Right((xMultiplier: 1.5, yMultiplier: 0.8))
+    static let staticLeft: Position = Position.Left((xMultiplier: 0.5, yMultiplier: 0.8))
+    static let staticBottom: Position = Position.Bottom((xMultiplier: 1, yMultiplier: 1.5))
     
     static func positionForMultipliers(xMultiplier: CGFloat, yMultiplier: CGFloat) -> Position? {
         return positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
@@ -49,14 +34,6 @@ private enum Position {
             return nil
         }
     }
-}
-
-private extension Position {
-    static let staticCenter: Position = Position.Center((xMultiplier: 1, yMultiplier: 0.5))
-    static let staticRight: Position = Position.Right((xMultiplier: 1.5, yMultiplier: 0.8))
-    static let staticLeft: Position = Position.Left((xMultiplier: 0.5, yMultiplier: 0.8))
-    static let staticBottom: Position = Position.Bottom((xMultiplier: 1, yMultiplier: 1.5))
-
 }
 
 class TickerView: UIView, UIDynamicAnimatorDelegate {
@@ -182,7 +159,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         label.textColor = UIColor.cyanColor()
         label.text = text
         
-        label.setTranslatesAutoresizingMaskIntoConstraints(false)
         addSubview(label)
         layoutLabel(label, position: positions)
 
