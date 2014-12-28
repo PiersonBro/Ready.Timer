@@ -88,7 +88,8 @@ import Foundation
                 duration = pausedDuration ?? 0
         }
         
-
+        conclusionStatus = status
+        
         timer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
         conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: duration))
     }
