@@ -57,7 +57,7 @@ private enum DurationKey: String {
         return durationOfSpeech!
     }
 }
-// FIXME: Refator too hard to use.
+// FIXME: Refactor too hard to use.
 private enum PListKey: String {
     case NameOfPlist = "DebateType"
     case Speeches = "Speeches"
