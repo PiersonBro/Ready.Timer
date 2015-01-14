@@ -45,9 +45,11 @@ public struct ConclusionResult {
     // This only occurs for countUp Timers.
     public let totalTime: NSTimeInterval?
 }
+
 public typealias StatusBlock = (elapsedTime: String) -> ()
 public typealias ConclusionBlock = (conclusionResult: ConclusionResult) -> ()
-public protocol TimerProtocol {
+
+public protocol TimerControllerType {
     var status: TimerStatus { get }
 
     func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock)
@@ -63,7 +65,7 @@ public extension String {
         var secondString = ""
 
         if second < 10 {
-                secondString = "0\(second)"
+            secondString = "0\(second)"
         } else {
             secondString = "\(second)"
         }
@@ -71,3 +73,4 @@ public extension String {
         return "\(minute):\(secondString)"
     }
 }
+

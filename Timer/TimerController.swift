@@ -8,92 +8,67 @@
 
 import Foundation
 
-@objc public class TimerController: TimerProtocol {
-    private lazy var timer: NSTimer = {
-        return NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
-    }()
-    // The original amount of timer passed to the timer, in seconds.
-    private let initialDuration: NSTimeInterval
-
-    // The duration of the timer in seconds.
-    private var duration: NSTimeInterval
-    private var block: StatusBlock?
-    private var conclusionBlock: ConclusionBlock?
-    private var timerDidStart: Bool = false
-    
-    public var pausedDuration: NSTimeInterval?
-    
+public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
     public var status: TimerStatus {
         if let conclusionStatus = conclusionStatus {
             var rawValue = conclusionStatus.rawValue
             if conclusionStatus == .Reset {
-                rawValue = "Inactive"
+                rawValue = TimerStatus.Inactive.rawValue
             }
-            return TimerStatus(rawValue:rawValue)!
-        } else if timerDidStart && timer.valid {
+            
+            return TimerStatus(rawValue: rawValue)!
+        } else if running {
             return .Running
         } else {
             return .Inactive
         }
-    }
-
-    private var conclusionStatus: ConclusionStatus?
-
-    /// Initialize a TimerController object.
-    /// This doesn't start the timer, instead call activateWithBlock.
-    ///
-    /// durationInMinutes - In Minutes --meaning that duration is multiplied by 60.
-    ///            If you need to have a timer in seconds just divide seconds by 60.
-    public init(durationInMinutes: NSTimeInterval) {
-        duration = durationInMinutes * 60
-        initialDuration = duration
+        
     }
     
-    public init(durationInSeconds: Int) {
-        duration = NSTimeInterval(durationInSeconds)
-        initialDuration = duration
+    private var conclusionStatus: ConclusionStatus?
+    
+    public let timer: T
+    private var statusBlock: StatusBlock?
+    private var conclusionBlock: ConclusionBlock?
+    
+    private var keepDuration: Bool = false
+    private var running = false
+    
+    public init(timer: T) {
+        self.timer = timer
+        self.timer.controller = self
     }
-
+    
     public func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock) {
-        conclusionStatus = nil
-        
-        self.block = block
+        statusBlock = block
         self.conclusionBlock = conclusionBlock
+        conclusionStatus = nil
+        running = true
         
-        NSRunLoop.currentRunLoop().addTimer(timer, forMode: NSDefaultRunLoopMode)
-        timerDidStart = true
+        timer.activate(keepingDurationIfPossible: keepDuration)
     }
     
     public func concludeWithStatus(status: ConclusionStatusWrite) {
-        concludeWithStatus(ConclusionStatus(rawValue:status.rawValue)!)
+        concludeWithStatus(ConclusionStatus(rawValue: status.rawValue)!)
     }
     
     private func concludeWithStatus(status: ConclusionStatus) {
+        running = false
         conclusionStatus = status
-        timer.invalidate()
-
-        switch status {
-            case .Finished:
-                duration = 0.0
-            case .Reset:
-                duration = initialDuration
-            case .Paused:
-                pausedDuration = duration
-            case .ResetToPaused:
-                duration = pausedDuration ?? initialDuration
+        if status == .Paused || status == .ResetToPaused {
+            keepDuration = true
         }
         
-        timer = NSTimer(timeInterval: 1, target: self, selector:"timerFired:", userInfo: nil, repeats: true)
-        conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil))
+        timer.deactivate()
+        conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil)
+ )
     }
     
-    func timerFired(timer: NSTimer) {
-        let time = --duration
-
-        if duration != -1 {
-             self.block!(elapsedTime: String.formattedStringForDuration(time))
-        } else {
-            concludeWithStatus(.Finished)
-        }
+    public func conclude() {
+        concludeWithStatus(.Finished)
+    }
+    
+    public func continueWithDuration(duration: NSTimeInterval) {
+        statusBlock!(elapsedTime: String.formattedStringForDuration(duration))
     }
 }
