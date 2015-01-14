@@ -10,11 +10,12 @@ import Timer
 import XCTest
 
 class TimerControllerTests: XCTestCase {
-    var timerController: TimerController!
+    var timerController: TimerController<CountDownTimer>!
     override func setUp() {
         super.setUp()
         let duration: NSTimeInterval = (5 / 60)
-        timerController = TimerController(durationInMinutes: duration)
+        let countDownTimer = CountDownTimer(durationInMinutes: duration)
+        timerController = Controller(controllerDataSource:countDownTimer)
     }
     
     //MARK: Status

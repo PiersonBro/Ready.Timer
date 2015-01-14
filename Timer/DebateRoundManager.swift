@@ -127,13 +127,14 @@ extension SpeechType: Printable {
 struct Speech {
     let speechType: SpeechType
     let name: String
-    var timerController: TimerController
+    var timerController: TimerController<CountDownTimer>
     var consumed: Bool = false
     
     init(speechType: SpeechType, name: String) {
        self.name = name
        self.speechType = speechType
-       timerController = TimerController(durationInMinutes: NSTimeInterval(speechType.durationOfSpeech()))
+       let timer = CountDownTimer(durationInMinutes: NSTimeInterval(speechType.durationOfSpeech()))
+       timerController = TimerController(timer: timer)
     }
 }
 
@@ -146,8 +147,8 @@ extension Speech: Printable {
 class DebateRoundManager {
     let debateType: DebateType
     let speechCount: Int
-    let affPrepTime: CountUpTimerController
-    let negPrepTime: CountUpTimerController
+    let affPrepTime: TimerController<CountUpTimer>
+    let negPrepTime: TimerController<CountUpTimer>
     
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
@@ -161,8 +162,11 @@ class DebateRoundManager {
         speechCount = speeches.count
         let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as NSNumber).doubleValue
         
-        affPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
-        negPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
+        let affPrepCountUpTimer = CountUpTimer(upperLimitInMinutes: prepTimeDuration)
+        let negPrepCountUpTimer = CountUpTimer(upperLimitInMinutes: prepTimeDuration)
+        
+        affPrepTime = TimerController(timer: affPrepCountUpTimer)
+        negPrepTime = TimerController(timer: negPrepCountUpTimer)
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {

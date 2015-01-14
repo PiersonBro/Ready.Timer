@@ -27,13 +27,13 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     let leftDivider: UIView = UIView(frame: CGRect())
     let rightDivider: UIView = UIView(frame: CGRect())
     
-    let countUpTimer: CountUpTimerController
+    let countUpTimer: TimerController<CountUpTimer>
 
     private let startPrepTimeString: String = "Start Pep Time"
     private let stopPrepTimeString: String = "Stop Prep Time"
     private let finishedPepTimeString: String = "Prep Time Expired"
     
-    init(countUpTimer: CountUpTimerController) {
+    init(countUpTimer: TimerController<CountUpTimer>) {
         self.countUpTimer = countUpTimer
         
         blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
@@ -125,11 +125,11 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
             switch position {
                 case .Center(_,_):
                     let duration: NSTimeInterval = {
+                        let countUpTimerDataSource = self.countUpTimer.timer
                         if self.countUpTimer.status == .Finished {
-                            return self.countUpTimer.upperLimit
+                            return countUpTimerDataSource.upperLimit
                         } else {
-                            return self.countUpTimer.pausedDuration ?? 0
-                        }
+                            return countUpTimerDataSource.duration                        }
                     }()
                     return String.formattedStringForDuration(duration)
                 default:
