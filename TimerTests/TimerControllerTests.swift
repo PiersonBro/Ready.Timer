@@ -105,6 +105,22 @@ class TimerControllerTests: XCTestCase {
         
         waitForExpectationsWithTimeout(5, handler:nil)
     }
+    
+    func testResetToPausedState() {
+        timerController.activateWithBlock({ elapsedTime in
+            if elapsedTime == "0:02" {
+                self.timerController.concludeWithStatus(.Paused)
+            }
+        }) { conclusionResult in
+            self.timerController.activateWithBlock({ elapsedTime in
+                if elapsedTime == "0:04" {
+                    self.timerController.concludeWithStatus(.ResetToPaused)
+                }
+            }) { conclusionResult in
+                XCTAssert(self.timerController.timer.duration == 2, "The timer's duration should be 2")
+            }
+        }
+    }
 
     override func tearDown() {
         super.tearDown()
