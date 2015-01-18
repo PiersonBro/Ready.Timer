@@ -49,7 +49,7 @@ public protocol TimerType {
     @objc private func timerFired(timer: NSTimer) {
         let time = --duration
         
-        if time != 0 {
+        if time != -1 {
             controller?.continueWithDuration(time)
         } else {
             controller?.conclude()
@@ -65,7 +65,7 @@ public protocol TimerType {
     public let upperLimit: NSTimeInterval
     public var duration: NSTimeInterval = 0
     
-    init(upperLimitInMinutes: NSTimeInterval) {
+    public init(upperLimitInMinutes: NSTimeInterval) {
         upperLimit = upperLimitInMinutes * 60
     }
     
@@ -74,7 +74,7 @@ public protocol TimerType {
     }
     
     public func activate(#keepingDurationIfPossible: Bool) {
-        if keepingDurationIfPossible {
+        if !keepingDurationIfPossible {
            duration = 0
         }
         
@@ -85,7 +85,7 @@ public protocol TimerType {
     @objc private func timerFired(timer: NSTimer) {
         let time = ++duration
         
-        if duration != upperLimit {
+        if duration <= upperLimit {
             controller?.continueWithDuration(duration)
         } else {
             controller?.conclude()
