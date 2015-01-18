@@ -34,15 +34,10 @@ class TimerControllerTests: XCTestCase {
     
     func testFinishedState() {
         let expectation = expectationWithDescription("The timer should have fired it's blocks")
-        let strings = ["0:04", "0:03", "0:02", "0:01","0:00"]
-        var index = 0
         
         timerController.activateWithBlock({ elapsedTime in
-            let string = strings[index]
-            XCTAssert(string == elapsedTime, "Elapsed time should be \(strings[index]) was \(elapsedTime)")
-            XCTAssert(self.timerController.status == .Running, "It should be running every time this block is executed")
-            index++
-            }, conclusionBlock: { (conclusionResult) in
+            XCTAssert(self.timerController.status == .Running, "Status should be .Running every time this block is executed")
+        }, conclusionBlock: { (conclusionResult) in
                 expectation.fulfill()
                 XCTAssert(conclusionResult.conclusionStatus == .Finished, "It should be finished when it is finished")
                 XCTAssert(self.timerController.status == .Finished, "It Should be finished when the timer is finished")

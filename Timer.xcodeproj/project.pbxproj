@@ -13,6 +13,8 @@
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
 		205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* DebateRoundManager.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
+		206AE6241A675A59003073A3 /* CountDownTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206AE6231A675A59003073A3 /* CountDownTimerTests.swift */; };
+		206AE6291A682413003073A3 /* CountUpTimerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206AE6281A682413003073A3 /* CountUpTimerTests.swift */; };
 		206C4AB91A195AAD00FC4913 /* TimerControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */; };
 		20767D641A2D94C700838580 /* TimerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20767D631A2D94C700838580 /* TimerProtocol.swift */; };
 		2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */; };
@@ -98,6 +100,8 @@
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		205C661619AD657900E14B30 /* DebateRoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DebateRoundManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
+		206AE6231A675A59003073A3 /* CountDownTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountDownTimerTests.swift; sourceTree = "<group>"; };
+		206AE6281A682413003073A3 /* CountUpTimerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountUpTimerTests.swift; sourceTree = "<group>"; };
 		206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TimerControllerTests.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20767D631A2D94C700838580 /* TimerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerProtocol.swift; sourceTree = "<group>"; };
 		2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TransitionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -205,6 +209,8 @@
 			isa = PBXGroup;
 			children = (
 				206C4AB81A195AAD00FC4913 /* TimerControllerTests.swift */,
+				206AE6231A675A59003073A3 /* CountDownTimerTests.swift */,
+				206AE6281A682413003073A3 /* CountUpTimerTests.swift */,
 				20C99B9E19A02E2E00477D3B /* Supporting Files */,
 			);
 			path = TimerTests;
@@ -405,6 +411,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				206C4AB91A195AAD00FC4913 /* TimerControllerTests.swift in Sources */,
+				206AE6291A682413003073A3 /* CountUpTimerTests.swift in Sources */,
+				206AE6241A675A59003073A3 /* CountDownTimerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
