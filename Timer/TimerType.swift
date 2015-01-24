@@ -19,7 +19,7 @@ public protocol TimerType {
     func deactivate()
 }
 
-@objc public class CountDownTimer: TimerType {
+public class CountDownTimer: TimerType {
     private var timer: NSTimer?
 
     public var duration: NSTimeInterval
@@ -58,7 +58,7 @@ public protocol TimerType {
     
 }
 
-@objc public class CountUpTimer: TimerType {
+public class CountUpTimer: TimerType {
     private lazy var timer: NSTimer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
     
     public var controller: TimerDelegate?
