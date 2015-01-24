@@ -65,10 +65,6 @@ class StatusTests<T: TimerType> {
         timerController = TimerController(timer: timerGenerator())
 
         testRepetedPauseToggling()
-        timerController = TimerController(timer: timerGenerator())
-        
-        testResetToPausedState()
-
     }
     
     //MARK: Status
@@ -162,38 +158,7 @@ class StatusTests<T: TimerType> {
         
         testCase.waitForExpectationsWithTimeout(120, handler:nil)
     }
-    
-    func testResetToPausedState() {
-        var i: Int = 0
-        var time = "Hello World"
-        let expectation = testCase.expectationWithDescription("The Timer should have fired it's blocks and other weird and unique stuff")
-        timerController.activateWithBlock({ elapsedTime in
-            i++
-            if i == 2 {
-                time = elapsedTime
-                self.timerController.concludeWithStatus(.Paused)
-            }
-            
-            }) { conclusionResult in
-                self.timerController.activateWithBlock({ elapsedTime in
-                    ++i
-                    if i == 3 {
-                        println("From i = 4 comes to you elapsedTime \(elapsedTime), and time itself: \(time)")
-                        XCTAssert(time != elapsedTime, "Time should not equal elapsedTime")
-                        self.timerController.concludeWithStatus(.ResetToPaused)
-                    }
-                    }) { conclusionResult in
-                        self.timerController.activateWithBlock({ elapsedTime in
-                            XCTAssert(time == elapsedTime, "Time was: \(time) it should equal elapsedTime: \(elapsedTime)")
-                            expectation.fulfill()
-                            self.timerController.concludeWithStatus(.Paused)
-                        }, conclusionBlock: nil)
-                }
-        }
         
-        testCase.waitForExpectationsWithTimeout(120, handler: nil)
-    }
-    
     private func convertElapsedTimeToNumber(elapsedTime: String) -> Int {
         let numberCharacter = elapsedTime[elapsedTime.endIndex.predecessor()]
         let intermediaryString = String(numberCharacter)

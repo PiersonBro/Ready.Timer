@@ -14,8 +14,6 @@ public enum ConclusionStatusWrite: String {
     case Paused = "Paused"
     /// Reset the timer so it was like activateWithBlock was never called.
     case Reset = "Reset"
-    // Reset the timer's duration to the last paused duration, if the timer was not paused, reset to the logical idea of zero for the given timer.
-    case ResetToPaused = "ResetToPaused"
 }
 
 
@@ -25,7 +23,6 @@ public enum ConclusionStatus: String {
     case Finished = "Finished"
     case Paused = "Paused"
     case Reset = "Reset"
-    case ResetToPaused = "ResetToPaused"
 }
 
 /// Read only enum, the consumer can't set these states themselves.

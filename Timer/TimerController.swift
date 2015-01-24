@@ -55,7 +55,7 @@ public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
     private func concludeWithStatus(status: ConclusionStatus) {
         running = false
         conclusionStatus = status
-        if status == .Paused || status == .ResetToPaused {
+        if status == .Paused {
             keepDuration = true
         }
         
