@@ -52,7 +52,7 @@ public typealias ConclusionBlock = (conclusionResult: ConclusionResult) -> ()
 public protocol TimerControllerType {
     var status: TimerStatus { get }
 
-    func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock)
+    func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock?)
     
     func concludeWithStatus(status: ConclusionStatusWrite)
 }

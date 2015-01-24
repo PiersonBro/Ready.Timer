@@ -39,7 +39,7 @@ public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
         self.timer.controller = self
     }
     
-    public func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock) {
+    public func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock?) {
         statusBlock = block
         self.conclusionBlock = conclusionBlock
         conclusionStatus = nil
@@ -60,7 +60,7 @@ public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
         }
         
         timer.deactivate()
-        conclusionBlock!(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil)
+        conclusionBlock?(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil)
  )
     }
     
