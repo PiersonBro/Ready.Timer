@@ -60,8 +60,7 @@ public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
         }
         
         timer.deactivate()
-        conclusionBlock?(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil)
- )
+        conclusionBlock?(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil))
     }
     
     public func conclude() {
