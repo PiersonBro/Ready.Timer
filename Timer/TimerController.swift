@@ -63,7 +63,7 @@ public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
         conclusionBlock?(conclusionResult: ConclusionResult(conclusionStatus: status, totalTime: nil))
     }
     
-    public func conclude() {
+    public func finished() {
         concludeWithStatus(.Finished)
     }
     

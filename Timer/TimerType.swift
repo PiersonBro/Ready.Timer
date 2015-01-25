@@ -10,7 +10,7 @@ import Foundation
 
 public protocol TimerDelegate {
     func continueWithDuration(duration: NSTimeInterval)
-    func conclude()
+    func finished()
 }
 
 public protocol TimerType {
@@ -52,7 +52,7 @@ public class CountDownTimer: TimerType {
         if time != -1 {
             controller?.continueWithDuration(time)
         } else {
-            controller?.conclude()
+            controller?.finished()
         }
     }
     
@@ -88,7 +88,7 @@ public class CountUpTimer: TimerType {
         if duration <= upperLimit {
             controller?.continueWithDuration(duration)
         } else {
-            controller?.conclude()
+            controller?.finished()
         }
     }
 }
