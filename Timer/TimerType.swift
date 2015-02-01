@@ -92,3 +92,60 @@ public class CountUpTimer: TimerType {
         }
     }
 }
+
+public class DebtTimer: TimerType, TimerDelegate {
+    public var controller: TimerDelegate?
+    
+    private let countDownTimer: CountDownTimer
+    private let countUpTimer: CountUpTimer
+    /// If true, the timer is counting down, if false the timer is counting up, (and in debt). If nil, the timer is not counting.
+    private var countingDown: Bool? = nil
+    // Consider a generic type here for status
+    // public let status: DebtTimerConclusionStatus
+    
+    public init(durationInMinutes: NSTimeInterval) {
+        countDownTimer = CountDownTimer(durationInMinutes: durationInMinutes)
+        countUpTimer = CountUpTimer(upperLimitInMinutes: durationInMinutes)
+        
+        countDownTimer.controller = self
+        countUpTimer.controller = self
+    }
+    
+    public func activate(#keepingDurationIfPossible: Bool) {
+        switch countingDown {
+            case .None:
+                countDownTimer.activate(keepingDurationIfPossible: keepingDurationIfPossible)
+                countingDown = true
+            case .Some(true):
+                countDownTimer.activate(keepingDurationIfPossible: keepingDurationIfPossible)
+            case .Some(false):
+               countUpTimer.activate(keepingDurationIfPossible: keepingDurationIfPossible)
+            default:
+                break
+        }
+    }
+    
+    public func deactivate() {
+        switch countingDown {
+            case .Some(true):
+                countDownTimer.deactivate()
+            case .Some(false):
+                countUpTimer.deactivate()
+            default:
+                break
+        }
+    }
+    
+    public func continueWithDuration(duration: NSTimeInterval) {
+        controller?.continueWithDuration(duration)
+    }
+    
+    public func finished() {
+        if countingDown == false {
+            return
+        }
+        
+        countingDown = false
+        controller?.finished()
+    }
+}
