@@ -47,7 +47,8 @@ public typealias StatusBlock = (elapsedTime: String) -> ()
 public typealias ConclusionBlock = (conclusionResult: ConclusionResult) -> ()
 
 public protocol TimerControllerType {
-    var status: TimerStatus { get }
+    typealias Status: RawRepresentable
+    var status: Status { get }
 
     func activateWithBlock(block: StatusBlock, conclusionBlock: ConclusionBlock?)
     

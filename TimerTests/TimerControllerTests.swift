@@ -37,7 +37,7 @@ class TimerControllerTests : XCTestCase {
     }
 }
 
-class StatusTests<T: TimerType> {
+class StatusTests<T: TimerType where T.Status.RawValue == String> {
     var timerController: TimerController<T>
     let timerGenerator: (Void -> T)
     let testCase: XCTestCase
@@ -69,7 +69,7 @@ class StatusTests<T: TimerType> {
     
     //MARK: Status
     func testInactiveState() {
-        XCTAssert(timerController.status == .Inactive, "The timer should be inactive when the timer hasn't started")
+        XCTAssert(timerController.status.rawValue == TimerStatus.Inactive.rawValue, "The timer should be inactive when the timer hasn't started")
     }
     
     func testRunningState() {
@@ -77,18 +77,18 @@ class StatusTests<T: TimerType> {
             }, conclusionBlock: { (conclusionStatus) in
                 
         })
-        XCTAssert(timerController.status == .Running, "The timer should be running when the timer has started")
+        XCTAssert(timerController.status.rawValue == TimerStatus.Running.rawValue, "The timer should be running when the timer has started")
     }
     
     func testFinishedState() {
         let expectation = testCase.expectationWithDescription("The timer should have fired it's blocks")
         
         timerController.activateWithBlock({ elapsedTime in
-            XCTAssert(self.timerController.status == .Running, "Status should be .Running every time this block is executed")
+            XCTAssert(self.timerController.status.rawValue == TimerStatus.Running.rawValue, "Status should be .Running every time this block is executed")
             }, conclusionBlock: { conclusionResult in
                 expectation.fulfill()
                 XCTAssert(conclusionResult.conclusionStatus == .Finished, "It should be finished when it is finished")
-                XCTAssert(self.timerController.status == .Finished, "It Should be finished when the timer is finished")
+                XCTAssert(self.timerController.status.rawValue == TimerStatus.Finished.rawValue, "It Should be finished when the timer is finished")
         })
         
         testCase.waitForExpectationsWithTimeout(480, handler: nil)
@@ -103,7 +103,7 @@ class StatusTests<T: TimerType> {
             }
         }, conclusionBlock: { conclusionResult in
                     XCTAssert(conclusionResult.conclusionStatus == .Paused, "It Should be paused after it was paused")
-                    XCTAssert(self.timerController.status == .Paused, "It should be paused after it was paused")
+                    XCTAssert(self.timerController.status.rawValue == TimerStatus.Paused.rawValue, "It should be paused after it was paused")
             self.timerController.activateWithBlock({ (elapsedTime) -> () in
                 let number = self.convertElapsedTimeToNumber(elapsedTime)
                 if number != 2 && number != 3 {
@@ -128,7 +128,7 @@ class StatusTests<T: TimerType> {
                 expectation.fulfill()
                 
                 XCTAssert(conclusionResult.conclusionStatus == .Reset, "The conclusionStatus should be `.Reset` after it was Reset")
-                XCTAssert(self.timerController.status == .Inactive, "The timer should now be inactive")
+                XCTAssert(self.timerController.status.rawValue == TimerStatus.Inactive.rawValue, "The timer should now be inactive")
         })
         
         testCase.waitForExpectationsWithTimeout(5, handler: nil)
@@ -138,20 +138,22 @@ class StatusTests<T: TimerType> {
         let expectation = testCase.expectationWithDescription("The timer should have fired it's blocks")
         
         timerController.activateWithBlock({ (elapsedTime) in
-            XCTAssert(self.timerController.status == .Running, "The timer should be running now")
+            XCTAssert(self.timerController.status.rawValue == TimerStatus.Running.rawValue, "The timer should be running now")
             self.timerController.concludeWithStatus(.Paused)
             
             }, conclusionBlock: { conclusionResult in
                 XCTAssert(conclusionResult.conclusionStatus == .Paused, "It Should be paused after it was paused")
-                XCTAssert(self.timerController.status == .Paused, "It should be paused after it was paused")
+
+                XCTAssert(self.timerController.status.rawValue == TimerStatus.Paused.rawValue, "It should be paused after it was paused")
                 
                 self.timerController.activateWithBlock({ elapsedTime in
-                    XCTAssert(self.timerController.status == .Running, "It should be running again")
+                    XCTAssert(self.timerController.status.rawValue == TimerStatus.Running.rawValue, "It should be running again")
                     self.timerController.concludeWithStatus(.Paused)
                     
                     }, conclusionBlock: { conclusionResult in
                         XCTAssert(conclusionResult.conclusionStatus == .Paused, "It should be paused")
-                        XCTAssert(self.timerController.status == .Paused, "The timer.status should be paused")
+                        
+                        XCTAssert(self.timerController.status.rawValue == TimerStatus.Paused.rawValue, "The timer.status should be paused")
                         expectation.fulfill()
                 })
         })

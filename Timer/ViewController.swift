@@ -142,12 +142,13 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     func tapped() {
         if let currentSpeech = currentSpeech {
-            if currentSpeech.timerController.status == .Running {
-                changeTimerToState(.Pause)
-            } else if currentSpeech.timerController.status == .Paused {
-                changeTimerToState(.Resume)
-            } else {
-                return
+            switch(currentSpeech.timerController.status) {
+                case .Running:
+                    changeTimerToState(.Pause)
+                case .Paused:
+                    changeTimerToState(.Resume)
+                default:
+                    break
             }
         }
     }

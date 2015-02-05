@@ -15,13 +15,18 @@ public protocol TimerDelegate {
 
 public protocol TimerType {
     var controller: TimerDelegate? {get set}
+    typealias Status : RawRepresentable
+    var status: Status.Type {get}
     func activate(#keepingDurationIfPossible: Bool)
     func deactivate()
 }
 
 public class CountDownTimer: TimerType {
     private var timer: NSTimer?
-
+    
+    public typealias Status = TimerStatus
+    public let status : Status.Type
+    
     public var duration: NSTimeInterval
     public let initialDuration: NSTimeInterval
     public var controller: TimerDelegate?
@@ -29,6 +34,7 @@ public class CountDownTimer: TimerType {
     public init(durationInMinutes: NSTimeInterval) {
         duration = durationInMinutes * 60
         initialDuration = durationInMinutes * 60
+        status = TimerStatus.self
     }
     
     public func activate(#keepingDurationIfPossible: Bool) {
@@ -61,12 +67,16 @@ public class CountDownTimer: TimerType {
 public class CountUpTimer: TimerType {
     private lazy var timer: NSTimer = NSTimer(timeInterval: 1, target: self, selector: "timerFired:", userInfo: nil, repeats: true)
     
+    public typealias Status = TimerStatus
+    public let status: Status.Type
+    
     public var controller: TimerDelegate?
     public let upperLimit: NSTimeInterval
     public var duration: NSTimeInterval = 0
     
     public init(upperLimitInMinutes: NSTimeInterval) {
         upperLimit = upperLimitInMinutes * 60
+        status = TimerStatus.self
     }
     
     public func deactivate() {
@@ -95,6 +105,10 @@ public class CountUpTimer: TimerType {
 
 public class DebtTimer: TimerType, TimerDelegate {
     public var controller: TimerDelegate?
+    // FIXME: Use custom type.
+    // WARNING: This isn't right.
+    public typealias Status = TimerStatus
+    public let status: Status.Type
     
     private let countDownTimer: CountDownTimer
     private let countUpTimer: CountUpTimer
@@ -106,7 +120,8 @@ public class DebtTimer: TimerType, TimerDelegate {
     public init(durationInMinutes: NSTimeInterval) {
         countDownTimer = CountDownTimer(durationInMinutes: durationInMinutes)
         countUpTimer = CountUpTimer(upperLimitInMinutes: durationInMinutes)
-        
+        status = TimerStatus.self
+
         countDownTimer.controller = self
         countUpTimer.controller = self
     }

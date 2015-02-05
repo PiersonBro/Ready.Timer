@@ -99,7 +99,8 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     func setupCircleButton() {
         circleButton.labelText = {
-            if self.countUpTimer.status == .Finished {
+            // The `TimerStatus` in front of the .Finished, appears to be a type inferenceing bug. Not sure how to reproduce it though.
+            if self.countUpTimer.status == TimerStatus.Finished {
                 return self.finishedPepTimeString
             } else {
                 return self.startPrepTimeString

@@ -8,21 +8,21 @@
 
 import Foundation
 
-public class TimerController<T: TimerType>: TimerControllerType, TimerDelegate {
-    public var status: TimerStatus {
+public class TimerController<T: TimerType where T.Status.RawValue == String>: TimerControllerType, TimerDelegate {
+    public typealias Status = T.Status
+    public var status: Status {
         if let conclusionStatus = conclusionStatus {
             var rawValue = conclusionStatus.rawValue
             if conclusionStatus == .Reset {
                 rawValue = TimerStatus.Inactive.rawValue
             }
             
-            return TimerStatus(rawValue: rawValue)!
+            return Status(rawValue: rawValue)!
         } else if running {
-            return .Running
+            return Status(rawValue: "Running")!
         } else {
-            return .Inactive
+            return Status(rawValue: "Inactive")!
         }
-        
     }
     
     private var conclusionStatus: ConclusionStatus?
