@@ -1,3 +1,6 @@
 [submodule "Cartography"]
 	path = Cartography
 	url = https://github.com/PiersonBro/Cartography
+[submodule "TimerKit"]
+	path = TimerKit
+	url = https://github.com/PiersonBro/TimerKit.git
