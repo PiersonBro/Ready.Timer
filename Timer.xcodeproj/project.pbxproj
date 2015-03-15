@@ -23,6 +23,8 @@
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
 		20D523561AB5581A00A46760 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D523551AB5581A00A46760 /* StringExtension.swift */; };
+		20D523751AB635A600A46760 /* TimerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; };
+		20D523761AB635A600A46760 /* TimerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20F473311A43F10B00E38D98 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F473301A43F10B00E38D98 /* Position.swift */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +71,27 @@
 			remoteGlobalIDString = 20C99B8719A02E2E00477D3B;
 			remoteInfo = Timer;
 		};
+		20D523711AB6359F00A46760 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20D523691AB6359F00A46760 /* TimerKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 208D25C11A84121300EC93B7;
+			remoteInfo = TimerKit;
+		};
+		20D523731AB6359F00A46760 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20D523691AB6359F00A46760 /* TimerKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 208D25CC1A84121300EC93B7;
+			remoteInfo = TimerKitTests;
+		};
+		20D523771AB635A600A46760 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20D523691AB6359F00A46760 /* TimerKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 208D25C01A84121300EC93B7;
+			remoteInfo = TimerKit;
+		};
 		20F0A8491A11734D00717EAA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */;
@@ -86,6 +109,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */,
+				20D523761AB635A600A46760 /* TimerKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -112,6 +136,7 @@
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20D523551AB5581A00A46760 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		20D523691AB6359F00A46760 /* TimerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TimerKit.xcodeproj; path = TimerKit/TimerKit.xcodeproj; sourceTree = "<group>"; };
 		20F473301A43F10B00E38D98 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Position.swift; path = ../Position.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -121,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */,
+				20D523751AB635A600A46760 /* TimerKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -148,6 +174,7 @@
 		20C99B7F19A02E2E00477D3B = {
 			isa = PBXGroup;
 			children = (
+				20D523691AB6359F00A46760 /* TimerKit.xcodeproj */,
 				2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */,
 				20C99B8A19A02E2E00477D3B /* Timer */,
 				20C99B9D19A02E2E00477D3B /* TimerTests */,
@@ -210,6 +237,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		20D5236A1AB6359F00A46760 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				20D523721AB6359F00A46760 /* TimerKit.framework */,
+				20D523741AB6359F00A46760 /* TimerKitTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		20F7EEBE1A488E6E0047DB98 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -236,6 +272,7 @@
 			);
 			dependencies = (
 				2005BD2019E50BAD00843B00 /* PBXTargetDependency */,
+				20D523781AB635A600A46760 /* PBXTargetDependency */,
 			);
 			name = Timer;
 			productName = Timer;
@@ -296,6 +333,10 @@
 					ProductGroup = 2005BD0C19E50B6800843B00 /* Products */;
 					ProjectRef = 2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */;
 				},
+				{
+					ProductGroup = 20D5236A1AB6359F00A46760 /* Products */;
+					ProjectRef = 20D523691AB6359F00A46760 /* TimerKit.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -332,6 +373,20 @@
 			fileType = wrapper.cfbundle;
 			path = "Cartography-Mac-Tests.xctest";
 			remoteRef = 2005BD1819E50B6800843B00 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		20D523721AB6359F00A46760 /* TimerKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TimerKit.framework;
+			remoteRef = 20D523711AB6359F00A46760 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		20D523741AB6359F00A46760 /* TimerKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TimerKitTests.xctest;
+			remoteRef = 20D523731AB6359F00A46760 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -412,6 +467,11 @@
 			isa = PBXTargetDependency;
 			target = 20C99B8719A02E2E00477D3B /* Timer */;
 			targetProxy = 20C99B9B19A02E2E00477D3B /* PBXContainerItemProxy */;
+		};
+		20D523781AB635A600A46760 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TimerKit;
+			targetProxy = 20D523771AB635A600A46760 /* PBXContainerItemProxy */;
 		};
 		20F0A84A1A11734D00717EAA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -517,6 +577,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Timer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -529,6 +590,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Timer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
