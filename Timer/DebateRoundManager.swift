@@ -41,15 +41,15 @@ private enum DurationKey: String {
                 durationOfSpeech = .DurationOfConstructive
             }
         case .LincolnDouglas:
-            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName) {
+            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOfAC
-            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOfNC
-            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOf1AR
-            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOfNR
-            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOf2AR
             }
         }
@@ -86,7 +86,7 @@ enum SpeechType {
     private static func typeOfSpeech(nameOfSpeech: NSString, debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> SpeechType {
         var speechType: SpeechType? = nil
         var durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
-        let duration = (debateRoundData[durationOfSpeechKey.rawValue] as NSNumber).integerValue
+        let duration = (debateRoundData[durationOfSpeechKey.rawValue] as! NSNumber).integerValue
         
         switch durationOfSpeechKey {
             case .DurationOfConstructive:
@@ -157,10 +157,10 @@ class DebateRoundManager {
         debateType = type
         let path = NSBundle.mainBundle().pathForResource(PListKey.NameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        debateRoundData = debates[debateType.rawValue] as [NSObject: AnyObject]
+        debateRoundData = debates[debateType.rawValue] as! [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
-        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as NSNumber).doubleValue
+        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue
         
         let affPrepCountUpTimer = CountUpTimer(upperLimitInMinutes: prepTimeDuration)
         let negPrepCountUpTimer = CountUpTimer(upperLimitInMinutes: prepTimeDuration)
@@ -170,7 +170,7 @@ class DebateRoundManager {
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
-        let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as [String]
+        let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
         var speeches: [Speech] = []
 
         for speechName: String in stringOfSpeeches {
