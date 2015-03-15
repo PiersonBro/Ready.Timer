@@ -22,6 +22,7 @@
 		20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9119A02E2E00477D3B /* Main.storyboard */; };
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
+		20D523561AB5581A00A46760 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D523551AB5581A00A46760 /* StringExtension.swift */; };
 		20F473311A43F10B00E38D98 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F473301A43F10B00E38D98 /* Position.swift */; };
 /* End PBXBuildFile section */
 
@@ -110,6 +111,7 @@
 		20C99B9A19A02E2E00477D3B /* TimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
+		20D523551AB5581A00A46760 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		20F473301A43F10B00E38D98 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Position.swift; path = ../Position.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -171,6 +173,7 @@
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
 				205C661619AD657900E14B30 /* DebateRoundManager.swift */,
+				20D523551AB5581A00A46760 /* StringExtension.swift */,
 				20BB1A4E19D2758600568046 /* CircleButton.swift */,
 				20C99B9119A02E2E00477D3B /* Main.storyboard */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
@@ -381,6 +384,7 @@
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
 				2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */,
 				205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */,
+				20D523561AB5581A00A46760 /* StringExtension.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
 				20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */,
 			);
