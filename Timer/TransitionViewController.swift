@@ -87,13 +87,12 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
 
     func startTimerWithLabel(label: UILabel) {
         countUpTimer.onTick { elapsedTime in
-            label.text = String.formattedStringForDuration(elapsedTime)
-            
+                label.text = String.formattedStringForDuration(elapsedTime)
             } .onConclusion { conclusionStatus in
                 if conclusionStatus == .Finish {
                     self.circleButton.labelText = self.finishedPepTimeString
                 }
-        }
+        }.activate()
     
     }
 
@@ -118,9 +117,9 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     func setupLabel(label: UILabel, position: Position) {
         contentView.addSubview(label)
-        layout(label) { label in
-            label.centerX == label.superview!.centerX * position.positionTuple.xMultiplier ~ 750
-            label.centerY == label.superview!.centerY * position.positionTuple.yMultiplier
+        constrain(label) { label in
+            label.centerX == label.superview!.centerX * CGFloat(position.positionTuple.xMultiplier) ~ 750
+            label.centerY == label.superview!.centerY * CGFloat(position.positionTuple.yMultiplier)
         }
 
         label.text = {
@@ -128,16 +127,18 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
                 case .Center(_,_):
                     let duration: NSTimeInterval = {
                      
-                        if self.countUpTimer.status == .Finished {
+                        if self.countUpTimer.status == .Finished || self.countUpTimer.status == .Inactive {
                             return self.countUpTimer.blueprint.startingValue
                         } else {
-                            return self.countUpTimer.pauseDuration!                        }
+                            return self.countUpTimer.pauseDuration!
+                        }
                     }()
-                    return String.formattedStringForDuration(duration)
+                    return .formattedStringForDuration(duration)
                 default:
                     return "0:00"
             }
         }()
+        
         label.font = UIFont.systemFontOfSize(160)
         label.textAlignment = .Center
         label.baselineAdjustment = .AlignCenters
