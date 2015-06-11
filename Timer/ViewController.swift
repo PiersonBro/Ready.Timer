@@ -11,11 +11,11 @@ import QuartzCore
 import Cartography
 
 class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate, UIGestureRecognizerDelegate {
-    let tickerView: TickerView?
+    var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let debateRoundManager: DebateRoundManager
     var currentSpeech: Speech?
-    let doubleTapGestureRecognizer: UITapGestureRecognizer
+    var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
     let startButton: CircleButton
     let clockwiseButton: CircleButton
     
@@ -24,24 +24,26 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
-        doubleTapGestureRecognizer = UITapGestureRecognizer()
-        super.init(coder: aDecoder)
-        // FIXME: Are you kidding me? This shouldn't have to be an optional, instead make dataSource and delegate optionals.
-        tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
         
+        super.init(coder: aDecoder)
+        
+        tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
-        doubleTapGestureRecognizer.numberOfTapsRequired = 2
-        doubleTapGestureRecognizer.delegate = self
+        
+        doubleTapGestureRecognizer!.numberOfTapsRequired = 2
+        doubleTapGestureRecognizer!.delegate = self
     }
     
     //MARK: ViewController Lifecycle.
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addGestureRecognizer(doubleTapGestureRecognizer)
-
-        view.addSubview(tickerView!)
-        layout(tickerView!, view) { (tickerView, view) in
+        view.addGestureRecognizer(doubleTapGestureRecognizer!)
+        
+        guard let tickerView = tickerView else { return }
+        
+        view.addSubview(tickerView)
+        layout(tickerView, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
             tickerView.width == view.width * 1 ~ 750
@@ -53,7 +55,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         startButton.addTarget(self, action: "timerButtonPressed", forControlEvents: .TouchUpInside)
         startButton.labelText = "Start"
         view.addSubview(startButton)
-        layout(startButton, view, tickerView!) { (startButton, view, tickerView) in
+        layout(startButton, view, tickerView) { (startButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             startButton.centerX == view.centerX * 1.5
             startButton.centerY == tickerView.top - 100
@@ -64,7 +66,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Clockwise"
         view.addSubview(clockwiseButton)
-        layout(clockwiseButton, view, tickerView!) { (counterClockwiseButton, view, tickerView) in
+        layout(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             counterClockwiseButton.centerX == view.centerX * 0.4
             counterClockwiseButton.centerY == tickerView.top - 100
@@ -115,26 +117,26 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
                 startButton.labelText = "Cancel"
-                currentSpeech?.timerController.activateWithBlock({ (elapsedTime) in
-                    self.timerLabel.text = elapsedTime
-                }, conclusionBlock: { conclusionResult in
-                    switch conclusionResult.conclusionStatus {
-                        case .Finished:
+                currentSpeech?.overtimeTimer.onTick { elapsedTime in
+                    self.timerLabel.text = String.formattedStringForDuration(elapsedTime)
+                } .onConclusion { conclusionResult in
+                    switch conclusionResult {
+                        case .Finish:
                             // Calling this will also mark the speech as consumed, yay side effects.
-                            self.tickerView?.rotateToNextSegment()
+                            self.tickerView!.rotateToNextSegment()
                             self.startButton.labelText = "Start"
                         case .Reset:
                             self.timerLabel.text = "\(self.currentSpeech!.speechType.durationOfSpeech()):00"
                         default:
                             break
                     }
-                })
+                    }.activate()
         } else if (startButton.labelText == "Cancel") {
                 startButton.labelText = "Start"
-                currentSpeech?.timerController.concludeWithStatus(.Reset)
+                currentSpeech?.overtimeTimer.concludeWithStatus(.Reset)
         } else if (startButton.labelText == "Pause") {
                 startButton.labelText = "Resume"
-                currentSpeech?.timerController.concludeWithStatus(.Paused)
+                currentSpeech?.overtimeTimer.concludeWithStatus(.Pause)
         }
     }
     
@@ -142,12 +144,13 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     func tapped() {
         if let currentSpeech = currentSpeech {
-            if currentSpeech.timerController.status == .Running {
-                changeTimerToState(.Pause)
-            } else if currentSpeech.timerController.status == .Paused {
-                changeTimerToState(.Resume)
-            } else {
-                return
+            switch(currentSpeech.overtimeTimer.status) {
+                case .Running:
+                    changeTimerToState(.Pause)
+                case .Paused:
+                    changeTimerToState(.Resume)
+                default:
+                    break
             }
         }
     }
@@ -168,7 +171,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     
     func rotateToNextSpeechIfPossible() {
         if let currentSpeech = currentSpeech {
-            if currentSpeech.timerController.status != .Running && currentSpeech.timerController.status != .Paused {
+            if currentSpeech.overtimeTimer.status != .Running && currentSpeech.overtimeTimer.status != .Paused {
                 tickerView!.rotateToNextSegment()
             } else {
                 // FIXME: Add a better denied animation here.

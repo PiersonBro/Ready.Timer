@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import TimerKit
 
 enum DebateType: String {
     case Parli = "Parli"
@@ -28,6 +29,7 @@ private enum DurationKey: String {
     static func durationKeyForSpeechName(speechName: NSString, debateType: DebateType) -> DurationKey {
         var durationOfSpeech: DurationKey? = nil
         switch debateType {
+        
         case _, _, _:
             if speechName.containsString("C") && speechName.containsString("X") {
                 durationOfSpeech = .DurationOfCrossExamination
@@ -41,15 +43,15 @@ private enum DurationKey: String {
                 durationOfSpeech = .DurationOfConstructive
             }
         case .LincolnDouglas:
-            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName) {
+            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOfAC
-            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOfNC
-            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOf1AR
-            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOfNR
-            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName) {
+            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName as String) {
                 durationOfSpeech = .DurationOf2AR
             }
         }
@@ -85,8 +87,8 @@ enum SpeechType {
     
     private static func typeOfSpeech(nameOfSpeech: NSString, debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> SpeechType {
         var speechType: SpeechType? = nil
-        var durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
-        let duration = (debateRoundData[durationOfSpeechKey.rawValue] as NSNumber).integerValue
+        let durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
+        let duration = (debateRoundData[durationOfSpeechKey.rawValue] as! NSNumber).integerValue
         
         switch durationOfSpeechKey {
             case .DurationOfConstructive:
@@ -111,7 +113,7 @@ enum SpeechType {
     }
 }
 
-extension SpeechType: Printable {
+extension SpeechType: CustomStringConvertible {
     var description: String {
         switch self {
         case .Constructive(let duration):
@@ -127,27 +129,30 @@ extension SpeechType: Printable {
 struct Speech {
     let speechType: SpeechType
     let name: String
-    var timerController: TimerController
+    var overtimeTimer: OvertimeTimer
     var consumed: Bool = false
     
     init(speechType: SpeechType, name: String) {
        self.name = name
        self.speechType = speechType
-       timerController = TimerController(durationInMinutes: NSTimeInterval(speechType.durationOfSpeech()))
+        let duration = NSTimeInterval(speechType.durationOfSpeech() * 60)
+        overtimeTimer = OvertimeTimer(timeLimit: duration)
     }
 }
 
-extension Speech: Printable {
+
+
+extension Speech: CustomStringConvertible {
     var description: String {
-        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(timerController) \n consumed: \(consumed)"
+        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer) \n consumed: \(consumed)"
     }
 }
 
 class DebateRoundManager {
     let debateType: DebateType
     let speechCount: Int
-    let affPrepTime: CountUpTimerController
-    let negPrepTime: CountUpTimerController
+    let affPrepTime: Timer<CountUpBlueprint>
+    let negPrepTime: Timer<CountUpBlueprint>
     
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
@@ -156,23 +161,26 @@ class DebateRoundManager {
         debateType = type
         let path = NSBundle.mainBundle().pathForResource(PListKey.NameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        debateRoundData = debates[debateType.rawValue] as [NSObject: AnyObject]
+        debateRoundData = debates[debateType.rawValue] as! [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
-        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as NSNumber).doubleValue
+        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue
         
-        affPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
-        negPrepTime = CountUpTimerController(upperLimitInMinutes: prepTimeDuration)
+        let prepBlueprint = CountUpBlueprint(upperLimit: prepTimeDuration)
+        
+        
+        affPrepTime = Timer(blueprint: prepBlueprint)
+        negPrepTime = Timer(blueprint: prepBlueprint)
+
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
-        let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as [String]
-        var speeches: [Speech] = []
-
-        for speechName: String in stringOfSpeeches {
+        let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
+      
+        let speeches = stringOfSpeeches.map { (speechName: String) -> Speech in
             let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
-            let newSpeech = Speech(speechType: speechType, name: speechName)
-            speeches.append(newSpeech)
+        
+            return Speech(speechType: speechType, name: speechName)
         }
         
         return speeches

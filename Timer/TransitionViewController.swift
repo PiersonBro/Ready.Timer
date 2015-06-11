@@ -8,6 +8,7 @@
 
 import UIKit
 import Cartography
+import TimerKit
 
 private extension Position {
     static let staticLeft: Position = .Left((xMultiplier: 0.5, yMultiplier: 0.5))
@@ -24,16 +25,16 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     let circleButton: CircleButton = CircleButton(frame: CGRect())
 
-    let leftDivider: UIView = UIView(frame: CGRect())
+    let leftDivider:  UIView = UIView(frame: CGRect())
     let rightDivider: UIView = UIView(frame: CGRect())
     
-    let countUpTimer: CountUpTimerController
+    let countUpTimer: Timer<CountUpBlueprint>
 
     private let startPrepTimeString: String = "Start Pep Time"
     private let stopPrepTimeString: String = "Stop Prep Time"
     private let finishedPepTimeString: String = "Prep Time Expired"
     
-    init(countUpTimer: CountUpTimerController) {
+    init(countUpTimer: Timer<CountUpBlueprint>) {
         self.countUpTimer = countUpTimer
         
         blurView = UIVisualEffectView(effect: UIBlurEffect(style: .Light))
@@ -85,21 +86,21 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     }
 
     func startTimerWithLabel(label: UILabel) {
-        countUpTimer.activateWithBlock({ elapsedTime in
-            label.text = elapsedTime
-        }, conclusionBlock: { result in
-            switch result.conclusionStatus {
-                case .Finished:
+        countUpTimer.onTick { elapsedTime in
+                label.text = String.formattedStringForDuration(elapsedTime)
+            } .onConclusion { conclusionStatus in
+                if conclusionStatus == .Finish {
                     self.circleButton.labelText = self.finishedPepTimeString
-                default:
-                    break
-            }
-        })
+                }
+        }.activate()
+    
     }
+
     
     func setupCircleButton() {
         circleButton.labelText = {
-            if self.countUpTimer.status == .Finished {
+            // The `TimerStatus` in front of the .Finished, appears to be a type inferenceing bug. Not sure how to reproduce it though.
+            if self.countUpTimer.status == TimerStatus.Finished {
                 return self.finishedPepTimeString
             } else {
                 return self.startPrepTimeString
@@ -116,26 +117,28 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
     
     func setupLabel(label: UILabel, position: Position) {
         contentView.addSubview(label)
-        layout(label) { label in
-            label.centerX == label.superview!.centerX * position.positionTuple.xMultiplier ~ 750
-            label.centerY == label.superview!.centerY * position.positionTuple.yMultiplier
+        constrain(label) { label in
+            label.centerX == label.superview!.centerX * CGFloat(position.positionTuple.xMultiplier) ~ 750
+            label.centerY == label.superview!.centerY * CGFloat(position.positionTuple.yMultiplier)
         }
 
         label.text = {
             switch position {
                 case .Center(_,_):
                     let duration: NSTimeInterval = {
-                        if self.countUpTimer.status == .Finished {
-                            return self.countUpTimer.upperLimit
+                     
+                        if self.countUpTimer.status == .Finished || self.countUpTimer.status == .Inactive {
+                            return self.countUpTimer.blueprint.startingValue
                         } else {
-                            return self.countUpTimer.pausedDuration ?? 0
+                            return self.countUpTimer.pauseDuration!
                         }
                     }()
-                    return String.formattedStringForDuration(duration)
+                    return .formattedStringForDuration(duration)
                 default:
                     return "0:00"
             }
         }()
+        
         label.font = UIFont.systemFontOfSize(160)
         label.textAlignment = .Center
         label.baselineAdjustment = .AlignCenters
@@ -168,7 +171,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
                 startTimerWithLabel(middleLabel)
                 circleButton.labelText = stopPrepTimeString
             case stopPrepTimeString:
-                countUpTimer.concludeWithStatus(.Paused)
+                countUpTimer.concludeWithStatus(.Pause)
                 dismissViewControllerAnimated(true, completion: nil)
             case startPrepTimeString:
                 break

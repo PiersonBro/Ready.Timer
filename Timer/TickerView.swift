@@ -38,15 +38,15 @@ private extension Position {
 
 class TickerView: UIView, UIDynamicAnimatorDelegate {
     // Subviews
-    private let bottommostLabel: TickerLabel
-    private let rightmostLabel: TickerLabel
-    private let topmostLabel: TickerLabel
-    private let leftmostLabel: TickerLabel
+    private var bottommostLabel: TickerLabel
+    private var rightmostLabel: TickerLabel
+    private var topmostLabel: TickerLabel
+    private var leftmostLabel: TickerLabel
     
     private var currentlyInvisibleLabel: TickerLabel {
         var invisibleLabel: TickerLabel? = nil
-        let mask = layer.mask as CAShapeLayer
-        let bezierPath: UIBezierPath = UIBezierPath(CGPath: mask.path)
+        let mask = layer.mask as! CAShapeLayer
+        let bezierPath: UIBezierPath = UIBezierPath(CGPath: mask.path!)
         for label in labels {
             if !bezierPath.containsPoint(label.center) {
                 invisibleLabel = label
@@ -68,7 +68,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private var speechIndexToUpdate: Int
     
     // Strongly held animator objects
-    private let animator: UIDynamicAnimator
+    private var animator: UIDynamicAnimator
     private let labels: [TickerLabel]
     
     let dataSource: TickerViewDataSource
@@ -178,8 +178,8 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
             let rightEdgeDivider = layoutProxies[3]
             let leftEdgeDivider = layoutProxies[4]
             
-            xConstraint = label.centerX == label.superview!.centerX * position.positionTuple.xMultiplier ~ 750
-            yConstraint = label.centerY == label.superview!.centerY * position.positionTuple.yMultiplier
+            xConstraint = label.centerX == label.superview!.centerX * CGFloat(position.positionTuple.xMultiplier) ~ 750
+            yConstraint = label.centerY == label.superview!.centerY * CGFloat(position.positionTuple.yMultiplier)
             
             switch position {
             case .Center:
@@ -204,7 +204,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     }
     
     override func drawRect(rect: CGRect) {
-        let layers = self.layer.sublayers as [CALayer]
+        let layers = self.layer.sublayers!
         for subLayer in layers {
             if subLayer.name != nil {
                 switch subLayer.name! {
@@ -310,14 +310,14 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     
     func makeDataSourceCalls() {
         for label in labels  {
-            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints() as [NSLayoutConstraint])
+            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
             let result = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             
             if let result = result {
                 switch (result) {
-                    case .Bottom(let xMultiplier, let yMultiplier):
+                    case .Bottom(_, _):
                         self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
-                    case .Right(let xMultiplier, let yMultiplier):
+                    case .Right(_, _):
                         self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(label.index)
                     default:
                         break
@@ -347,9 +347,8 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     override func updateConstraints() {
         if labelConstraintsNeedUpdate {
                 labelConstraintsNeedUpdate = false
-                let unmodifiedConstraints = constraints() as [NSLayoutConstraint]
+                let unmodifiedConstraints = constraints
                 enumerateLabels(labels, block: { (label, nextLabel) in
-                    let oldConstraints = self.positioningConstraintsForLabel(label, constraints: unmodifiedConstraints)
                     let newConstraints = self.positioningConstraintsForLabel(nextLabel, constraints: unmodifiedConstraints)
                     let xMultiplier = newConstraints.xConstraint.multiplier
                     let yMultiplier = newConstraints.yConstraint.multiplier
@@ -367,7 +366,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     func constraintsForLabel(label: TickerLabel, superviewConstraints: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
         var labelConstraints = [NSLayoutConstraint]()
         for constraint in superviewConstraints {
-            let identifierNSString: NSString = constraint.identifier ?? "" as NSString
+            let identifierNSString: NSString = constraint.identifier ?? ""
             if (identifierNSString.containsString(label.hash.description)) {
                 labelConstraints.append(constraint)
             }
