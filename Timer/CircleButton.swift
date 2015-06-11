@@ -65,25 +65,25 @@ class CircleButton: UIControl {
         layer.mask = shapeLayer
     }
     
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         addSubview(overlayView)
         overlayView.frame = bounds
         overlayView.backgroundColor = UIColor.grayColor()
         overlayView.alpha = 0.5
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         // Mask ends here.
         overlayView.removeFromSuperview()
         sendActionsForControlEvents(.TouchUpInside)
     }
 
     // As per documentation, implement these so as to prevent the iOS from moving up the responder chain.
-    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
     
     }
 
-    override func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
     }
 }

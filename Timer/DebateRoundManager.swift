@@ -29,6 +29,7 @@ private enum DurationKey: String {
     static func durationKeyForSpeechName(speechName: NSString, debateType: DebateType) -> DurationKey {
         var durationOfSpeech: DurationKey? = nil
         switch debateType {
+        
         case _, _, _:
             if speechName.containsString("C") && speechName.containsString("X") {
                 durationOfSpeech = .DurationOfCrossExamination
@@ -86,7 +87,7 @@ enum SpeechType {
     
     private static func typeOfSpeech(nameOfSpeech: NSString, debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> SpeechType {
         var speechType: SpeechType? = nil
-        var durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
+        let durationOfSpeechKey = DurationKey.durationKeyForSpeechName(nameOfSpeech, debateType: debateType)
         let duration = (debateRoundData[durationOfSpeechKey.rawValue] as! NSNumber).integerValue
         
         switch durationOfSpeechKey {
@@ -112,7 +113,7 @@ enum SpeechType {
     }
 }
 
-extension SpeechType: Printable {
+extension SpeechType: CustomStringConvertible {
     var description: String {
         switch self {
         case .Constructive(let duration):
@@ -141,7 +142,7 @@ struct Speech {
 
 
 
-extension Speech: Printable {
+extension Speech: CustomStringConvertible {
     var description: String {
         return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer) \n consumed: \(consumed)"
     }
