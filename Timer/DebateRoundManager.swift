@@ -28,9 +28,10 @@ private enum DurationKey: String {
     
     static func durationKeyForSpeechName(speechName: NSString, debateType: DebateType) -> DurationKey {
         var durationOfSpeech: DurationKey? = nil
+
         switch debateType {
-        
-        case _, _, _:
+       
+        case _,_,_:
             if speechName.containsString("C") && speechName.containsString("X") {
                 durationOfSpeech = .DurationOfCrossExamination
             } else {
@@ -140,8 +141,6 @@ struct Speech {
     }
 }
 
-
-
 extension Speech: CustomStringConvertible {
     var description: String {
         return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer) \n consumed: \(consumed)"
@@ -164,10 +163,9 @@ class DebateRoundManager {
         debateRoundData = debates[debateType.rawValue] as! [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
         speechCount = speeches.count
-        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue
-        
+
+        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue * 60.0
         let prepBlueprint = CountUpBlueprint(upperLimit: prepTimeDuration)
-        
         
         affPrepTime = Timer(blueprint: prepBlueprint)
         negPrepTime = Timer(blueprint: prepBlueprint)
