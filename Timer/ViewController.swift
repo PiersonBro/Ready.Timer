@@ -115,9 +115,9 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
                 startButton.labelText = "Cancel"
-                currentSpeech?.timerController.activateWithBlock({ (elapsedTime) in
+                currentSpeech?.overtimeTimer.onTick { (elapsedTime) in
                     self.timerLabel.text = elapsedTime
-                }, conclusionBlock: { conclusionResult in
+                } .onConclusion { conclusionResult in
                     switch conclusionResult.conclusionStatus {
                         case .Finished:
                             // Calling this will also mark the speech as consumed, yay side effects.
@@ -128,7 +128,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
                         default:
                             break
                     }
-                })
+                    }.activate()
         } else if (startButton.labelText == "Cancel") {
                 startButton.labelText = "Start"
                 currentSpeech?.timerController.concludeWithStatus(.Reset)

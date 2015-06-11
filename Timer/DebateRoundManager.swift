@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import TimerKit
 
 enum DebateType: String {
     case Parli = "Parli"
@@ -127,28 +128,30 @@ extension SpeechType: Printable {
 struct Speech {
     let speechType: SpeechType
     let name: String
-    var timerController: TimerController<CountDownTimer>
+    var overtimeTimer: OvertimeTimer
     var consumed: Bool = false
     
     init(speechType: SpeechType, name: String) {
        self.name = name
        self.speechType = speechType
-       let timer = CountDownTimer(durationInMinutes: NSTimeInterval(speechType.durationOfSpeech()))
-       timerController = TimerController(timer: timer)
+        let duration = NSTimeInterval(speechType.durationOfSpeech() * 60)
+        overtimeTimer = OvertimeTimer(timeLimit: duration)
     }
 }
 
+
+
 extension Speech: Printable {
     var description: String {
-        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(timerController) \n consumed: \(consumed)"
+        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer) \n consumed: \(consumed)"
     }
 }
 
 class DebateRoundManager {
     let debateType: DebateType
     let speechCount: Int
-    let affPrepTime: TimerController<CountUpTimer>
-    let negPrepTime: TimerController<CountUpTimer>
+    let affPrepTime: Timer<CountUpBlueprint>
+    let negPrepTime: Timer<CountUpBlueprint>
     
     private var speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
@@ -162,21 +165,21 @@ class DebateRoundManager {
         speechCount = speeches.count
         let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue
         
-        let affPrepCountUpTimer = CountUpTimer(upperLimitInMinutes: prepTimeDuration)
-        let negPrepCountUpTimer = CountUpTimer(upperLimitInMinutes: prepTimeDuration)
+        let prepBlueprint = CountUpBlueprint(upperLimit: prepTimeDuration)
         
-        affPrepTime = TimerController(timer: affPrepCountUpTimer)
-        negPrepTime = TimerController(timer: negPrepCountUpTimer)
+        
+        affPrepTime = Timer(blueprint: prepBlueprint)
+        negPrepTime = Timer(blueprint: prepBlueprint)
+
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
         let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
-        var speeches: [Speech] = []
-
-        for speechName: String in stringOfSpeeches {
+      
+        let speeches = stringOfSpeeches.map { (speechName: String) -> Speech in
             let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
-            let newSpeech = Speech(speechType: speechType, name: speechName)
-            speeches.append(newSpeech)
+        
+            return Speech(speechType: speechType, name: speechName)
         }
         
         return speeches
