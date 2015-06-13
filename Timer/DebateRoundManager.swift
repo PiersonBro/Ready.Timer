@@ -29,37 +29,35 @@ private enum DurationKey: String {
     static func durationKeyForSpeechName(speechName: NSString, debateType: DebateType) -> DurationKey {
         var durationOfSpeech: DurationKey? = nil
 
-        switch debateType {
-       
-        case _,_,_:
-            if speechName.containsString("C") && speechName.containsString("X") {
-                durationOfSpeech = .DurationOfCrossExamination
-            } else {
-                fallthrough
-            }
-        case .Parli, .TeamPolicy:
-            if speechName.containsString("R") {
-                durationOfSpeech = .DurationOfRebuttal
-            } else if speechName.containsString("C") {
-                durationOfSpeech = .DurationOfConstructive
-            }
-        case .LincolnDouglas:
-            if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName as String) {
-                durationOfSpeech = .DurationOfAC
-            } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName as String) {
-                durationOfSpeech = .DurationOfNC
-            } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName as String) {
-                durationOfSpeech = .DurationOf1AR
-            } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName as String) {
-                durationOfSpeech = .DurationOfNR
-            } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName as String) {
-                durationOfSpeech = .DurationOf2AR
+        if speechName.containsString("C") && speechName.containsString("X") {
+            durationOfSpeech = .DurationOfCrossExamination
+        } else {
+            switch debateType {
+            case .Parli, .TeamPolicy:
+                if speechName.containsString("R") {
+                    durationOfSpeech = .DurationOfRebuttal
+                } else if speechName.containsString("C") {
+                    durationOfSpeech = .DurationOfConstructive
+                }
+            case .LincolnDouglas:
+                if (DurationKey.DurationOfAC.rawValue as NSString).containsString(speechName as String) {
+                    durationOfSpeech = .DurationOfAC
+                } else if (DurationKey.DurationOfNC.rawValue as NSString).containsString(speechName as String) {
+                    durationOfSpeech = .DurationOfNC
+                } else if (DurationKey.DurationOf1AR.rawValue as NSString).containsString(speechName as String) {
+                    durationOfSpeech = .DurationOf1AR
+                } else if (DurationKey.DurationOfNR.rawValue as NSString).containsString(speechName as String) {
+                    durationOfSpeech = .DurationOfNR
+                } else if (DurationKey.DurationOf2AR.rawValue as NSString).containsString(speechName as String) {
+                    durationOfSpeech = .DurationOf2AR
+                }
             }
         }
         
         return durationOfSpeech!
     }
 }
+
 // FIXME: Refactor too hard to use.
 private enum PListKey: String {
     case NameOfPlist = "DebateType"
@@ -169,7 +167,6 @@ class DebateRoundManager {
         
         affPrepTime = Timer(blueprint: prepBlueprint)
         negPrepTime = Timer(blueprint: prepBlueprint)
-
     }
 
     private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
