@@ -4,3 +4,6 @@
 [submodule "TimerKit"]
 	path = TimerKit
 	url = https://github.com/PiersonBro/TimerKit
+[submodule "Din"]
+	path = Din
+	url = https://github.com/PiersonBro/Din.git
