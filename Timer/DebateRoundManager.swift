@@ -129,12 +129,12 @@ extension SpeechType: CustomStringConvertible {
 struct Speech {
     let speechType: SpeechType
     let name: String
-    var overtimeTimer: OvertimeTimer
+    let overtimeTimer: OvertimeTimer
     var consumed: Bool = false
     
     init(speechType: SpeechType, name: String) {
-       self.name = name
-       self.speechType = speechType
+        self.name = name
+        self.speechType = speechType
         let duration = NSTimeInterval(speechType.durationOfSpeech() * 60)
         overtimeTimer = OvertimeTimer(timeLimit: duration)
     }

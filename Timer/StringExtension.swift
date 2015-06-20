@@ -13,7 +13,7 @@ public extension String {
     public static func formattedStringForDuration(duration: NSTimeInterval) -> String {
         let minute = Int(duration) / 60
         let second = Int(duration) % 60
-        var secondString = ""
+        let secondString: String
         
         if second < 10 {
             secondString = "0\(second)"
