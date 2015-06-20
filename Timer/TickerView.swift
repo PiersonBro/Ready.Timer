@@ -43,20 +43,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private var topmostLabel: TickerLabel
     private var leftmostLabel: TickerLabel
     
-    private var currentlyInvisibleLabel: TickerLabel {
-        var invisibleLabel: TickerLabel? = nil
-        let mask = layer.mask as! CAShapeLayer
-        let bezierPath: UIBezierPath = UIBezierPath(CGPath: mask.path!)
-        for label in labels {
-            if !bezierPath.containsPoint(label.center) {
-                invisibleLabel = label
-                break
-            }
-        }
-        
-        return invisibleLabel!
-    }
-    
     private let leftDivider: UIView
     private let rightDivider: UIView
     private let leftEdgeDivider: UIView
@@ -136,7 +122,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         
 
         topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
-        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(speechCount)
         topmostLabel.index = speechCount
 
         leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
@@ -208,11 +193,11 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         for subLayer in layers {
             if subLayer.name != nil {
                 switch subLayer.name! {
-                    case "leftLineShapeLayer":
-                        subLayer.removeFromSuperlayer()
-                    case "rightLineShapeLayer":
-                        subLayer.removeFromSuperlayer()
-                    default: break
+                case "leftLineShapeLayer":
+                    subLayer.removeFromSuperlayer()
+                case "rightLineShapeLayer":
+                    subLayer.removeFromSuperlayer()
+                default: break
                 }
             }
         }
@@ -309,25 +294,38 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     }
     
     func makeDataSourceCalls() {
+        var centerLabel: TickerLabel? = nil
+        var rightLabel: TickerLabel? = nil
+        var bottomLabel: TickerLabel? = nil
+        
         for label in labels  {
             let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
             let result = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             
             if let result = result {
                 switch (result) {
-                    case .Bottom(_, _):
-                        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(label.index)
-                    case .Right(_, _):
-                        self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(label.index)
-                    default:
-                        break
+                case .Center(_, _):
+                    centerLabel = label
+                case .Right(_, _):
+                    rightLabel = label
+                case .Bottom(_,_):
+                    bottomLabel = label
+                default:
+                    break
                 }
             }
         }
-
-        if (self.dataSource.stringShouldBeChanged(currentlyInvisibleLabel.index)) {
+        
+        guard let unwrappedLabelCenter = centerLabel, unwrappedLabelRight = rightLabel, unwrappedLabelBottom = bottomLabel else {
+            fatalError("Couldn't find centerLabel, rightLabel, or bottomLabel")
+        }
+        
+        self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(unwrappedLabelRight.index)
+        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
+        
+        if (self.dataSource.stringShouldBeChanged(unwrappedLabelBottom.index)) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
-            var speechName = ""
+            let speechName: String
             
             if let name = optionalSpeechName {
                 speechName = name
@@ -335,27 +333,25 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
                 delegate.tickerViewDidRotateToLastSpeech(speechCount)
                 speechCount = 0
                 let firstName = dataSource.stringForIndex(speechCount)
-                if firstName != nil {
-                    speechName = firstName!
-                }
+                speechName = firstName ?? "E"
             }
             
-            currentlyInvisibleLabel.index = speechCount
-            currentlyInvisibleLabel.text = speechName
+            unwrappedLabelBottom.index = speechCount
+            unwrappedLabelBottom.text = speechName
         }
     }
     override func updateConstraints() {
         if labelConstraintsNeedUpdate {
-                labelConstraintsNeedUpdate = false
-                let unmodifiedConstraints = constraints
-                enumerateLabels(labels, block: { (label, nextLabel) in
-                    let newConstraints = self.positioningConstraintsForLabel(nextLabel, constraints: unmodifiedConstraints)
-                    let xMultiplier = newConstraints.xConstraint.multiplier
-                    let yMultiplier = newConstraints.yConstraint.multiplier
-                    let newPosition = Position.positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
-                    
-                    NSLayoutConstraint.deactivateConstraints(self.constraintsForLabel(label, superviewConstraints: unmodifiedConstraints))
-                    self.layoutLabel(label, position:newPosition!)
+            labelConstraintsNeedUpdate = false
+            let unmodifiedConstraints = constraints
+            enumerateLabels(labels, block: { (label, nextLabel) in
+                let newConstraints = self.positioningConstraintsForLabel(nextLabel, constraints: unmodifiedConstraints)
+                let xMultiplier = newConstraints.xConstraint.multiplier
+                let yMultiplier = newConstraints.yConstraint.multiplier
+                let newPosition = Position.positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
+                
+                NSLayoutConstraint.deactivateConstraints(self.constraintsForLabel(label, superviewConstraints: unmodifiedConstraints))
+                self.layoutLabel(label, position:newPosition!)
             })
             makeDataSourceCalls()
         }
@@ -384,12 +380,12 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
             }
             
             switch constraint.identifier ?? "" {
-                case ("X constraint for label: \(label.hash)"):
-                    xConstraint = constraint
-                case ("Y constraint for label: \(label.hash)"):
-                    yConstraint = constraint
-                default:
-                    break
+            case ("X constraint for label: \(label.hash)"):
+                xConstraint = constraint
+            case ("Y constraint for label: \(label.hash)"):
+                yConstraint = constraint
+            default:
+                break
             }
         }
         
