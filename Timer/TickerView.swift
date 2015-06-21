@@ -316,6 +316,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
             }
         }
         
+        //Can't shadow because of rdar://21475718
         guard let unwrappedLabelCenter = centerLabel, unwrappedLabelRight = rightLabel, unwrappedLabelBottom = bottomLabel else {
             fatalError("Couldn't find centerLabel, rightLabel, or bottomLabel")
         }
