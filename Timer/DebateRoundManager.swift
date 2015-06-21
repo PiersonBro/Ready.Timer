@@ -61,6 +61,7 @@ private enum DurationKey: String {
 // FIXME: Refactor too hard to use.
 private enum PListKey: String {
     case NameOfPlist = "DebateType"
+    case DebugNameOfPlist = "DebateType-copy"
     case Speeches = "Speeches"
     case TotalPrepTime = "Total Prep Time"
 }
@@ -128,12 +129,12 @@ extension SpeechType: CustomStringConvertible {
 struct Speech {
     let speechType: SpeechType
     let name: String
-    var overtimeTimer: OvertimeTimer
+    let overtimeTimer: OvertimeTimer
     var consumed: Bool = false
     
     init(speechType: SpeechType, name: String) {
-       self.name = name
-       self.speechType = speechType
+        self.name = name
+        self.speechType = speechType
         let duration = NSTimeInterval(speechType.durationOfSpeech() * 60)
         overtimeTimer = OvertimeTimer(timeLimit: duration)
     }
@@ -156,7 +157,7 @@ class DebateRoundManager {
     
     init(type: DebateType) {
         debateType = type
-        let path = NSBundle.mainBundle().pathForResource(PListKey.NameOfPlist.rawValue, ofType: "plist")
+        let path = NSBundle.mainBundle().pathForResource(PListKey.DebugNameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
         debateRoundData = debates[debateType.rawValue] as! [NSObject: AnyObject]
         speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)

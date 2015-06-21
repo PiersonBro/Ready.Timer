@@ -10,11 +10,14 @@
 		2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; };
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
+		2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */; };
 		205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* DebateRoundManager.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
+		20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; };
+		20BF4C761B2E46E100AB2F87 /* Din.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8D19A02E2E00477D3B /* AppDelegate.swift */; };
 		20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8F19A02E2E00477D3B /* ViewController.swift */; };
 		20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9119A02E2E00477D3B /* Main.storyboard */; };
@@ -62,6 +65,27 @@
 			remoteGlobalIDString = 54C96A10195063CD000CDD27;
 			remoteInfo = "Cartography-iOS";
 		};
+		20BF4C701B2E46D100AB2F87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2098CC861ABD4FB40012FFFB;
+			remoteInfo = Din;
+		};
+		20BF4C721B2E46D100AB2F87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2098CC911ABD4FB40012FFFB;
+			remoteInfo = DinTests;
+		};
+		20BF4C771B2E46E100AB2F87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 2098CC851ABD4FB40012FFFB;
+			remoteInfo = Din;
+		};
 		20C99B9B19A02E2E00477D3B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 20C99B8019A02E2E00477D3B /* Project object */;
@@ -108,6 +132,7 @@
 			files = (
 				2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */,
 				20D523761AB635A600A46760 /* TimerKit.framework in Embed Frameworks */,
+				20BF4C761B2E46E100AB2F87 /* Din.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -117,11 +142,13 @@
 /* Begin PBXFileReference section */
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
+		2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DebateType-copy.plist"; sourceTree = "<group>"; };
 		205C661619AD657900E14B30 /* DebateRoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DebateRoundManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TransitionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
+		20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Din.xcodeproj; path = Din/Din.xcodeproj; sourceTree = "<group>"; };
 		20C99B8819A02E2E00477D3B /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B8C19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99B8D19A02E2E00477D3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -143,6 +170,7 @@
 			files = (
 				2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */,
 				20D523751AB635A600A46760 /* TimerKit.framework in Frameworks */,
+				20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -167,9 +195,19 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		20BF4C691B2E46D100AB2F87 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				20BF4C711B2E46D100AB2F87 /* Din.framework */,
+				20BF4C731B2E46D100AB2F87 /* DinTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		20C99B7F19A02E2E00477D3B = {
 			isa = PBXGroup;
 			children = (
+				20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */,
 				20D523691AB6359F00A46760 /* TimerKit.xcodeproj */,
 				2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */,
 				20C99B8A19A02E2E00477D3B /* Timer */,
@@ -209,6 +247,7 @@
 		20C99B8B19A02E2E00477D3B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */,
 				20C99B8C19A02E2E00477D3B /* Info.plist */,
 				205C661819AD6C7100E14B30 /* DebateType.plist */,
 			);
@@ -267,6 +306,7 @@
 			dependencies = (
 				2005BD2019E50BAD00843B00 /* PBXTargetDependency */,
 				20D523781AB635A600A46760 /* PBXTargetDependency */,
+				20BF4C781B2E46E100AB2F87 /* PBXTargetDependency */,
 			);
 			name = Timer;
 			productName = Timer;
@@ -329,6 +369,10 @@
 					ProjectRef = 2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */;
 				},
 				{
+					ProductGroup = 20BF4C691B2E46D100AB2F87 /* Products */;
+					ProjectRef = 20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */;
+				},
+				{
 					ProductGroup = 20D5236A1AB6359F00A46760 /* Products */;
 					ProjectRef = 20D523691AB6359F00A46760 /* TimerKit.xcodeproj */;
 				},
@@ -370,6 +414,20 @@
 			remoteRef = 2005BD1819E50B6800843B00 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		20BF4C711B2E46D100AB2F87 /* Din.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Din.framework;
+			remoteRef = 20BF4C701B2E46D100AB2F87 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		20BF4C731B2E46D100AB2F87 /* DinTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = DinTests.xctest;
+			remoteRef = 20BF4C721B2E46D100AB2F87 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		20D523721AB6359F00A46760 /* TimerKit.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -394,6 +452,7 @@
 				20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */,
 				20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */,
 				20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */,
+				2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */,
 				205C661919AD6C7100E14B30 /* DebateType.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -455,6 +514,11 @@
 			isa = PBXTargetDependency;
 			name = "Cartography-iOS";
 			targetProxy = 2005BD1F19E50BAD00843B00 /* PBXContainerItemProxy */;
+		};
+		20BF4C781B2E46E100AB2F87 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Din;
+			targetProxy = 20BF4C771B2E46E100AB2F87 /* PBXContainerItemProxy */;
 		};
 		20C99B9C19A02E2E00477D3B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

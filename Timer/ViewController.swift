@@ -9,6 +9,7 @@
 import UIKit
 import QuartzCore
 import Cartography
+import Din
 
 class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
@@ -39,7 +40,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
-        
+
         guard let tickerView = tickerView else { return }
         
         view.addSubview(tickerView)
@@ -81,6 +82,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
             timerLabel.centerX == view.centerX
             timerLabel.centerY == view.centerY / 2
         }
+        tickerViewDidRotateStringAtIndexToCenterPosition(0)
     }
 
     override func didReceiveMemoryWarning() {
@@ -118,19 +120,17 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
                 startButton.labelText = "Cancel"
                 currentSpeech?.overtimeTimer.onTick { elapsedTime in
-                    self.timerLabel.text = String.formattedStringForDuration(elapsedTime)
+                    self.timerLabel.text = .formattedStringForDuration(elapsedTime)
                 } .onConclusion { conclusionResult in
                     switch conclusionResult {
-                        case .Finish:
-                            // Calling this will also mark the speech as consumed, yay side effects.
-                            self.tickerView!.rotateToNextSegment()
-                            self.startButton.labelText = "Start"
+                        case .Overtime:
+                            self.transitionToNextSpeech()
                         case .Reset:
                             self.timerLabel.text = "\(self.currentSpeech!.speechType.durationOfSpeech()):00"
                         default:
                             break
                     }
-                    }.activate()
+                }.activate()
         } else if (startButton.labelText == "Cancel") {
                 startButton.labelText = "Start"
                 currentSpeech?.overtimeTimer.concludeWithStatus(.Reset)
@@ -200,6 +200,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     }
     
     func tickerViewDidRotateStringAtIndexToRightPosition(index: Int) {
+        self.currentSpeech?.overtimeTimer.concludeWithStatus(.Finish)
         debateRoundManager.markSpeechAsConsumedAtIndex(index)
     }
     
@@ -219,5 +220,27 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     }
     
     func tickerViewDidRotateToLastSpeech(index: Int) {
+        print(debateRoundManager.getSpeechAtIndex(index))
+    }
+    
+    // MARK: Next Speech
+    func transitionToNextSpeech() {
+        #if !(arch(i386) || !arch(x86_64))
+            let audioController = AudioController(type: Ringtone())
+            let soundManager = audioController.playSound(.Ascending, repeating: true)
+        #endif
+
+        let action = UIAlertAction(title: "Done", style: .Default) { action in
+            #if !(arch(i386) || !arch(x86_64))
+                soundManager.stop()
+            #endif
+            self.startButton.labelText = "Start"
+            // Calling this will also mark the speech as consumed, yay side effects.
+            self.tickerView!.rotateToNextSegment()
+        }
+        
+        let actionController = UIAlertController(title: "Timer Done", message: nil, preferredStyle: .Alert)
+        actionController.addAction(action)
+        self.presentViewController(actionController, animated: true, completion: nil)
     }
 }
