@@ -48,7 +48,7 @@
 	</dict>
 	<key>LincolnDouglas</key>
 	<dict>
-		<key> Speeches </key>
+		<key>Speeches</key>
 		<array>
 			<string>AC</string>
 			<string>CX</string>
@@ -58,15 +58,15 @@
 			<string>NR</string>
 			<string>2 AR</string>
 		</array>
-		<key>Duration Of AC </key>
+		<key>Duration of AC</key>
 		<integer>6</integer>
-		<key>Duraton of NC </key>
+		<key>Duration of NC</key>
 		<integer>6</integer>
-		<key>Duration of 1 AR </key>
+		<key>Duration of 1 AR</key>
 		<integer>4</integer>
 		<key>Duration of NR</key>
 		<integer>6</integer>
-		<key>Duration of 2 AR </key>
+		<key>Duration of 2 AR</key>
 		<integer>3</integer>
 		<key>Duration of Cross Examination</key>
 		<integer>3</integer>
