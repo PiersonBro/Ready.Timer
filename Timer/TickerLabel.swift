@@ -10,6 +10,7 @@ import UIKit
 
 class TickerLabel: UILabel {
     var index: Int
+    var consumed = false
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

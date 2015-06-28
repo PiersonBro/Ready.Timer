@@ -14,11 +14,12 @@ import Din
 class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
     let timerLabel: UILabel
-    let debateRoundManager: DebateRoundManager
-    var currentSpeech: Speech?
-    var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
     let startButton: CircleButton
     let clockwiseButton: CircleButton
+    
+    var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
+    var debateRoundManager: DebateRoundManager
+    var currentSpeech: Speech?
     
     required init(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
@@ -90,8 +91,8 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     }
     
     //MARK: TimerButton
-
     func timerButtonPressed() {
+        //FIXME: This is confusing!
         changeTimerToState(.CurrentState)
     }
     
@@ -195,32 +196,23 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
             // We are at the end of the Debate Round.
             return nil
         }
-        let speech = debateRoundManager.getSpeechAtIndex(index)
+        let speech = debateRoundManager.speeches[index]
         return speech.name
     }
     
-    func tickerViewDidRotateStringAtIndexToRightPosition(index: Int) {
-        self.currentSpeech?.overtimeTimer.concludeWithStatus(.Finish)
-        debateRoundManager.markSpeechAsConsumedAtIndex(index)
-    }
-    
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
-        let speech = debateRoundManager.getSpeechAtIndex(index)
+        let speech = debateRoundManager.speeches[index]
         timerLabel.text = "\(speech.speechType.durationOfSpeech()):00"
         currentSpeech = speech
     }
-    
-    func stringShouldBeChanged(index: Int) -> Bool {
-        let speech = debateRoundManager.getSpeechAtIndex(index)
-        if (speech.consumed) {
-            return true
-        }
         
-        return false
+    func tickerViewDidRotateToLastSpeech(index: Int) {
+        //FIXME: This needs to change before release.
+        debateRoundManager = DebateRoundManager(type: .LincolnDouglas)
     }
     
-    func tickerViewDidRotateToLastSpeech(index: Int) {
-        print(debateRoundManager.getSpeechAtIndex(index))
+    func tickerViewDidRotateStringAtIndexToRightPosition(index: Int) {
+        
     }
     
     // MARK: Next Speech
@@ -236,6 +228,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
             #endif
             self.startButton.labelText = "Start"
             // Calling this will also mark the speech as consumed, yay side effects.
+            self.currentSpeech?.overtimeTimer.concludeWithStatus(.Finish)
             self.tickerView!.rotateToNextSegment()
         }
         

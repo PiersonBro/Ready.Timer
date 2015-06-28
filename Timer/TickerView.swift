@@ -323,8 +323,9 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         
         self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(unwrappedLabelRight.index)
         self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
+        unwrappedLabelRight.consumed = true
         
-        if (self.dataSource.stringShouldBeChanged(unwrappedLabelBottom.index)) {
+        if (unwrappedLabelBottom.consumed) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             let speechName: String
             
@@ -397,7 +398,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
 protocol TickerViewDataSource {
     // Index - Starts from Zero .
     func stringForIndex(index: Int) -> String?
-    func stringShouldBeChanged(index: Int) -> Bool
 }
 
 protocol TickerViewDelegate {
