@@ -263,10 +263,12 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     
     func snapBehaviorsForLabelsAscending(ascending: Bool) -> [UISnapBehavior] {
         var snapBehaviors: [UISnapBehavior] = []
-        var reversedLabels: [TickerLabel]? = nil
+        let reversedLabels: [TickerLabel]?
         
         if !ascending {
             reversedLabels = labels.reverse()
+        } else {
+            reversedLabels = nil
         }
         
         enumerateLabels(reversedLabels ?? labels) { (label, nextLabel) in
@@ -278,18 +280,18 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     }
     
       func enumerateLabels(labelsToEnumerate: [TickerLabel], block: (label: TickerLabel, nextLabel: TickerLabel) -> Void) {
-        for var i = 0; i < labelsToEnumerate.count; ++i {
+        for i in 0..<labelsToEnumerate.count {
             let label = labelsToEnumerate[i]
-            var nextLabel: TickerLabel? = nil
+            let nextLabel: TickerLabel
             let nextIndex = i + 1
            
             if (nextIndex < labelsToEnumerate.count) {
                 nextLabel = labelsToEnumerate[nextIndex]
             } else {
-                nextLabel = labelsToEnumerate.first
+                nextLabel = labelsToEnumerate.first!
             }
 
-            block(label: label, nextLabel: nextLabel!)
+            block(label: label, nextLabel: nextLabel)
         }
     }
     
