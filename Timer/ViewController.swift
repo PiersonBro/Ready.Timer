@@ -11,7 +11,7 @@ import QuartzCore
 import Cartography
 import Din
 
-class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate, UIGestureRecognizerDelegate {
+class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
@@ -29,7 +29,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         
         super.init(coder: aDecoder)
         
-        tickerView = TickerView(frame: CGRect(), dataSource: self, delegate: self)
+        tickerView = TickerView(frame: CGRect(), dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
@@ -190,7 +190,7 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
         }
     }
     
-    //MARK: TickerView DataSource and Delegate
+    //MARK: TickerView DataSource
     func stringForIndex(index: Int) -> String? {
         if index >= debateRoundManager.speechCount {
             // We are at the end of the Debate Round.
@@ -209,10 +209,6 @@ class ViewController: UIViewController, TickerViewDataSource, TickerViewDelegate
     func tickerViewDidRotateToLastSpeech(index: Int) {
         //FIXME: This needs to change before release.
         debateRoundManager = DebateRoundManager(type: .LincolnDouglas)
-    }
-    
-    func tickerViewDidRotateStringAtIndexToRightPosition(index: Int) {
-        
     }
     
     // MARK: Next Speech

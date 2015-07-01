@@ -57,8 +57,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private let labels: [TickerLabel]
     
     let dataSource: TickerViewDataSource
-    let delegate: TickerViewDelegate
-    
+
     required init(coder aDecoder: NSCoder) {
         fatalError("Initializer Not Supported")
     }
@@ -67,7 +66,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         fatalError("Initializer Not Supported")
     }
     
-    init(frame: CGRect, dataSource: TickerViewDataSource, delegate: TickerViewDelegate) {
+    init(frame: CGRect, dataSource: TickerViewDataSource) {
         bottommostLabel = TickerLabel(frame: CGRect())
         rightmostLabel = TickerLabel(frame: CGRect())
         topmostLabel = TickerLabel(frame: CGRect())
@@ -83,7 +82,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         speechCount = 0
         self.dataSource = dataSource
-        self.delegate = delegate
         super.init(frame: frame)
 
         addSubview(leftDivider)
@@ -349,7 +347,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         }
         
         if finalSpeechIsAtCenter {
-            delegate.tickerViewDidRotateToLastSpeech(unwrappedLabelCenter.index)
+            dataSource.tickerViewDidRotateToLastSpeech(unwrappedLabelCenter.index)
             removeLines()
             unwrappedLabelRight.hidden = true
             unwrappedLabelBottom.hidden = true
@@ -360,8 +358,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
             return
         }
         
-        self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(unwrappedLabelRight.index)
-        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
+        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
         unwrappedLabelRight.consumed = true
         
         if (unwrappedLabelBottom.consumed) {
@@ -434,10 +431,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
 protocol TickerViewDataSource {
     // Index - Starts from Zero .
     func stringForIndex(index: Int) -> String?
-}
-
-protocol TickerViewDelegate {
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int)
-    func tickerViewDidRotateStringAtIndexToRightPosition(index: Int)
     func tickerViewDidRotateToLastSpeech(index: Int)
 }
