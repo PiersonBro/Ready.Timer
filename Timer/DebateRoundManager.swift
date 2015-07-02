@@ -130,7 +130,6 @@ struct Speech {
     let speechType: SpeechType
     let name: String
     let overtimeTimer: OvertimeTimer
-    var consumed: Bool = false
     
     init(speechType: SpeechType, name: String) {
         self.name = name
@@ -142,7 +141,7 @@ struct Speech {
 
 extension Speech: CustomStringConvertible {
     var description: String {
-        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer) \n consumed: \(consumed)"
+        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer)"
     }
 }
 
@@ -152,7 +151,7 @@ class DebateRoundManager {
     let affPrepTime: Timer<CountUpBlueprint>
     let negPrepTime: Timer<CountUpBlueprint>
     
-    private var speeches: [Speech]
+    let speeches: [Speech]
     private let debateRoundData: [NSObject : AnyObject]
     
     init(type: DebateType) {
@@ -180,13 +179,5 @@ class DebateRoundManager {
         }
         
         return speeches
-    }
-    
-    func getSpeechAtIndex(index: Int) -> Speech {
-        return speeches[index]
-    }
-    
-    func markSpeechAsConsumedAtIndex(index: Int) {
-        speeches[index].consumed = true
     }
 }

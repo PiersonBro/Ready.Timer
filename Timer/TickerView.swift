@@ -51,15 +51,13 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private var labelConstraintsNeedUpdate: Bool = false
 
     private var speechCount: Int
-    private var speechIndexToUpdate: Int
     
     // Strongly held animator objects
     private var animator: UIDynamicAnimator
     private let labels: [TickerLabel]
     
     let dataSource: TickerViewDataSource
-    let delegate: TickerViewDelegate
-    
+
     required init(coder aDecoder: NSCoder) {
         fatalError("Initializer Not Supported")
     }
@@ -68,7 +66,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         fatalError("Initializer Not Supported")
     }
     
-    init(frame: CGRect, dataSource: TickerViewDataSource, delegate: TickerViewDelegate) {
+    init(frame: CGRect, dataSource: TickerViewDataSource) {
         bottommostLabel = TickerLabel(frame: CGRect())
         rightmostLabel = TickerLabel(frame: CGRect())
         topmostLabel = TickerLabel(frame: CGRect())
@@ -84,8 +82,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         speechCount = 0
         self.dataSource = dataSource
-        self.delegate = delegate
-        speechIndexToUpdate = 0;
         super.init(frame: frame)
 
         addSubview(leftDivider)
@@ -189,18 +185,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     }
     
     override func drawRect(rect: CGRect) {
-        let layers = self.layer.sublayers!
-        for subLayer in layers {
-            if subLayer.name != nil {
-                switch subLayer.name! {
-                case "leftLineShapeLayer":
-                    subLayer.removeFromSuperlayer()
-                case "rightLineShapeLayer":
-                    subLayer.removeFromSuperlayer()
-                default: break
-                }
-            }
-        }
+        removeLines()
         
         let mask = CAShapeLayer()
         mask.frame = bounds;
@@ -211,16 +196,19 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         mask.path = bezierPath.CGPath
         layer.mask = mask
         
+        addLines(rect: rect)
+    }
+    
+    func addLines(rect rect: CGRect) {
         let leftLineShapeLayer = CAShapeLayer()
         leftLineShapeLayer.name = "leftLineShapeLayer"
         let leftLinePath = UIBezierPath()
         leftLinePath.moveToPoint(CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMaxY(rect)))
         leftLinePath.addLineToPoint(CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMinY(rect)))
-       
+        
         leftLineShapeLayer.path = leftLinePath.CGPath
         leftLineShapeLayer.strokeColor = UIColor.cyanColor().CGColor
         leftLineShapeLayer.lineWidth = 5
-        
         layer.addSublayer(leftLineShapeLayer)
         
         let rightLineShapeLayer = CAShapeLayer()
@@ -235,19 +223,40 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         layer.addSublayer(rightLineShapeLayer)
     }
     
+    func removeLines() {
+        let layers = self.layer.sublayers!
+        for subLayer in layers {
+            if subLayer.name != nil {
+                switch subLayer.name! {
+                case "leftLineShapeLayer":
+                    subLayer.removeFromSuperlayer()
+                case "rightLineShapeLayer":
+                    subLayer.removeFromSuperlayer()
+                default: break
+                }
+            }
+        }
+    }
+    
+    
     func rotateToNextSegment() {
-        rotateWithSnapBehaviors(snapBehaviorsForLabelsAscending(true))
+        rotate(ascending: true)
     }
     
     func rotateToPreviousSegment() {
-        rotateWithSnapBehaviors(snapBehaviorsForLabelsAscending(false))
+        rotate(ascending: false)
     }
-
-    func rotateWithSnapBehaviors(snapBehaviors: [UISnapBehavior]) {
+    
+    func rotate(ascending ascending: Bool) {
+        let labelsToEnumerate = ascending ? labels : labels.reverse()
         animator.removeAllBehaviors()
         
-        for snapBehavior in snapBehaviors {
-            animator.addBehavior(snapBehavior)
+        enumerateLabels(labelsToEnumerate) { (label, nextLabel) in
+            label.snapBehavior!.snapPoint = nextLabel.center
+        }
+        
+        for label in labels {
+            animator.addBehavior(label.snapBehavior!)
         }
         
         let item = UIDynamicItemBehavior(items: labels)
@@ -261,86 +270,111 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         animator.removeAllBehaviors()
     }
     
-    func snapBehaviorsForLabelsAscending(ascending: Bool) -> [UISnapBehavior] {
-        var snapBehaviors: [UISnapBehavior] = []
-        var reversedLabels: [TickerLabel]? = nil
-        
-        if !ascending {
-            reversedLabels = labels.reverse()
-        }
-        
-        enumerateLabels(reversedLabels ?? labels) { (label, nextLabel) in
-            let snapBehavior = UISnapBehavior(item: label, snapToPoint: nextLabel.center)
-            snapBehaviors.append(snapBehavior)
-        }
-        
-        return snapBehaviors
-    }
-    
-      func enumerateLabels(labelsToEnumerate: [TickerLabel], block: (label: TickerLabel, nextLabel: TickerLabel) -> Void) {
-        for var i = 0; i < labelsToEnumerate.count; ++i {
+    func enumerateLabels(labelsToEnumerate: [TickerLabel], block: (label: TickerLabel, nextLabel: TickerLabel) -> Void) {
+        for i in 0..<labelsToEnumerate.count {
             let label = labelsToEnumerate[i]
-            var nextLabel: TickerLabel? = nil
+            let nextLabel: TickerLabel
             let nextIndex = i + 1
            
             if (nextIndex < labelsToEnumerate.count) {
                 nextLabel = labelsToEnumerate[nextIndex]
             } else {
-                nextLabel = labelsToEnumerate.first
+                nextLabel = labelsToEnumerate.first!
             }
 
-            block(label: label, nextLabel: nextLabel!)
+            block(label: label, nextLabel: nextLabel)
         }
     }
+    
+    var finalSpeechIsAtCenter = false
+    var shouldReloadDataSource = false
     
     func makeDataSourceCalls() {
         var centerLabel: TickerLabel? = nil
         var rightLabel: TickerLabel? = nil
+        var leftLabel: TickerLabel? = nil
         var bottomLabel: TickerLabel? = nil
         
         for label in labels  {
             let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
-            let result = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
+            let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             
-            if let result = result {
-                switch (result) {
+            if let position = position {
+                switch (position) {
                 case .Center(_, _):
                     centerLabel = label
                 case .Right(_, _):
                     rightLabel = label
                 case .Bottom(_,_):
                     bottomLabel = label
-                default:
-                    break
+                case .Left(_, _):
+                    leftLabel = label
                 }
             }
         }
         
         //Can't shadow because of rdar://21475718
-        guard let unwrappedLabelCenter = centerLabel, unwrappedLabelRight = rightLabel, unwrappedLabelBottom = bottomLabel else {
+        guard let unwrappedLabelCenter = centerLabel, unwrappedLabelRight = rightLabel, unwrappedLabelBottom = bottomLabel, unwrappedLabelLeft = leftLabel else {
             fatalError("Couldn't find centerLabel, rightLabel, or bottomLabel")
         }
         
-        self.delegate.tickerViewDidRotateStringAtIndexToRightPosition(unwrappedLabelRight.index)
-        self.delegate.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
+        if shouldReloadDataSource {
+            addLines(rect: bounds)
+            speechCount = 0
+            
+            func configureLabel(label: TickerLabel) {
+                if speechCount != 0 {
+                    ++speechCount
+                }
+                
+                label.index = speechCount
+                label.text = dataSource.stringForIndex(speechCount)
+                label.consumed = false
+                label.hidden = false
+
+                if speechCount == 0 {
+                    ++speechCount
+                }
+            }
+            
+            configureLabel(unwrappedLabelCenter)
+            configureLabel(unwrappedLabelLeft)
+            configureLabel(unwrappedLabelBottom)
+            configureLabel(unwrappedLabelRight)
+            
+            shouldReloadDataSource = false
+            return
+        }
         
-        if (self.dataSource.stringShouldBeChanged(unwrappedLabelBottom.index)) {
+        if finalSpeechIsAtCenter {
+            dataSource.tickerViewDidRotateToLastSpeech(unwrappedLabelCenter.index)
+            removeLines()
+            unwrappedLabelRight.hidden = true
+            unwrappedLabelBottom.hidden = true
+            unwrappedLabelLeft.hidden = true
+            
+            shouldReloadDataSource = true
+            finalSpeechIsAtCenter = false
+            return
+        }
+        
+        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
+        unwrappedLabelRight.consumed = true
+        
+        if (unwrappedLabelBottom.consumed) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             let speechName: String
             
             if let name = optionalSpeechName {
                 speechName = name
+                unwrappedLabelBottom.index = speechCount
+                unwrappedLabelBottom.text = speechName
             } else {
-                delegate.tickerViewDidRotateToLastSpeech(speechCount)
-                speechCount = 0
-                let firstName = dataSource.stringForIndex(speechCount)
-                speechName = firstName ?? "E"
+                finalSpeechIsAtCenter = true
             }
-            
-            unwrappedLabelBottom.index = speechCount
-            unwrappedLabelBottom.text = speechName
         }
     }
+    
     override func updateConstraints() {
         if labelConstraintsNeedUpdate {
             labelConstraintsNeedUpdate = false
@@ -370,7 +404,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         }
         return labelConstraints
     }
-    
+        
     func positioningConstraintsForLabel(label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
         var xConstraint: NSLayoutConstraint? = nil
         var yConstraint: NSLayoutConstraint? = nil
@@ -397,11 +431,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
 protocol TickerViewDataSource {
     // Index - Starts from Zero .
     func stringForIndex(index: Int) -> String?
-    func stringShouldBeChanged(index: Int) -> Bool
-}
-
-protocol TickerViewDelegate {
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int)
-    func tickerViewDidRotateStringAtIndexToRightPosition(index: Int)
     func tickerViewDidRotateToLastSpeech(index: Int)
 }

@@ -10,6 +10,10 @@ import UIKit
 
 class TickerLabel: UILabel {
     var index: Int
+    var consumed = false
+    /// Before adding to a dynamic animator be sure to change the snapPoint property.
+    /// On `TickerLabel` init `snapBehavior.snapPoint` is `CGPoint()`
+    var snapBehavior: UISnapBehavior? = nil
     
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -21,5 +25,6 @@ class TickerLabel: UILabel {
         textAlignment = .Center
         baselineAdjustment = .AlignCenters
         adjustsFontSizeToFitWidth = true
+        snapBehavior = UISnapBehavior(item: self, snapToPoint: CGPoint())
     }
 }
