@@ -125,8 +125,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         label.text = {
             switch position {
                 case .Center(_,_):
-                    let duration: NSTimeInterval = {
-                     
+                    let duration: Int = {
                         if self.countUpTimer.status == .Finished || self.countUpTimer.status == .Inactive {
                             return self.countUpTimer.blueprint.startingValue
                         } else {

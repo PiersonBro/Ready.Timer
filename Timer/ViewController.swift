@@ -18,12 +18,12 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     let clockwiseButton: CircleButton
     
     var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
-    var debateRoundManager: DebateRoundManager
+    var debateRound: DebateRound
     var currentSpeech: Speech?
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
-        debateRoundManager = DebateRoundManager(type: .TeamPolicy)
+        debateRound = DebateRound(type: .TeamPolicy)
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
         
@@ -120,24 +120,25 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
                 startButton.labelText = "Cancel"
-                currentSpeech?.overtimeTimer.onTick { elapsedTime in
+                currentSpeech?.timer.onTick { elapsedTime in
                     self.timerLabel.text = .formattedStringForDuration(elapsedTime)
                 } .onConclusion { conclusionResult in
                     switch conclusionResult {
                         case .Overtime:
+                            assert(self.currentSpeech?.timer.status == .Overtime)
                             self.transitionToNextSpeech()
                         case .Reset:
-                            self.timerLabel.text = "\(self.currentSpeech!.speechType.durationOfSpeech()):00"
+                            self.timerLabel.text = "\(self.currentSpeech!.timer.startingTimeInMinutes!):00"
                         default:
                             break
                     }
                 }.activate()
         } else if (startButton.labelText == "Cancel") {
                 startButton.labelText = "Start"
-                currentSpeech?.overtimeTimer.concludeWithStatus(.Reset)
+                currentSpeech?.timer.concludeWithStatus(.Reset)
         } else if (startButton.labelText == "Pause") {
                 startButton.labelText = "Resume"
-                currentSpeech?.overtimeTimer.concludeWithStatus(.Pause)
+                currentSpeech?.timer.concludeWithStatus(.Pause)
         }
     }
     
@@ -145,7 +146,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     
     func tapped() {
         if let currentSpeech = currentSpeech {
-            switch(currentSpeech.overtimeTimer.status) {
+            switch(currentSpeech.timer.status) {
                 case .Running:
                     changeTimerToState(.Pause)
                 case .Paused:
@@ -166,13 +167,13 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     
     //MARK: Debug
     func clockwise(sender: CircleButton) {
-        let transitionViewController = TransitionViewController(countUpTimer: debateRoundManager.affPrepTime)
+        let transitionViewController = TransitionViewController(countUpTimer: debateRound.rightCountUpTimer!)
         self.presentViewController(transitionViewController, animated: true, completion: nil)
     }
     
     func rotateToNextSpeechIfPossible() {
         if let currentSpeech = currentSpeech {
-            if currentSpeech.overtimeTimer.status != .Running && currentSpeech.overtimeTimer.status != .Paused {
+            if currentSpeech.timer.status != .Running && currentSpeech.timer.status != .Paused {
                 tickerView!.rotateToNextSegment()
             } else {
                 // FIXME: Add a better denied animation here.
@@ -192,23 +193,23 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     
     //MARK: TickerView DataSource
     func stringForIndex(index: Int) -> String? {
-        if index >= debateRoundManager.speechCount {
+        if index >= debateRound.timers.count {
             // We are at the end of the Debate Round.
             return nil
         }
-        let speech = debateRoundManager.speeches[index]
+        let speech = debateRound.timers[index]
         return speech.name
     }
     
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
-        let speech = debateRoundManager.speeches[index]
-        timerLabel.text = "\(speech.speechType.durationOfSpeech()):00"
+        let speech = debateRound.timers[index]
+        timerLabel.text = "\(speech.timer.startingTimeInMinutes!):00"
         currentSpeech = speech
     }
         
     func tickerViewDidRotateToLastSpeech(index: Int) {
         //FIXME: This needs to change before release.
-        debateRoundManager = DebateRoundManager(type: .LincolnDouglas)
+        debateRound = DebateRound(type: .LincolnDouglas)
     }
     
     // MARK: Next Speech
@@ -224,7 +225,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
             #endif
             self.startButton.labelText = "Start"
             // Calling this will also mark the speech as consumed, yay side effects.
-            self.currentSpeech?.overtimeTimer.concludeWithStatus(.Finish)
+            self.currentSpeech?.timer.concludeWithStatus(.Finish)
             self.tickerView!.rotateToNextSegment()
         }
         

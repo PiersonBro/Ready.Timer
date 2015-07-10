@@ -10,7 +10,7 @@ import XCTest
 @testable import Timer
 
 class DebateRoundManagerTests: XCTestCase {
-    let debateRoundManager = DebateRoundManager(type: .LincolnDouglas)
+    let debateRoundManager = DebateRound(type: .LincolnDouglas)
     
     override func setUp() {
         super.setUp()

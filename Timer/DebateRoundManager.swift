@@ -10,9 +10,7 @@ import Foundation
 import TimerKit
 
 enum DebateType: String {
-    case Parli = "Parli"
-    case TeamPolicy = "TeamPolicy"
-    case LincolnDouglas = "LincolnDouglas"
+    case Parli, TeamPolicy, LincolnDouglas
 }
 
 private enum DurationKey: String {
@@ -126,53 +124,44 @@ extension SpeechType: CustomStringConvertible {
     }
 }
 
-struct Speech {
-    let speechType: SpeechType
+struct Speech: DataType {
+    typealias DataTimer = OvertimeTimer
     let name: String
-    let overtimeTimer: OvertimeTimer
+    let timer: DataTimer
     
-    init(speechType: SpeechType, name: String) {
+    private init(speechType: SpeechType, name: String) {
         self.name = name
-        self.speechType = speechType
-        let duration = NSTimeInterval(speechType.durationOfSpeech() * 60)
-        overtimeTimer = OvertimeTimer(timeLimit: duration)
+        timer = OvertimeTimer(timeLimitInMinutes: speechType.durationOfSpeech())
     }
 }
 
-extension Speech: CustomStringConvertible {
-    var description: String {
-        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer)"
-    }
-}
+struct DebateRound: RoundType {
+    typealias Data = Speech
 
-class DebateRoundManager {
-    let debateType: DebateType
-    let speechCount: Int
-    let affPrepTime: Timer<CountUpBlueprint>
-    let negPrepTime: Timer<CountUpBlueprint>
+    // AFF
+    let rightCountUpTimer: Timer<CountUpBlueprint>?
+    // NEG
+    let leftCountUpTimer: Timer<CountUpBlueprint>?
     
-    let speeches: [Speech]
+    let timers: [Data]
     private let debateRoundData: [NSObject : AnyObject]
     
     init(type: DebateType) {
-        debateType = type
         let path = NSBundle.mainBundle().pathForResource(PListKey.DebugNameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        debateRoundData = debates[debateType.rawValue] as! [NSObject: AnyObject]
-        speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
-        speechCount = speeches.count
+        debateRoundData = debates[type.rawValue] as! [NSObject: AnyObject]
+        timers = DebateRound.generateSpeechesFromData(debateRoundData, debateType: type)
 
-        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue * 60.0
-        let prepBlueprint = CountUpBlueprint(upperLimit: prepTimeDuration)
-        
-        affPrepTime = Timer(blueprint: prepBlueprint)
-        negPrepTime = Timer(blueprint: prepBlueprint)
+        let prepTimeDuration = debateRoundData[PListKey.TotalPrepTime.rawValue] as! Int
+        let prepBlueprint = CountUpBlueprint(upperLimitInMinutes: prepTimeDuration)
+        leftCountUpTimer = Timer(blueprint: prepBlueprint)
+        rightCountUpTimer = Timer(blueprint: prepBlueprint)
     }
 
-    private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
+    private static func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
         let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
       
-        let speeches = stringOfSpeeches.map { (speechName: String) -> Speech in
+        let speeches = stringOfSpeeches.map { speechName -> Speech in
             let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
         
             return Speech(speechType: speechType, name: speechName)
@@ -181,3 +170,21 @@ class DebateRoundManager {
         return speeches
     }
 }
+
+protocol RoundType {
+    typealias Data: DataType
+    var timers: [Data] { get }
+    
+    var leftCountUpTimer: Timer<CountUpBlueprint>? {get}
+    var rightCountUpTimer: Timer<CountUpBlueprint>? {get}
+}
+
+//FIXME: Use a different name
+protocol DataType {
+    typealias DataTimer: TimerType
+    
+    var timer: DataTimer {get}
+    var name: String {get}
+}
+
+
