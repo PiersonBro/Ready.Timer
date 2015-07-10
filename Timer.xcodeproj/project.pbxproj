@@ -21,7 +21,6 @@
 		20BF4C761B2E46E100AB2F87 /* Din.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8D19A02E2E00477D3B /* AppDelegate.swift */; };
 		20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8F19A02E2E00477D3B /* ViewController.swift */; };
-		20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9119A02E2E00477D3B /* Main.storyboard */; };
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
 		20D523561AB5581A00A46760 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D523551AB5581A00A46760 /* StringExtension.swift */; };
@@ -169,7 +168,6 @@
 		20C99B8C19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99B8D19A02E2E00477D3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		20C99B8F19A02E2E00477D3B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = ViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		20C99B9219A02E2E00477D3B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		20C99B9419A02E2E00477D3B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		20C99B9A19A02E2E00477D3B /* TimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -252,7 +250,6 @@
 				205C661619AD657900E14B30 /* DebateRoundManager.swift */,
 				20D523551AB5581A00A46760 /* StringExtension.swift */,
 				20BB1A4E19D2758600568046 /* CircleButton.swift */,
-				20C99B9119A02E2E00477D3B /* Main.storyboard */,
 				20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
 				20C99B8B19A02E2E00477D3B /* Supporting Files */,
@@ -468,7 +465,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20C99B9319A02E2E00477D3B /* Main.storyboard in Resources */,
 				20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */,
 				20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */,
 				2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */,
@@ -574,14 +570,6 @@
 				20A73A291B2A11BB0088EE4F /* Base */,
 			);
 			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-		20C99B9119A02E2E00477D3B /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				20C99B9219A02E2E00477D3B /* Base */,
-			);
-			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

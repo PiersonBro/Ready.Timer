@@ -11,7 +11,7 @@ import QuartzCore
 import Cartography
 import Din
 
-class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
+class ViewController<Round: RoundType>: UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
@@ -21,19 +21,20 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     var debateRound: DebateRound
     var currentSpeech: Speech?
     
-    required init?(coder aDecoder: NSCoder) {
+    init(round: Round) {
         timerLabel = UILabel(frame: CGRect())
         debateRound = DebateRound(type: .TeamPolicy)
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
-        
-        super.init(coder: aDecoder)
-        
+    
+        super.init(nibName: nil, bundle: nil)
+
         tickerView = TickerView(frame: CGRect(), dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
+        self.view.backgroundColor = .whiteColor()
     }
     
     //MARK: ViewController Lifecycle.
@@ -96,15 +97,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         changeTimerToState(.CurrentState)
     }
     
-    enum TimerButtonState: String {
-        case Start = "Start"
-        case Cancel = "Cancel"
-        case Pause = "Pause"
-        case Resume = "Resume"
-        case CurrentState = ""
-    }
-    
-    func changeTimerToState(state: TimerButtonState) {
+    private func changeTimerToState(state: TimerButtonState) {
         switch state {
             case .Start:
                 startButton.labelText = TimerButtonState.Start.rawValue
@@ -234,3 +227,13 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         self.presentViewController(actionController, animated: true, completion: nil)
     }
 }
+
+
+private enum TimerButtonState: String {
+    case Start = "Start"
+    case Cancel = "Cancel"
+    case Pause = "Pause"
+    case Resume = "Resume"
+    case CurrentState = ""
+}
+
