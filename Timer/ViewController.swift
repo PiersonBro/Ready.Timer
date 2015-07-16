@@ -21,7 +21,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     var debateRoundManager: DebateRoundManager
     var currentSpeech: Speech?
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
         startButton = CircleButton(frame: CGRect())
