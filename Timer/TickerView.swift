@@ -225,19 +225,16 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     
     func removeLines() {
         let layers = self.layer.sublayers!
-        for subLayer in layers {
-            if subLayer.name != nil {
-                switch subLayer.name! {
+        for subLayer in layers where subLayer.name != nil {
+            switch subLayer.name! {
                 case "leftLineShapeLayer":
                     subLayer.removeFromSuperlayer()
                 case "rightLineShapeLayer":
                     subLayer.removeFromSuperlayer()
                 default: break
-                }
             }
         }
     }
-    
     
     func rotateToNextSegment() {
         rotate(ascending: true)
