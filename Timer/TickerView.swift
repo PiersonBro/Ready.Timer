@@ -133,6 +133,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
+        animator.debugEnabled = true
     }
 
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
