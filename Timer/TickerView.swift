@@ -288,33 +288,10 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     var shouldReloadDataSource = false
     
     func makeDataSourceCalls() {
-        var centerLabel: TickerLabel? = nil
-        var rightLabel: TickerLabel? = nil
-        var leftLabel: TickerLabel? = nil
-        var bottomLabel: TickerLabel? = nil
-        
-        for label in labels  {
-            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
-            let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
-            
-            if let position = position {
-                switch (position) {
-                case .Center(_, _):
-                    centerLabel = label
-                case .Right(_, _):
-                    rightLabel = label
-                case .Bottom(_,_):
-                    bottomLabel = label
-                case .Left(_, _):
-                    leftLabel = label
-                }
-            }
-        }
-        
-        //Can't shadow because of rdar://21475718
-        guard let unwrappedLabelCenter = centerLabel, unwrappedLabelRight = rightLabel, unwrappedLabelBottom = bottomLabel, unwrappedLabelLeft = leftLabel else {
-            fatalError("Couldn't find centerLabel, rightLabel, or bottomLabel")
-        }
+        let centerLabel = labelForPosition(.staticCenter)
+        let rightLabel = labelForPosition(.staticRight)
+        let leftLabel = labelForPosition(.staticLeft)
+        let bottomLabel = labelForPosition(.staticBottom)
         
         if shouldReloadDataSource {
             addLines(rect: bounds)
@@ -335,42 +312,54 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
                 }
             }
             
-            configureLabel(unwrappedLabelCenter)
-            configureLabel(unwrappedLabelLeft)
-            configureLabel(unwrappedLabelBottom)
-            configureLabel(unwrappedLabelRight)
+            configureLabel(centerLabel)
+            configureLabel(leftLabel)
+            configureLabel(bottomLabel)
+            configureLabel(rightLabel)
             
             shouldReloadDataSource = false
             return
         }
         
         if finalSpeechIsAtCenter {
-            dataSource.tickerViewDidRotateToLastSpeech(unwrappedLabelCenter.index)
+            dataSource.tickerViewDidRotateToLastSpeech(centerLabel.index)
             removeLines()
-            unwrappedLabelRight.hidden = true
-            unwrappedLabelBottom.hidden = true
-            unwrappedLabelLeft.hidden = true
+            rightLabel.hidden = true
+            bottomLabel.hidden = true
+            leftLabel.hidden = true
             
             shouldReloadDataSource = true
             finalSpeechIsAtCenter = false
             return
         }
         
-        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
-        unwrappedLabelRight.consumed = true
+        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index)
+        rightLabel.consumed = true
         
-        if (unwrappedLabelBottom.consumed) {
+        if (bottomLabel.consumed) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             let speechName: String
             
             if let name = optionalSpeechName {
                 speechName = name
-                unwrappedLabelBottom.index = speechCount
-                unwrappedLabelBottom.text = speechName
+                bottomLabel.index = speechCount
+                bottomLabel.text = speechName
             } else {
                 finalSpeechIsAtCenter = true
             }
         }
+    }
+
+    func labelForPosition(positionToFind: Position) -> TickerLabel {
+        for label in labels  {
+            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
+            let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
+            
+            if let position = position where position == positionToFind  {
+                return label
+            }
+        }
+        fatalError("Could not find label for position: \(positionToFind)")
     }
     
     override func updateConstraints() {
