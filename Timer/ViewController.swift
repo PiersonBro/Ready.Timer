@@ -29,7 +29,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         
         super.init(coder: aDecoder)
         
-        tickerView = TickerView(frame: CGRect(), dataSource: self)
+        tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2

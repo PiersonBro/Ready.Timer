@@ -66,7 +66,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         fatalError("Initializer Not Supported")
     }
     
-    init(frame: CGRect, dataSource: TickerViewDataSource) {
+    init(dataSource: TickerViewDataSource) {
         bottommostLabel = TickerLabel(frame: CGRect())
         rightmostLabel = TickerLabel(frame: CGRect())
         topmostLabel = TickerLabel(frame: CGRect())
@@ -82,7 +82,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         speechCount = 0
         self.dataSource = dataSource
-        super.init(frame: frame)
+        super.init(frame: CGRect())
 
         addSubview(leftDivider)
         layout(leftDivider, self) { (leftDivider, view) in
