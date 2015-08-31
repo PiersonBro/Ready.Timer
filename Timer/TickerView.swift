@@ -249,7 +249,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         let labelsToEnumerate = ascending ? labels : labels.reverse()
         animator.removeAllBehaviors()
         
-        enumerateLabels(labelsToEnumerate) { (label, nextLabel) in
+        enumerate(labelsToEnumerate) { (label, nextLabel) in
             label.snapBehavior!.snapPoint = nextLabel.center
         }
         
@@ -268,19 +268,19 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         animator.removeAllBehaviors()
     }
     
-    func enumerateLabels(labelsToEnumerate: [TickerLabel], block: (label: TickerLabel, nextLabel: TickerLabel) -> Void) {
-        for i in 0..<labelsToEnumerate.count {
-            let label = labelsToEnumerate[i]
-            let nextLabel: TickerLabel
+    func enumerate<T>(array: [T], block: (value: T, nextValue: T) -> Void) {
+        for i in 0..<array.count {
+            let value = array[i]
+            let next: T
             let nextIndex = i + 1
            
-            if (nextIndex < labelsToEnumerate.count) {
-                nextLabel = labelsToEnumerate[nextIndex]
+            if (nextIndex < array.count) {
+                next = array[nextIndex]
             } else {
-                nextLabel = labelsToEnumerate.first!
+                next = array.first!
             }
 
-            block(label: label, nextLabel: nextLabel)
+            block(value: value, nextValue: next)
         }
     }
     
@@ -366,7 +366,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         if labelConstraintsNeedUpdate {
             labelConstraintsNeedUpdate = false
             let unmodifiedConstraints = constraints
-            enumerateLabels(labels, block: { (label, nextLabel) in
+            enumerate(labels, block: { (label, nextLabel) in
                 let newConstraints = self.positioningConstraintsForLabel(nextLabel, constraints: unmodifiedConstraints)
                 let xMultiplier = newConstraints.xConstraint.multiplier
                 let yMultiplier = newConstraints.yConstraint.multiplier
