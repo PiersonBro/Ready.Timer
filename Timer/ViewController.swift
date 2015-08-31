@@ -104,6 +104,8 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         case CurrentState = ""
     }
     
+    var shouldSkip = true
+    
     func changeTimerToState(state: TimerButtonState) {
         switch state {
             case .Start:
@@ -119,6 +121,10 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         }
         
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
+                if shouldSkip {
+                    transitionToNextSpeech()
+                    return
+                }
                 startButton.labelText = "Cancel"
                 currentSpeech?.overtimeTimer.onTick { elapsedTime in
                     self.timerLabel.text = .formattedStringForDuration(elapsedTime)
