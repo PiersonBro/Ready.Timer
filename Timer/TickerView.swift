@@ -352,7 +352,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
 
     func labelForPosition(positionToFind: Position) -> TickerLabel {
         for label in labels  {
-            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
+            let constraints = positioningConstraintsForLabel(label, constraints: self.constraints)
             let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             
             if let position = position where position == positionToFind  {
