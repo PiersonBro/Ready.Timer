@@ -87,7 +87,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
 
     func startTimerWithLabel(label: UILabel) {
         countUpTimer.onTick { elapsedTime in
-                label.text = String.formattedStringForDuration(elapsedTime)
+                label.text = .formattedStringForDuration(elapsedTime)
             } .onConclusion { conclusionStatus in
                 if conclusionStatus == .Finish {
                     self.circleButton.labelText = self.finishedPepTimeString
