@@ -21,7 +21,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
     var debateRoundManager: DebateRoundManager
     var currentSpeech: Speech?
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         timerLabel = UILabel(frame: CGRect())
         debateRoundManager = DebateRoundManager(type: .TeamPolicy)
         startButton = CircleButton(frame: CGRect())
@@ -29,7 +29,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         
         super.init(coder: aDecoder)
         
-        tickerView = TickerView(frame: CGRect(), dataSource: self)
+        tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
@@ -104,6 +104,8 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         case CurrentState = ""
     }
     
+    var shouldSkip = true
+    
     func changeTimerToState(state: TimerButtonState) {
         switch state {
             case .Start:
@@ -119,6 +121,10 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         }
         
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
+                if shouldSkip {
+                    transitionToNextSpeech()
+                    return
+                }
                 startButton.labelText = "Cancel"
                 currentSpeech?.overtimeTimer.onTick { elapsedTime in
                     self.timerLabel.text = .formattedStringForDuration(elapsedTime)

@@ -31,3 +31,9 @@ public enum Position {
         }
     }
 }
+
+extension Position: Equatable {}
+
+public func ==(lhs: Position, rhs: Position) -> Bool {
+    return lhs.positionTuple.xMultiplier == rhs.positionTuple.xMultiplier && lhs.positionTuple.yMultiplier == rhs.positionTuple.yMultiplier
+}

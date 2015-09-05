@@ -10,12 +10,14 @@
 		2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; };
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		2005ED781B3D2C4C00E6FE03 /* DebateRoundManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2005ED771B3D2C4C00E6FE03 /* DebateRoundManagerTests.swift */; };
+		201D37EA1B93D7F70074475E /* DragHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 201D37E91B93D7F70074475E /* DragHandler.swift */; settings = {ASSET_TAGS = (); }; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
 		2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */; };
 		205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* DebateRoundManager.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
+		20B95B721B584D4F009675B7 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B95B711B584D4F009675B7 /* Position.swift */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
 		20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; };
 		20BF4C761B2E46E100AB2F87 /* Din.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -27,7 +29,6 @@
 		20D523561AB5581A00A46760 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D523551AB5581A00A46760 /* StringExtension.swift */; };
 		20D523751AB635A600A46760 /* TimerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; };
 		20D523761AB635A600A46760 /* TimerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		20F473311A43F10B00E38D98 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F473301A43F10B00E38D98 /* Position.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -157,12 +158,15 @@
 /* Begin PBXFileReference section */
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
 		2005ED771B3D2C4C00E6FE03 /* DebateRoundManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DebateRoundManagerTests.swift; path = ../Timer/DebateRoundManagerTests.swift; sourceTree = "<group>"; };
+		201D37E91B93D7F70074475E /* DragHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragHandler.swift; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DebateType-copy.plist"; sourceTree = "<group>"; };
 		205C661619AD657900E14B30 /* DebateRoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = DebateRoundManager.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TransitionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		20B95B711B584D4F009675B7 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StickyCorners-Bridging-Header.h"; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Din.xcodeproj; path = Din/Din.xcodeproj; sourceTree = "<group>"; };
 		20C99B8819A02E2E00477D3B /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -176,7 +180,6 @@
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20D523551AB5581A00A46760 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		20D523691AB6359F00A46760 /* TimerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TimerKit.xcodeproj; path = TimerKit/TimerKit.xcodeproj; sourceTree = "<group>"; };
-		20F473301A43F10B00E38D98 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Position.swift; path = ../Position.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -246,8 +249,9 @@
 			children = (
 				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
 				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
-				20F473301A43F10B00E38D98 /* Position.swift */,
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
+				201D37E91B93D7F70074475E /* DragHandler.swift */,
+				20B95B711B584D4F009675B7 /* Position.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
 				205C661619AD657900E14B30 /* DebateRoundManager.swift */,
 				20D523551AB5581A00A46760 /* StringExtension.swift */,
@@ -255,6 +259,7 @@
 				20C99B9119A02E2E00477D3B /* Main.storyboard */,
 				20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
+				20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */,
 				20C99B8B19A02E2E00477D3B /* Supporting Files */,
 			);
 			path = Timer;
@@ -507,15 +512,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20F473311A43F10B00E38D98 /* Position.swift in Sources */,
 				20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
+				201D37EA1B93D7F70074475E /* DragHandler.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
 				2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */,
 				205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */,
 				20D523561AB5581A00A46760 /* StringExtension.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
 				20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */,
+				20B95B721B584D4F009675B7 /* Position.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -678,6 +684,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.rezworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/EandZ/Documents/Programing/REZ Works/Ready Timer/Timer/StickyCorners-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -693,6 +700,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.rezworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/EandZ/Documents/Programing/REZ Works/Ready Timer/Timer/StickyCorners-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
