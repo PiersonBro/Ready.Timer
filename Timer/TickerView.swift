@@ -36,7 +36,7 @@ private extension Position {
     }
 }
 
-class TickerView: UIView, UIDynamicAnimatorDelegate {
+class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     // Subviews
     private var bottommostLabel: TickerLabel
     private var rightmostLabel: TickerLabel
@@ -48,13 +48,22 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private let leftEdgeDivider: UIView
     private let rightEdgeDivider: UIView
     
-    private var labelConstraintsNeedUpdate: Bool = false
+    private var labelConstraintsNeedUpdate: Bool = false {
+        didSet {
+            if labelConstraintsNeedUpdate == true {
+                setNeedsUpdateConstraints()
+            }
+        }
+    }
 
     private var speechCount: Int
     
     // Strongly held animator objects
     private var animator: UIDynamicAnimator
     private let labels: [TickerLabel]
+    
+    var dragHandler: DragHandler? = nil
+    var machineRotated = false
     
     let dataSource: TickerViewDataSource
 
@@ -135,7 +144,11 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         contentMode = .Redraw
         animator.debugEnabled = true
     }
-
+    
+    deinit {
+        dragHandler?.deactivate()
+    }
+    
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
         label.font = UIFont.systemFontOfSize(50)
         label.textColor = UIColor.cyanColor()
@@ -198,6 +211,14 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         layer.mask = mask
         
         addLines(rect: rect)
+        
+        if dragHandler == nil {
+            dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
+        }
+        
+        dragHandler?.delegate = self
+        
+        dragHandler?.activate()
     }
     
     func addLines(rect rect: CGRect) {
@@ -261,11 +282,20 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         item.resistance = 150
         animator.addBehavior(item)
         labelConstraintsNeedUpdate = true
-        setNeedsUpdateConstraints()
+        machineRotated = true
+    }
+    
+    //MARK: DragHandler Delegate
+    func didFinishDrag() {
+        labelConstraintsNeedUpdate = true
     }
     
     func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
         animator.removeAllBehaviors()
+        if machineRotated {
+            dragHandler!.labelsExternallyShifted()
+            machineRotated = false
+        }
     }
     
     func enumerate<T>(array: [T], block: (value: T, nextValue: T) -> Void) {
