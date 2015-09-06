@@ -15,9 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        window?.rootViewController = ViewController(round: DebateRound(type: .LincolnDouglas))
+        let round = DebateRound(type: .LincolnDouglas)
+        let viewController = ViewController(round: round)
+        window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        
+        viewController.helloWorld("hello")
         return true
     }
 

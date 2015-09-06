@@ -10,20 +10,21 @@ import UIKit
 import QuartzCore
 import Cartography
 import Din
+import TimerKit
 
-class ViewController<Round: RoundType>: UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
+class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
     let clockwiseButton: CircleButton
     
     var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
-    var debateRound: DebateRound
-    var currentSpeech: Speech?
+    var debateRound: Round
+    var currentSpeech: Round.Segment?
     
     init(round: Round) {
         timerLabel = UILabel(frame: CGRect())
-        debateRound = DebateRound(type: .TeamPolicy)
+        debateRound = round
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
     
@@ -36,9 +37,12 @@ class ViewController<Round: RoundType>: UIViewController, TickerViewDataSource, 
         doubleTapGestureRecognizer!.delegate = self
         self.view.backgroundColor = .whiteColor()
     }
-    
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+
     //MARK: ViewController Lifecycle.
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
@@ -114,11 +118,11 @@ class ViewController<Round: RoundType>: UIViewController, TickerViewDataSource, 
         if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
                 startButton.labelText = "Cancel"
                 currentSpeech?.timer.onTick { elapsedTime in
-                    self.timerLabel.text = .formattedStringForDuration(elapsedTime)
+                    self.timerLabel.text = String.formattedStringForDuration(elapsedTime)
                 } .onConclusion { conclusionResult in
                     switch conclusionResult {
                         case .Overtime:
-                            assert(self.currentSpeech?.timer.status == .Overtime)
+                            assert(self.currentSpeech!.timer.status.rawValue == "Overtime")
                             self.transitionToNextSpeech()
                         case .Reset:
                             self.timerLabel.text = "\(self.currentSpeech!.timer.startingTimeInMinutes!):00"
@@ -202,7 +206,7 @@ class ViewController<Round: RoundType>: UIViewController, TickerViewDataSource, 
         
     func tickerViewDidRotateToLastSpeech(index: Int) {
         //FIXME: This needs to change before release.
-        debateRound = DebateRound(type: .LincolnDouglas)
+//        debateRound = DebateRound(type: .LincolnDouglas)
     }
     
     // MARK: Next Speech
@@ -217,7 +221,6 @@ class ViewController<Round: RoundType>: UIViewController, TickerViewDataSource, 
                 soundManager.stop()
             #endif
             self.startButton.labelText = "Start"
-            // Calling this will also mark the speech as consumed, yay side effects.
             self.currentSpeech?.timer.concludeWithStatus(.Finish)
             self.tickerView!.rotateToNextSegment()
         }
@@ -237,3 +240,10 @@ private enum TimerButtonState: String {
     case CurrentState = ""
 }
 
+
+extension ViewController where Round.Segment.SegmentTimer == OvertimeTimer {
+    
+    func helloWorld(string: String) {
+        print(Round.Segment.SegmentTimer.self)
+    }
+}
