@@ -124,10 +124,10 @@ extension SpeechType: CustomStringConvertible {
     }
 }
 
-struct Speech: DataType {
-    typealias DataTimer = OvertimeTimer
+struct Speech: SegmentTimerType {
+    typealias SegmentTimer = OvertimeTimer
     let name: String
-    let timer: DataTimer
+    let timer: SegmentTimer
     
     private init(speechType: SpeechType, name: String) {
         self.name = name
@@ -136,14 +136,14 @@ struct Speech: DataType {
 }
 
 struct DebateRound: RoundType {
-    typealias Data = Speech
+    typealias SegmentTimer = Speech
 
     // AFF
     let rightCountUpTimer: Timer<CountUpBlueprint>?
     // NEG
     let leftCountUpTimer: Timer<CountUpBlueprint>?
     
-    let timers: [Data]
+    let timers: [SegmentTimer]
     private let debateRoundData: [NSObject : AnyObject]
     
     init(type: DebateType) {
@@ -172,18 +172,18 @@ struct DebateRound: RoundType {
 }
 
 protocol RoundType {
-    typealias Data: DataType
-    var timers: [Data] { get }
+    typealias Segment: SegmentTimerType
+    var timers: [Segment] { get }
     
     var leftCountUpTimer: Timer<CountUpBlueprint>? {get}
     var rightCountUpTimer: Timer<CountUpBlueprint>? {get}
 }
 
 //FIXME: Use a different name
-protocol DataType {
-    typealias DataTimer: TimerType
+protocol SegmentTimerType {
+    typealias SegmentTimer: TimerType
     
-    var timer: DataTimer {get}
+    var timer: SegmentTimer {get}
     var name: String {get}
 }
 
