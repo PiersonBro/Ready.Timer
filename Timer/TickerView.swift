@@ -85,7 +85,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         super.init(frame: frame)
 
         addSubview(leftDivider)
-        layout(leftDivider, self) { (leftDivider, view) in
+        constrain(leftDivider, self) { (leftDivider, view) in
             leftDivider.centerX == view.centerX * 0.6
             leftDivider.centerY == view.centerY
             leftDivider.height == view.height
@@ -93,7 +93,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         }
         
         addSubview(rightDivider)
-        layout(rightDivider, self) { (rightDivider, view) in
+        constrain(rightDivider, self) { (rightDivider, view) in
             rightDivider.centerX == view.centerX * 1.40
             rightDivider.centerY == view.centerY
             rightDivider.height == view.height
@@ -101,7 +101,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         }
         
         addSubview(leftEdgeDivider)
-        layout(leftEdgeDivider, self) { (leftEdgeDivider, view) in
+        constrain(leftEdgeDivider, self) { (leftEdgeDivider, view) in
             leftEdgeDivider.centerX == view.centerX * 0.1
             leftEdgeDivider.centerY == view.centerY
             leftEdgeDivider.height == view.height
@@ -109,7 +109,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         }
         
         addSubview(rightEdgeDivider)
-        layout(rightEdgeDivider, self) { (rightEdgeDivider, view) in
+        constrain(rightEdgeDivider, self) { (rightEdgeDivider, view) in
             rightEdgeDivider.centerX == view.centerX * 1.9
             rightEdgeDivider.centerY == view.centerY
             rightEdgeDivider.height == view.height
@@ -152,7 +152,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         var leftConstraint: NSLayoutConstraint? = nil
         var rightConstraint: NSLayoutConstraint? = nil
     
-        layout([label, rightDivider, leftDivider, rightEdgeDivider, leftEdgeDivider]) { (layoutProxies) in
+        constrain([label, rightDivider, leftDivider, rightEdgeDivider, leftEdgeDivider]) { (layoutProxies) in
             let label = layoutProxies[0]
             let rightDivider = layoutProxies[1]
             let leftDivider = layoutProxies[2]

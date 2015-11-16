@@ -124,67 +124,79 @@ extension SpeechType: CustomStringConvertible {
     }
 }
 
-struct Speech: SegmentTimerType {
-    typealias SegmentTimer = OvertimeTimer
-    let name: String
-    let timer: SegmentTimer
-    
-    private init(speechType: SpeechType, name: String) {
+private extension OvertimeSegment {
+    init(speechType: SpeechType, name: String) {
         self.name = name
         timer = OvertimeTimer(timeLimitInMinutes: speechType.durationOfSpeech())
     }
 }
 
-struct DebateRound: RoundType {
-    typealias SegmentTimer = Speech
-
-    // AFF
-    let rightCountUpTimer: Timer<CountUpBlueprint>?
-    // NEG
-    let leftCountUpTimer: Timer<CountUpBlueprint>?
-    
-    let timers: [SegmentTimer]
-    private let debateRoundData: [NSObject : AnyObject]
-    
-    init(type: DebateType) {
+extension Round {
+    static func roundFromDebateType(type: DebateType) -> Round {
         let path = NSBundle.mainBundle().pathForResource(PListKey.DebugNameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        debateRoundData = debates[type.rawValue] as! [NSObject: AnyObject]
-        timers = DebateRound.generateSpeechesFromData(debateRoundData, debateType: type)
+        let debateRoundData = debates[type.rawValue] as! [NSObject: AnyObject]
 
         let prepTimeDuration = debateRoundData[PListKey.TotalPrepTime.rawValue] as! Int
         let prepBlueprint = CountUpBlueprint(upperLimitInMinutes: prepTimeDuration)
-        leftCountUpTimer = Timer(blueprint: prepBlueprint)
-        rightCountUpTimer = Timer(blueprint: prepBlueprint)
-    }
+        let leftCountUpTimer = Timer(blueprint: prepBlueprint)
+        let rightCountUpTimer = Timer(blueprint: prepBlueprint)
 
-    private static func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
-        let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
-      
-        let speeches = stringOfSpeeches.map { speechName -> Speech in
-            let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
-        
-            return Speech(speechType: speechType, name: speechName)
+        let timers = generateSpeechesFromData(debateRoundData, debateType: type, intersperseLeft: leftCountUpTimer,intersperseRight: rightCountUpTimer) { segment -> Bool in
+                if segment.name == "CX" {
+                    return true
+                } else {
+                    return isRebuttal(segment)
+                }
         }
         
-        return speeches
+        return Round(first: timers.0, third: timers.1)
     }
 }
 
-protocol RoundType {
-    typealias Segment: SegmentTimerType
-    var timers: [Segment] { get }
-    
-    var leftCountUpTimer: Timer<CountUpBlueprint>? {get}
-    var rightCountUpTimer: Timer<CountUpBlueprint>? {get}
+func isRebuttal(x: OvertimeSegment) -> Bool {
+    if x.name == "1 AR" {
+        return true
+    } else if x.name == "1 NR" || x.name == "NR" {
+        return true
+    } else if x.name == "2 NR" {
+        return true
+    } else {
+        return false
+    }
 }
 
-//FIXME: Use a different name
-protocol SegmentTimerType {
-    typealias SegmentTimer: TimerType
-    
-    var timer: SegmentTimer {get}
-    var name: String {get}
+private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType, intersperseLeft: Timer<CountUpBlueprint>, intersperseRight: Timer<CountUpBlueprint>, shouldIntersperseAfterSegment: (overtimeSegment: OvertimeSegment) -> Bool) -> ([OvertimeSegment?], [CountUpSegment?])  {
+    let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
+    var speeches = stringOfSpeeches.map { speechName -> OvertimeSegment? in
+        let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
+        return OvertimeSegment(speechType: speechType, name: speechName)
+    }
+    //FIXME: This is pure mutation and grossness.
+    speeches.forEach { segment in
+        if let segment = segment {
+            let index = speeches.indexOf { $0 == segment }
+            if shouldIntersperseAfterSegment(overtimeSegment: segment) {
+                speeches.insert(nil, atIndex: index! + 1)
+            }
+        }
+    }
+    let leftSegment = CountUpSegment(timer: intersperseLeft, name: "Aff Prep Timer")
+    let rightSegment = CountUpSegment(timer: intersperseRight, name: "Neg Prep Timer")
+    var left = false
+    let countUpSegment = speeches.map { segment -> CountUpSegment? in
+        if let _ = segment {
+            return nil
+        } else {
+            if left {
+                left = false
+                return leftSegment
+            } else {
+                left = true
+                return rightSegment
+            }
+        }
+    }
+
+    return (speeches, countUpSegment)
 }
-
-

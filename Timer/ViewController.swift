@@ -12,30 +12,35 @@ import Cartography
 import Din
 import TimerKit
 
-class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
+protocol TimerViewControllerType {
+    // FIXME: Change these to properties.
+    func setTimerLabelText(text: String)
+    func setTimerState(state: TimerButtonState)
+    func timerDidFinish()
+}
+
+class ViewController : UIViewController, TickerViewDataSource, TimerViewControllerType, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
     let clockwiseButton: CircleButton
     
     var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
-    var debateRound: Round
-    var currentSpeech: Round.Segment?
+    var engine: RoundUIEngine? = nil
     
-    init(round: Round) {
+    init(partialEngine: (viewController: TimerViewControllerType) -> RoundUIEngine) {
         timerLabel = UILabel(frame: CGRect())
-        debateRound = round
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
     
         super.init(nibName: nil, bundle: nil)
-
+        engine = partialEngine(viewController: self)
         tickerView = TickerView(frame: CGRect(), dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
-        self.view.backgroundColor = .whiteColor()
+        view.backgroundColor = .whiteColor()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -50,7 +55,7 @@ class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewCon
         guard let tickerView = tickerView else { return }
         
         view.addSubview(tickerView)
-        layout(tickerView, view) { (tickerView, view) in
+        constrain(tickerView, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
             tickerView.width == view.width * 1 ~ 750
@@ -62,7 +67,7 @@ class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewCon
         startButton.addTarget(self, action: "timerButtonPressed", forControlEvents: .TouchUpInside)
         startButton.labelText = "Start"
         view.addSubview(startButton)
-        layout(startButton, view, tickerView) { (startButton, view, tickerView) in
+        constrain(startButton, view, tickerView) { (startButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             startButton.centerX == view.centerX * 1.5
             startButton.centerY == tickerView.top - 100
@@ -73,7 +78,7 @@ class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewCon
         clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Clockwise"
         view.addSubview(clockwiseButton)
-        layout(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
+        constrain(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             counterClockwiseButton.centerX == view.centerX * 0.4
             counterClockwiseButton.centerY == tickerView.top - 100
@@ -84,74 +89,30 @@ class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewCon
         
         timerLabel.font = UIFont.systemFontOfSize(160)
         view.addSubview(timerLabel)
-        layout(timerLabel, view) { (timerLabel, view) in
+        constrain(timerLabel, view) { (timerLabel, view) in
             timerLabel.centerX == view.centerX
             timerLabel.centerY == view.centerY / 2
         }
         tickerViewDidRotateStringAtIndexToCenterPosition(0)
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
+    
+    func setTimerLabelText(text: String) {
+        timerLabel.text = text
     }
     
+    func setTimerState(state: TimerButtonState) {
+        //FIXME: Add proper localization support:
+        startButton.labelText = state.rawValue
+    }
+
     //MARK: TimerButton
     func timerButtonPressed() {
-        //FIXME: This is confusing!
-        changeTimerToState(.CurrentState)
+        engine!.buttonTapped()
     }
-    
-    private func changeTimerToState(state: TimerButtonState) {
-        switch state {
-            case .Start:
-                startButton.labelText = TimerButtonState.Start.rawValue
-            case .Cancel:
-                startButton.labelText = TimerButtonState.Cancel.rawValue
-            case .Pause:
-                startButton.labelText = TimerButtonState.Pause.rawValue
-            case .Resume:
-                startButton.labelText = TimerButtonState.Resume.rawValue
-            case .CurrentState:
-                break
-        }
-        
-        if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
-                startButton.labelText = "Cancel"
-                currentSpeech?.timer.onTick { elapsedTime in
-                    self.timerLabel.text = String.formattedStringForDuration(elapsedTime)
-                } .onConclusion { conclusionResult in
-                    switch conclusionResult {
-                        case .Overtime:
-                            assert(self.currentSpeech!.timer.status.rawValue == "Overtime")
-                            self.transitionToNextSpeech()
-                        case .Reset:
-                            self.timerLabel.text = "\(self.currentSpeech!.timer.startingTimeInMinutes!):00"
-                        default:
-                            break
-                    }
-                }.activate()
-        } else if (startButton.labelText == "Cancel") {
-                startButton.labelText = "Start"
-                currentSpeech?.timer.concludeWithStatus(.Reset)
-        } else if (startButton.labelText == "Pause") {
-                startButton.labelText = "Resume"
-                currentSpeech?.timer.concludeWithStatus(.Pause)
-        }
-    }
-    
+
     // MARK: Gesture Recognizers
-    
     func tapped() {
-        if let currentSpeech = currentSpeech {
-            switch(currentSpeech.timer.status) {
-                case .Running:
-                    changeTimerToState(.Pause)
-                case .Paused:
-                    changeTimerToState(.Resume)
-                default:
-                    break
-            }
-        }
+        engine!.doubleTapped()
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
@@ -162,55 +123,21 @@ class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewCon
         }
     }
     
-    //MARK: Debug
-    func clockwise(sender: CircleButton) {
-        let transitionViewController = TransitionViewController(countUpTimer: debateRound.rightCountUpTimer!)
-        self.presentViewController(transitionViewController, animated: true, completion: nil)
-    }
-    
-    func rotateToNextSpeechIfPossible() {
-        if let currentSpeech = currentSpeech {
-            if currentSpeech.timer.status != .Running && currentSpeech.timer.status != .Paused {
-                tickerView!.rotateToNextSegment()
-            } else {
-                // FIXME: Add a better denied animation here.
-                let animation = CAKeyframeAnimation(keyPath: "transform")
-                let initialValue = NSValue(CATransform3D: CATransform3DMakeTranslation(-6.0, 0.0, 0.0))
-                let finalValue = NSValue(CATransform3D: CATransform3DMakeTranslation(6.0, 0.0, 0.0))
-                animation.values = [initialValue, finalValue]
-                animation.autoreverses = true
-                animation.duration = 0.5
-                animation.repeatCount = 2.0
-                clockwiseButton.layer.addAnimation(animation, forKey:nil)
-            }
-        } else {
-            tickerView!.rotateToNextSegment()
-        }
-    }
-    
     //MARK: TickerView DataSource
     func stringForIndex(index: Int) -> String? {
-        if index >= debateRound.timers.count {
-            // We are at the end of the Debate Round.
-            return nil
-        }
-        let speech = debateRound.timers[index]
-        return speech.name
+        return engine!.displayNameForSegmentIndex(index)
     }
     
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
-        let speech = debateRound.timers[index]
-        timerLabel.text = "\(speech.timer.startingTimeInMinutes!):00"
-        currentSpeech = speech
+        // We don't have to do anything. 
     }
         
     func tickerViewDidRotateToLastSpeech(index: Int) {
-        //FIXME: This needs to change before release.
-//        debateRound = DebateRound(type: .LincolnDouglas)
+        // FIXME: What happens when the round ends?
     }
     
     // MARK: Next Speech
-    func transitionToNextSpeech() {
+    func timerDidFinish() {
         #if !(arch(i386) || !arch(x86_64))
             let audioController = AudioController(type: Ringtone())
             let soundManager = audioController.playSound(.Ascending, repeating: true)
@@ -221,29 +148,49 @@ class ViewController<Round: RoundType where Round.Segment == Speech> : UIViewCon
                 soundManager.stop()
             #endif
             self.startButton.labelText = "Start"
-            self.currentSpeech?.timer.concludeWithStatus(.Finish)
+            self.engine!.userFinished()
+            //FIXME: Should this be part of `userFinished`?
+            self.engine!.next()
             self.tickerView!.rotateToNextSegment()
         }
         
         let actionController = UIAlertController(title: "Timer Done", message: nil, preferredStyle: .Alert)
         actionController.addAction(action)
-        self.presentViewController(actionController, animated: true, completion: nil)
+        presentViewController(actionController, animated: true, completion: nil)
     }
-}
-
-
-private enum TimerButtonState: String {
-    case Start = "Start"
-    case Cancel = "Cancel"
-    case Pause = "Pause"
-    case Resume = "Resume"
-    case CurrentState = ""
-}
-
-
-extension ViewController where Round.Segment.SegmentTimer == OvertimeTimer {
     
-    func helloWorld(string: String) {
-        print(Round.Segment.SegmentTimer.self)
+    //MARK: Debug
+    //FIXME: THIS IS BROKEN!
+    func clockwise(sender: CircleButton) {
+        fatalError("Please burn this to the ground.")
     }
 }
+
+//
+//// FIXME: Encapsulate these functions
+//func createFile() {
+//    let plistCreator = PlistCreator(timerKind: .CountDownTimer)
+//    plistCreator.addTimer(identifier: "Piano 1", duration: 10)
+//    plistCreator.addTimer(identifier: "Piano 2", duration: 20)
+//    plistCreator.addTimer(identifier: "Piano 3", duration: 5)
+//    if plistCreator.finish(name: "Piano") {
+//        print("Success")
+//    } else {
+//        print("Failure")
+//    }
+//}
+//
+//func load() -> CountDownRound {
+//    let plistReconstituter = PlistReconstituter(name: "Piano")
+//    if let timers = plistReconstituter.countDownTimers {
+//        let segments = zip(timers, plistReconstituter.names).map { timer, name in
+//            CountDownSegment(timer: timer, name: name)
+//        }
+//        
+//        return CountDownRound(timers: segments, leftCountUpTimer: nil, rightCountUpTimer: nil)
+//        
+//    } else {
+//        fatalError()
+//    }
+//}
+//

@@ -4,24 +4,31 @@
 
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "64D9193D901B8B1E1D67C697742877728DA72EA8" : 0,
     "DD25B9E902E46CE83FDE35C1A3F2D1B9E6D1E355" : 0,
     "B94099762A6CCA1CC3C3AA8AD781B8919D57F48E" : 0,
     "364D2E5F611143E7C4D0A99C691B1988FBD5381F" : 0
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CBAD05E1-7580-402D-9F7C-138AD2937635",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "64D9193D901B8B1E1D67C697742877728DA72EA8" : "Ready%20Timer\/Din\/",
     "DD25B9E902E46CE83FDE35C1A3F2D1B9E6D1E355" : "Ready%20Timer",
     "B94099762A6CCA1CC3C3AA8AD781B8919D57F48E" : "Ready%20Timer\/TimerKit",
     "364D2E5F611143E7C4D0A99C691B1988FBD5381F" : "Ready%20TimerCartography"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Timer",
-  "DVTSourceControlWorkspaceBlueprintVersion" : 203,
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
   "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "Timer.xcodeproj",
   "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/robb\/cartography",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "364D2E5F611143E7C4D0A99C691B1988FBD5381F"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/PiersonBro\/Din.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "64D9193D901B8B1E1D67C697742877728DA72EA8"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/PiersonBro\/TimerKit.git",

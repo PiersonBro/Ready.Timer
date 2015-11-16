@@ -15,11 +15,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        let round = DebateRound(type: .LincolnDouglas)
-        let viewController = ViewController(round: round)
+        
+        let creator = PlistCreator()
+        creator.addTimer(ofType: .OvertimeTimer, identifier: "Hello", duration: 5)
+        creator.addTimer(ofType: .CountDownTimer, identifier: "Snot", duration: 5)
+        creator.addTimer(ofType: .CountUpTimer, identifier: "terrible", duration: 4)
+        creator.finish(name: "Stupid")
+
+        let round = Round.roundForName("Stupid")
+        let partialEngine = RoundUIEngine.createEngine(round)
+        let viewController = ViewController(partialEngine: partialEngine)
+
         window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        viewController.helloWorld("hello")
+        
         return true
     }
 

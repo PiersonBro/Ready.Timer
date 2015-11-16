@@ -54,19 +54,19 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         super.viewDidLoad()
         
         view.addSubview(blurView)
-        layout(blurView) { backgroundView in
+        constrain(blurView) { backgroundView in
             backgroundView.size == backgroundView.superview!.size
             backgroundView.center == backgroundView.center
         }
         
         view.addSubview(blurView)
-        layout(blurView) { contentView in
+        constrain(blurView) { contentView in
             contentView.size == contentView.superview!.size
             contentView.center == contentView.superview!.center
         }
         
         contentView.addSubview(leftDivider)
-        layout(leftDivider) { leftDivider in
+        constrain(leftDivider) { leftDivider in
             leftDivider.centerX == leftDivider.superview!.centerX * 0.67
             leftDivider.centerY == leftDivider.superview!.centerY * 0.5
             leftDivider.height == leftDivider.superview!.height / 4
@@ -74,7 +74,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         }
         
         contentView.addSubview(rightDivider)
-        layout(rightDivider) { rightDivider in
+        constrain(rightDivider) { rightDivider in
             rightDivider.centerY == rightDivider.superview!.centerY * 0.5
             rightDivider.centerX == rightDivider.superview!.centerX * 1.35
             rightDivider.height == rightDivider.superview!.height / 4
@@ -109,7 +109,7 @@ class TransitionViewController: UIViewController, UIDynamicAnimatorDelegate {
         
         circleButton.addTarget(self, action: "buttonTapped:", forControlEvents: .TouchUpInside)
         contentView.addSubview(circleButton)
-        layout(circleButton) { circleButton in
+        constrain(circleButton) { circleButton in
             circleButton.center == circleButton.superview!.center
             circleButton.size == circleButton.superview!.size / 4
         }
