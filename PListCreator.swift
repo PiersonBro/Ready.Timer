@@ -53,26 +53,18 @@ extension Round {
         let numbers = names.map {
             dictionary[$0] as! Int
         }
-        
-        let duration = zip(numbers, names).reduce([String: Int]()) { (var dictionary, numberAndName) in
-            dictionary[numberAndName.1] = numberAndName.0
-            return dictionary
-        }
-        
         let typeOfTimers = names.map {
             dictionary[PlistKeys.TypeOfTimer.rawValue + $0] as! String
         }.map {
             TimerKind(rawValue: $0)!
         }
-        
-        let allKeys = duration.map { $0.1 }
 
         var overtimeSegments = [OvertimeSegment?]()
         var countDownSegments = [CountDownSegment?]()
         var countUpSegments = [CountUpSegment?]()
         var infiniteSegments = [InfiniteSegment?]()
         
-        zip(zip(typeOfTimers, allKeys), names).forEach { kindAndDuration, name in
+        zip(zip(typeOfTimers, numbers), names).forEach { kindAndDuration, name in
             let round = createTimersOfType(kindAndDuration.0, duration: kindAndDuration.1, name: name)
             if let overtimeSegment = round.0 {
                 overtimeSegments.append(overtimeSegment)
