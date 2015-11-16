@@ -165,32 +165,3 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         fatalError("Please burn this to the ground.")
     }
 }
-
-//
-//// FIXME: Encapsulate these functions
-//func createFile() {
-//    let plistCreator = PlistCreator(timerKind: .CountDownTimer)
-//    plistCreator.addTimer(identifier: "Piano 1", duration: 10)
-//    plistCreator.addTimer(identifier: "Piano 2", duration: 20)
-//    plistCreator.addTimer(identifier: "Piano 3", duration: 5)
-//    if plistCreator.finish(name: "Piano") {
-//        print("Success")
-//    } else {
-//        print("Failure")
-//    }
-//}
-//
-//func load() -> CountDownRound {
-//    let plistReconstituter = PlistReconstituter(name: "Piano")
-//    if let timers = plistReconstituter.countDownTimers {
-//        let segments = zip(timers, plistReconstituter.names).map { timer, name in
-//            CountDownSegment(timer: timer, name: name)
-//        }
-//        
-//        return CountDownRound(timers: segments, leftCountUpTimer: nil, rightCountUpTimer: nil)
-//        
-//    } else {
-//        fatalError()
-//    }
-//}
-//
