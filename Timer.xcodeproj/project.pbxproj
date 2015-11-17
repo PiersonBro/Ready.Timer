@@ -20,7 +20,6 @@
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
 		206E8E6E1BAE3F60001E2EA5 /* TimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E8E6D1BAE3F60001E2EA5 /* TimerUIEngine.swift */; };
-		2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
 		20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; };
@@ -189,7 +188,6 @@
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
 		206E8E6D1BAE3F60001E2EA5 /* TimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerUIEngine.swift; sourceTree = SOURCE_ROOT; };
-		2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TransitionViewController.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Din.xcodeproj; path = Din/Din.xcodeproj; sourceTree = "<group>"; };
@@ -348,7 +346,6 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
-				2082121E1A2AD40900BDCEF3 /* TransitionViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -578,7 +575,6 @@
 				20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
 				20032E541BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift in Sources */,
-				2082121F1A2AD40900BDCEF3 /* TransitionViewController.swift in Sources */,
 				205C661719AD657900E14B30 /* DebateRoundManager.swift in Sources */,
 				20D523561AB5581A00A46760 /* StringExtension.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
