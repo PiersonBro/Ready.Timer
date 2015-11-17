@@ -1,5 +1,5 @@
 //
-//  DebateRoundManager.swift
+//  Debate+Round.swift
 //  Timer
 //
 //  Created by E&Z Pierson on 8/26/14.
@@ -154,7 +154,7 @@ extension Round {
     }
 }
 
-func isRebuttal(x: OvertimeSegment) -> Bool {
+private func isRebuttal(x: OvertimeSegment) -> Bool {
     if x.name == "1 AR" {
         return true
     } else if x.name == "1 NR" || x.name == "NR" {
