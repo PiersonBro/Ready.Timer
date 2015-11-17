@@ -19,7 +19,8 @@
 		205C661719AD657900E14B30 /* Debate+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* Debate+Round.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
-		206E8E6E1BAE3F60001E2EA5 /* TimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E8E6D1BAE3F60001E2EA5 /* TimerUIEngine.swift */; };
+		206E8E6E1BAE3F60001E2EA5 /* TimerUIEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */; };
+		20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
 		20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; };
@@ -187,7 +188,8 @@
 		205C661619AD657900E14B30 /* Debate+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Debate+Round.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
-		206E8E6D1BAE3F60001E2EA5 /* TimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerUIEngine.swift; sourceTree = SOURCE_ROOT; };
+		206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerUIEngineType.swift; sourceTree = SOURCE_ROOT; };
+		20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvertimeUIEngine.swift; sourceTree = "<group>"; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Din.xcodeproj; path = Din/Din.xcodeproj; sourceTree = "<group>"; };
@@ -246,14 +248,23 @@
 			children = (
 				200D1CEA1BE33FEF00F60F77 /* EngineProxy.swift */,
 				20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */,
-				206E8E6D1BAE3F60001E2EA5 /* TimerUIEngine.swift */,
-				20032E5A1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift */,
-				20032E5C1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift */,
-				20032E531BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift */,
+				20837FA81BFAF33C00D7F23D /* TimerUIEngineType */,
 				20CBC6C41BD07780001898E2 /* UIConfiguration.swift */,
 				20EDCC051B9FAB260058E168 /* PListCreator.swift */,
 			);
 			name = "Model-ViewController";
+			sourceTree = "<group>";
+		};
+		20837FA81BFAF33C00D7F23D /* TimerUIEngineType */ = {
+			isa = PBXGroup;
+			children = (
+				206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */,
+				20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */,
+				20032E5A1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift */,
+				20032E5C1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift */,
+				20032E531BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift */,
+			);
+			name = TimerUIEngineType;
 			sourceTree = "<group>";
 		};
 		20BF4C691B2E46D100AB2F87 /* Products */ = {
@@ -568,6 +579,7 @@
 				20F473311A43F10B00E38D98 /* Position.swift in Sources */,
 				2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */,
 				20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */,
+				20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */,
 				20032E5B1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
@@ -582,7 +594,7 @@
 				20CBC6C51BD07780001898E2 /* UIConfiguration.swift in Sources */,
 				20EF4A3F1BD6F7620045D233 /* RoundUIEngine.swift in Sources */,
 				200D1CEB1BE33FEF00F60F77 /* EngineProxy.swift in Sources */,
-				206E8E6E1BAE3F60001E2EA5 /* TimerUIEngine.swift in Sources */,
+				206E8E6E1BAE3F60001E2EA5 /* TimerUIEngineType.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
