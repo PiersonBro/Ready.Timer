@@ -165,7 +165,7 @@ final class OvertimeUIEngine<T: SegmentType where T.SegmentTimer == OvertimeTime
         }()
 
         if let timerStateToUpdateWorldWith = timerStateToUpdateWorldWith {
-            viewController.setTimerState(timerStateToUpdateWorldWith)
+            viewController.setTimerButtonText(timerStateToUpdateWorldWith.rawValue)
         }
     }
     

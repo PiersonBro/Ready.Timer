@@ -91,7 +91,7 @@ final class CountDownTimerUIEngine: TimerUIEngineType {
         }()
 
         if let timerStateToUpdateWorldWith = timerStateToUpdateWorldWith {
-            viewController.setTimerState(timerStateToUpdateWorldWith)
+            viewController.setTimerButtonText(timerStateToUpdateWorldWith.rawValue)
         }
     }
     

@@ -15,7 +15,7 @@ import TimerKit
 protocol TimerViewControllerType {
     // FIXME: Change these to properties.
     func setTimerLabelText(text: String)
-    func setTimerState(state: TimerButtonState)
+    func setTimerButtonText(text: String)
     func timerDidFinish()
 }
 
@@ -100,9 +100,9 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         timerLabel.text = text
     }
     
-    func setTimerState(state: TimerButtonState) {
+    func setTimerButtonText(text: String) {
         //FIXME: Add proper localization support:
-        startButton.labelText = state.rawValue
+        startButton.labelText = text
     }
 
     //MARK: TimerButton
