@@ -26,7 +26,12 @@ final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<I
     }
     
     func buttonTapped() {
-        
+        if timer.status == .Inactive || timer.status == .Paused {
+            changeTimerToState(.Start)
+        } else if timer.status == .Running {
+            timer.concludeWithStatus(.Finish)
+        }
+
     }
     
     //FIXME: Consider making this a protocol extension.
@@ -36,13 +41,15 @@ final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<I
             changeTimerToState(.Pause)
             shouldPause = false
         } else {
-            changeTimerToState(.Start)
+            changeTimerToState(.Resume)
             shouldPause = true
         }
     }
     
     func userFinished() {
-        timer.concludeWithStatus(.Finish)
+        if timer.status != .Finished {
+            timer.concludeWithStatus(.Finish)
+        }
     }
     
     private func changeTimerToState(state: TimerButtonState) {
@@ -56,9 +63,25 @@ final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<I
                     default:
                         break
                     }
-            }
+            }.activate()
         } else if state == .Pause {
             timer.concludeWithStatus(.Pause)
+        }
+        
+        let labelText: String?
+        switch state {
+            case .Start:
+                labelText = "Finish"
+            case .Pause:
+                labelText = "Resume"
+            case .Resume:
+                labelText = "Finish"
+            default:
+                labelText = nil
+        }
+       
+        if let labelText = labelText {
+            viewController.setTimerButtonText(labelText)
         }
     }
 }
