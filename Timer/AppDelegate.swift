@@ -23,7 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         creator.finish(name: "Stupid")
 
         let round = Round.roundForName("Stupid")
-        let partialEngine = RoundUIEngine.createEngine(round)
+        round.registerAsDefaultRound()
+        let unarchivedRound = Round.defaultRound()!
+        let partialEngine = RoundUIEngine.createEngine(unarchivedRound)
         let viewController = ViewController(partialEngine: partialEngine)
 
         window?.rootViewController = viewController

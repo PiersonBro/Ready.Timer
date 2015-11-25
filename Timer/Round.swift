@@ -16,8 +16,10 @@ struct Round {
     typealias CountDownTimerArray = [CountDownSegment?]
     
     let segmentProxies: [SegmentProxy?]
+    let name: String
     
-    init(first: OvertimeArray, second: InfiniteTimerArray = [], third: CountUpTimerArray = [], fourth: CountDownTimerArray = []) {
+    init(first: OvertimeArray, second: InfiniteTimerArray = [], third: CountUpTimerArray = [], fourth: CountDownTimerArray = [], name: String) {
+        self.name = name
         let count: Int
         var overtimeTimer: OvertimeArray
         var infiniteTimer: InfiniteTimerArray

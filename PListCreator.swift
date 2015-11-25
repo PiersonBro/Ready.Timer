@@ -28,8 +28,12 @@ class PlistCreator {
     }
     
     func finish(name name: String) -> Bool {
-        let path = NSBundle.mainBundle().resourcePath! + "/" + name + ".plist"
-        return (dictionary as NSDictionary).writeToFile(path, atomically: false)
+        let defaultManager = NSFileManager.defaultManager()
+        if !defaultManager.fileExistsAtPath(FSKeys.folderPath) {
+            try! defaultManager.createDirectoryAtPath(FSKeys.folderPath, withIntermediateDirectories: false, attributes: nil)
+        }
+        
+        return (dictionary as NSDictionary).writeToFile(FSKeys.pathForName(name), atomically: false)
     }
 }
 
@@ -45,10 +49,19 @@ enum PlistKeys: String {
     case TypeOfTimer
 }
 
+enum FSKeys: String {
+    case Plist = ".plist"
+    case FolderPath = "/Rounds/"
+    
+    static let folderPath = NSBundle.mainBundle().resourcePath! + FSKeys.FolderPath.rawValue
+    static func pathForName(name: String) -> String {
+        return folderPath + name + FSKeys.Plist.rawValue
+    }
+}
+
 extension Round {
     static func roundForName(name: String) -> Round {
-        let path = NSBundle.mainBundle().resourcePath! + "/" + name + ".plist"
-        let dictionary = NSDictionary(contentsOfFile: path)! as! [String : AnyObject]
+        let dictionary = NSDictionary(contentsOfFile: FSKeys.pathForName(name))! as! [String : AnyObject]
         let names = dictionary[PlistKeys.Speeches.rawValue] as! [String]
         let numbers = names.map {
             dictionary[$0] as! Int
@@ -91,7 +104,7 @@ extension Round {
             }
         }
         
-        return Round(first: overtimeSegments, second: infiniteSegments, third: countUpSegments, fourth: countDownSegments)
+        return Round(first: overtimeSegments, second: infiniteSegments, third: countUpSegments, fourth: countDownSegments, name: name)
     }
     
     private static func createTimersOfType(timerType: TimerKind, duration: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?) {

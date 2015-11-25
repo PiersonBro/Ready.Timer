@@ -150,7 +150,7 @@ extension Round {
                 }
         }
         
-        return Round(first: timers.0, third: timers.1)
+        return Round(first: timers.0, third: timers.1, name: type.rawValue)
     }
 }
 
