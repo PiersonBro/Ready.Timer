@@ -75,8 +75,8 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             startButton.height == startButton.width
         }
         
-        clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
-        clockwiseButton.labelText = "Clockwise"
+        clockwiseButton.addTarget(self, action: "selectRound:", forControlEvents: .TouchUpInside)
+        clockwiseButton.labelText = "Select Round"
         view.addSubview(clockwiseButton)
         constrain(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
@@ -159,9 +159,9 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         presentViewController(actionController, animated: true, completion: nil)
     }
     
-    //MARK: Debug
-    //FIXME: THIS IS BROKEN!
-    func clockwise(sender: CircleButton) {
-        fatalError("Please burn this to the ground.")
+    func selectRound(sender: CircleButton) {
+        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+        selectionViewController.modalPresentationStyle = .FormSheet
+        presentViewController(selectionViewController, animated: true, completion: nil)
     }
 }
