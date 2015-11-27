@@ -17,6 +17,7 @@
 		2035F7681BA6630E00FEDD11 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2035F7671BA6630E00FEDD11 /* Round.swift */; };
 		2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */; };
 		204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204C58641BFD8783008D1FF2 /* DefaultRound.swift */; };
+		20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */; };
 		205C661719AD657900E14B30 /* Debate+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* Debate+Round.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
@@ -188,6 +189,7 @@
 		2035F7671BA6630E00FEDD11 /* Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DebateType-copy.plist"; sourceTree = "<group>"; };
 		204C58641BFD8783008D1FF2 /* DefaultRound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultRound.swift; sourceTree = "<group>"; };
+		20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCreatorViewController.swift; sourceTree = "<group>"; };
 		205C661619AD657900E14B30 /* Debate+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Debate+Round.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
+				20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */,
 				20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */,
 			);
 			name = ViewControllers;
@@ -592,6 +595,7 @@
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
 				20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */,
 				20032E5D1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift in Sources */,
+				20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */,
 				20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
 				20032E541BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift in Sources */,

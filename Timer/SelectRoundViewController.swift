@@ -72,6 +72,10 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     }
     
     func addRound() {
+        let createRoundVC = CreateRoundViewController()
+        presentingViewController?.dismissViewControllerAnimated(true) {
+            UIApplication.sharedApplication().delegate?.window!?.rootViewController = createRoundVC
+        }
     }
 
     func done() {

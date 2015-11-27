@@ -16,13 +16,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         let creator = PlistCreator()
-        creator.addTimer(ofType: .InfiniteTimer, identifier: "Infinity", duration: 0)
-        creator.addTimer(ofType: .OvertimeTimer, identifier: "Hello", duration: 5)
-        creator.addTimer(ofType: .CountDownTimer, identifier: "Snot", duration: 5)
-        creator.addTimer(ofType: .CountUpTimer, identifier: "terrible", duration: 4)
-        creator.finish(name: "Stupid")
+        creator.addTimer(ofType: .InfiniteTimer, identifier: "Infinity", durationInMinutes: 0)
+        creator.addTimer(ofType: .OvertimeTimer, identifier: "Hello", durationInMinutes: 5)
+        creator.addTimer(ofType: .CountDownTimer, identifier: "Snot", durationInMinutes: 5)
+        creator.addTimer(ofType: .CountUpTimer, identifier: "terrible", durationInMinutes: 4)
+        creator.finish(name: "Brilliant")
 
-        let round = Round.roundForName("Stupid")
+        let round = Round.roundForName("Brilliant")
         round.registerAsDefaultRound()
         let unarchivedRound = Round.defaultRound()!
         let partialEngine = RoundUIEngine.createEngine(unarchivedRound)

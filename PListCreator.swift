@@ -11,11 +11,14 @@ import TimerKit
 
 class PlistCreator {
     var dictionary = [String: AnyObject]()
-        
-    //NOTE: `duration` is in minutes.
-    func addTimer(ofType typeOfTimer: TimerKind, identifier: String, duration: Int) {
+    
+    func addTimer(ofType typeOfTimer: TimerKind, identifier: String, durationInMinutes: Int) {
+        addTimer(ofType: typeOfTimer, identifier: identifier, durationInSeconds: durationInMinutes * 60)
+    }
+    
+    func addTimer(ofType typeOfTimer: TimerKind, identifier: String, durationInSeconds: Int) {
         dictionary[PlistKeys.TypeOfTimer.rawValue + identifier] = typeOfTimer.rawValue
-        dictionary[identifier] = duration
+        dictionary[identifier] = durationInSeconds
         //FIXME: Use an enum
         let speeches = dictionary[PlistKeys.Speeches.rawValue] as? [String]
         
@@ -53,7 +56,7 @@ enum FSKeys: String {
     case Plist = ".plist"
     case FolderPath = "/Rounds/"
     
-    static let folderPath = NSBundle.mainBundle().resourcePath! + FSKeys.FolderPath.rawValue
+    static let folderPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! + FSKeys.FolderPath.rawValue
     static func pathForName(name: String) -> String {
         return folderPath + name + FSKeys.Plist.rawValue
     }
@@ -78,7 +81,7 @@ extension Round {
         var infiniteSegments = [InfiniteSegment?]()
         
         zip(zip(typeOfTimers, numbers), names).forEach { kindAndDuration, name in
-            let round = createTimersOfType(kindAndDuration.0, duration: kindAndDuration.1, name: name)
+            let round = createTimersOfType(kindAndDuration.0, durationInSeconds: kindAndDuration.1, name: name)
             if let overtimeSegment = round.0 {
                 overtimeSegments.append(overtimeSegment)
                 countDownSegments.append(nil)
@@ -107,20 +110,24 @@ extension Round {
         return Round(first: overtimeSegments, second: infiniteSegments, third: countUpSegments, fourth: countDownSegments, name: name)
     }
     
-    private static func createTimersOfType(timerType: TimerKind, duration: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?) {
+    private static func createTimersOfType(timerType: TimerKind, durationInMinutes: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?) {
+        return Round.createTimersOfType(timerType, durationInMinutes: durationInMinutes * 60, name: name)
+    }
+    
+    private static func createTimersOfType(timerType: TimerKind, durationInSeconds: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?) {
         switch timerType {
             case .OvertimeTimer:
-                let segment = OvertimeSegment(timer: OvertimeTimer(timeLimitInMinutes: duration),  name: name)
+                let segment = OvertimeSegment(timer: OvertimeTimer(timeLimitInSeconds: durationInSeconds),  name: name)
                 return (segment, nil, nil, nil)
             case .InfiniteTimer:
                 let infinteSegment = InfiniteSegment(timer: Timer(blueprint: InfiniteBlueprint()), name: name)
                 return (nil, nil, nil, infinteSegment)
             case .CountUpTimer:
-                let timer = Timer(blueprint: CountUpBlueprint(upperLimitInMinutes: duration))
+                let timer = Timer(blueprint: CountUpBlueprint(upperLimitInSeconds: durationInSeconds))
                 let segment = CountUpSegment(timer: timer, name: name)
                 return (nil, nil, segment, nil)
             case .CountDownTimer:
-                let timer = Timer(blueprint: CountDownBlueprint(countDownFromInMinutes: duration))
+                let timer = Timer(blueprint: CountDownBlueprint(countDownFromInSeconds: durationInSeconds))
                 let segment = CountDownSegment(timer: timer, name: name)
                 return (nil, segment, nil, nil)
         }
