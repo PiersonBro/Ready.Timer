@@ -37,6 +37,7 @@
 		20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EDCC051B9FAB260058E168 /* PListCreator.swift */; };
 		20EF4A3F1BD6F7620045D233 /* RoundUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */; };
 		20F473311A43F10B00E38D98 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F473301A43F10B00E38D98 /* Position.swift */; };
+		20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -209,6 +210,7 @@
 		20EDCC051B9FAB260058E168 /* PListCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PListCreator.swift; path = ../PListCreator.swift; sourceTree = "<group>"; };
 		20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundUIEngine.swift; path = ../RoundUIEngine.swift; sourceTree = "<group>"; };
 		20F473301A43F10B00E38D98 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Position.swift; path = ../Position.swift; sourceTree = "<group>"; };
+		20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectRoundViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -360,6 +362,7 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
+				20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -587,6 +590,7 @@
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
 				204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */,
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
+				20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */,
 				20032E5D1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift in Sources */,
 				20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
