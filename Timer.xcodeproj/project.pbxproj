@@ -21,6 +21,8 @@
 		205C661719AD657900E14B30 /* Debate+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* Debate+Round.swift */; };
 		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
+		206BF1A01C099B7700375F52 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF19F1C099B7700375F52 /* Position.swift */; };
+		206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF18C1C099A4E00375F52 /* DragHandler.swift */; };
 		206E8E6E1BAE3F60001E2EA5 /* TimerUIEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */; };
 		20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
@@ -37,7 +39,6 @@
 		20D523761AB635A600A46760 /* TimerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EDCC051B9FAB260058E168 /* PListCreator.swift */; };
 		20EF4A3F1BD6F7620045D233 /* RoundUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */; };
-		20F473311A43F10B00E38D98 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F473301A43F10B00E38D98 /* Position.swift */; };
 		20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -193,9 +194,12 @@
 		205C661619AD657900E14B30 /* Debate+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Debate+Round.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
 		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
+		206BF18C1C099A4E00375F52 /* DragHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragHandler.swift; sourceTree = "<group>"; };
+		206BF19F1C099B7700375F52 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerUIEngineType.swift; sourceTree = SOURCE_ROOT; };
 		20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvertimeUIEngine.swift; sourceTree = "<group>"; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StickyCorners-Bridging-Header.h"; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Din.xcodeproj; path = Din/Din.xcodeproj; sourceTree = "<group>"; };
 		20C99B8819A02E2E00477D3B /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -211,7 +215,6 @@
 		20D523691AB6359F00A46760 /* TimerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TimerKit.xcodeproj; path = TimerKit/TimerKit.xcodeproj; sourceTree = "<group>"; };
 		20EDCC051B9FAB260058E168 /* PListCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PListCreator.swift; path = ../PListCreator.swift; sourceTree = "<group>"; };
 		20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundUIEngine.swift; path = ../RoundUIEngine.swift; sourceTree = "<group>"; };
-		20F473301A43F10B00E38D98 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Position.swift; path = ../Position.swift; sourceTree = "<group>"; };
 		20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectRoundViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -256,7 +259,6 @@
 				20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */,
 				20837FA81BFAF33C00D7F23D /* TimerUIEngineType */,
 				20CBC6C41BD07780001898E2 /* UIConfiguration.swift */,
-				20EDCC051B9FAB260058E168 /* PListCreator.swift */,
 			);
 			name = "Model-ViewController";
 			sourceTree = "<group>";
@@ -310,8 +312,9 @@
 				204C58641BFD8783008D1FF2 /* DefaultRound.swift */,
 				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
 				20837FA51BF9783800D7F23D /* Model-ViewController */,
-				20F473301A43F10B00E38D98 /* Position.swift */,
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
+				206BF19F1C099B7700375F52 /* Position.swift */,
+				206BF18C1C099A4E00375F52 /* DragHandler.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
 				205C661619AD657900E14B30 /* Debate+Round.swift */,
 				2035F7671BA6630E00FEDD11 /* Round.swift */,
@@ -320,6 +323,7 @@
 				20BB1A4E19D2758600568046 /* CircleButton.swift */,
 				20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */,
 				20C99B9419A02E2E00477D3B /* Images.xcassets */,
+				20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */,
 				20C99B8B19A02E2E00477D3B /* Supporting Files */,
 			);
 			path = Timer;
@@ -363,6 +367,7 @@
 		20F7EEBE1A488E6E0047DB98 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				20EDCC051B9FAB260058E168 /* PListCreator.swift */,
 				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
 				20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */,
 				20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */,
@@ -585,14 +590,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				20F473311A43F10B00E38D98 /* Position.swift in Sources */,
 				2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */,
+				206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */,
 				20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */,
 				20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */,
 				20032E5B1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
 				204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */,
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
+				206BF1A01C099B7700375F52 /* Position.swift in Sources */,
 				20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */,
 				20032E5D1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift in Sources */,
 				20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */,
@@ -760,6 +766,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.rezworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/EandZ/Documents/Ready.Timer/Timer/StickyCorners-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -775,6 +782,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.rezworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/EandZ/Documents/Ready.Timer/Timer/StickyCorners-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

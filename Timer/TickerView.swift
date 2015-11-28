@@ -36,7 +36,7 @@ private extension Position {
     }
 }
 
-class TickerView: UIView, UIDynamicAnimatorDelegate {
+class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     // Subviews
     private var bottommostLabel: TickerLabel
     private var rightmostLabel: TickerLabel
@@ -48,13 +48,22 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     private let leftEdgeDivider: UIView
     private let rightEdgeDivider: UIView
     
-    private var labelConstraintsNeedUpdate: Bool = false
+    private var labelConstraintsNeedUpdate: Bool = false {
+        didSet {
+            if labelConstraintsNeedUpdate == true {
+                setNeedsUpdateConstraints()
+            }
+        }
+    }
 
     private var speechCount: Int
     
     // Strongly held animator objects
     private var animator: UIDynamicAnimator
     private let labels: [TickerLabel]
+    
+    var dragHandler: DragHandler? = nil
+    var machineRotated = false
     
     let dataSource: TickerViewDataSource
 
@@ -66,7 +75,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         fatalError("Initializer Not Supported")
     }
     
-    init(frame: CGRect, dataSource: TickerViewDataSource) {
+    init(dataSource: TickerViewDataSource) {
         bottommostLabel = TickerLabel(frame: CGRect())
         rightmostLabel = TickerLabel(frame: CGRect())
         topmostLabel = TickerLabel(frame: CGRect())
@@ -82,7 +91,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         speechCount = 0
         self.dataSource = dataSource
-        super.init(frame: frame)
+        super.init(frame: CGRect())
 
         addSubview(leftDivider)
         constrain(leftDivider, self) { (leftDivider, view) in
@@ -133,8 +142,13 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
+        animator.debugEnabled = true
     }
-
+    
+    deinit {
+        dragHandler?.deactivate()
+    }
+    
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
         label.font = UIFont.systemFontOfSize(50)
         label.textColor = UIColor.cyanColor()
@@ -197,6 +211,14 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         layer.mask = mask
         
         addLines(rect: rect)
+        
+        if dragHandler == nil {
+            dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
+        }
+        
+        dragHandler?.delegate = self
+        
+        dragHandler?.activate()
     }
     
     func addLines(rect rect: CGRect) {
@@ -225,19 +247,16 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     
     func removeLines() {
         let layers = self.layer.sublayers!
-        for subLayer in layers {
-            if subLayer.name != nil {
-                switch subLayer.name! {
+        for subLayer in layers where subLayer.name != nil {
+            switch subLayer.name! {
                 case "leftLineShapeLayer":
                     subLayer.removeFromSuperlayer()
                 case "rightLineShapeLayer":
                     subLayer.removeFromSuperlayer()
                 default: break
-                }
             }
         }
     }
-    
     
     func rotateToNextSegment() {
         rotate(ascending: true)
@@ -251,7 +270,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         let labelsToEnumerate = ascending ? labels : labels.reverse()
         animator.removeAllBehaviors()
         
-        enumerateLabels(labelsToEnumerate) { (label, nextLabel) in
+        enumerate(labelsToEnumerate) { (label, nextLabel) in
             label.snapBehavior!.snapPoint = nextLabel.center
         }
         
@@ -263,26 +282,35 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
         item.resistance = 150
         animator.addBehavior(item)
         labelConstraintsNeedUpdate = true
-        setNeedsUpdateConstraints()
+        machineRotated = true
+    }
+    
+    //MARK: DragHandler Delegate
+    func didFinishDrag() {
+        labelConstraintsNeedUpdate = true
     }
     
     func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
         animator.removeAllBehaviors()
+        if machineRotated {
+            dragHandler!.labelsExternallyShifted()
+            machineRotated = false
+        }
     }
     
-    func enumerateLabels(labelsToEnumerate: [TickerLabel], block: (label: TickerLabel, nextLabel: TickerLabel) -> Void) {
-        for i in 0..<labelsToEnumerate.count {
-            let label = labelsToEnumerate[i]
-            let nextLabel: TickerLabel
+    func enumerate<T>(array: [T], block: (value: T, nextValue: T) -> Void) {
+        for i in 0..<array.count {
+            let value = array[i]
+            let next: T
             let nextIndex = i + 1
            
-            if (nextIndex < labelsToEnumerate.count) {
-                nextLabel = labelsToEnumerate[nextIndex]
+            if (nextIndex < array.count) {
+                next = array[nextIndex]
             } else {
-                nextLabel = labelsToEnumerate.first!
+                next = array.first!
             }
 
-            block(label: label, nextLabel: nextLabel)
+            block(value: value, nextValue: next)
         }
     }
     
@@ -290,33 +318,10 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
     var shouldReloadDataSource = false
     
     func makeDataSourceCalls() {
-        var centerLabel: TickerLabel? = nil
-        var rightLabel: TickerLabel? = nil
-        var leftLabel: TickerLabel? = nil
-        var bottomLabel: TickerLabel? = nil
-        
-        for label in labels  {
-            let constraints = self.positioningConstraintsForLabel(label, constraints: self.constraints)
-            let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
-            
-            if let position = position {
-                switch (position) {
-                case .Center(_, _):
-                    centerLabel = label
-                case .Right(_, _):
-                    rightLabel = label
-                case .Bottom(_,_):
-                    bottomLabel = label
-                case .Left(_, _):
-                    leftLabel = label
-                }
-            }
-        }
-        
-        //Can't shadow because of rdar://21475718
-        guard let unwrappedLabelCenter = centerLabel, unwrappedLabelRight = rightLabel, unwrappedLabelBottom = bottomLabel, unwrappedLabelLeft = leftLabel else {
-            fatalError("Couldn't find centerLabel, rightLabel, or bottomLabel")
-        }
+        let centerLabel = labelForPosition(.staticCenter)
+        let rightLabel = labelForPosition(.staticRight)
+        let leftLabel = labelForPosition(.staticLeft)
+        let bottomLabel = labelForPosition(.staticBottom)
         
         if shouldReloadDataSource {
             addLines(rect: bounds)
@@ -337,49 +342,61 @@ class TickerView: UIView, UIDynamicAnimatorDelegate {
                 }
             }
             
-            configureLabel(unwrappedLabelCenter)
-            configureLabel(unwrappedLabelLeft)
-            configureLabel(unwrappedLabelBottom)
-            configureLabel(unwrappedLabelRight)
+            configureLabel(centerLabel)
+            configureLabel(leftLabel)
+            configureLabel(bottomLabel)
+            configureLabel(rightLabel)
             
             shouldReloadDataSource = false
             return
         }
         
         if finalSpeechIsAtCenter {
-            dataSource.tickerViewDidRotateToLastSpeech(unwrappedLabelCenter.index)
+            dataSource.tickerViewDidRotateToLastSpeech(centerLabel.index)
             removeLines()
-            unwrappedLabelRight.hidden = true
-            unwrappedLabelBottom.hidden = true
-            unwrappedLabelLeft.hidden = true
+            rightLabel.hidden = true
+            bottomLabel.hidden = true
+            leftLabel.hidden = true
             
             shouldReloadDataSource = true
             finalSpeechIsAtCenter = false
             return
         }
         
-        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(unwrappedLabelCenter.index)
-        unwrappedLabelRight.consumed = true
+        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index)
+        rightLabel.consumed = true
         
-        if (unwrappedLabelBottom.consumed) {
+        if (bottomLabel.consumed) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             let speechName: String
             
             if let name = optionalSpeechName {
                 speechName = name
-                unwrappedLabelBottom.index = speechCount
-                unwrappedLabelBottom.text = speechName
+                bottomLabel.index = speechCount
+                bottomLabel.text = speechName
             } else {
                 finalSpeechIsAtCenter = true
             }
         }
+    }
+
+    func labelForPosition(positionToFind: Position) -> TickerLabel {
+        for label in labels  {
+            let constraints = positioningConstraintsForLabel(label, constraints: self.constraints)
+            let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
+            
+            if let position = position where position == positionToFind  {
+                return label
+            }
+        }
+        fatalError("Could not find label for position: \(positionToFind)")
     }
     
     override func updateConstraints() {
         if labelConstraintsNeedUpdate {
             labelConstraintsNeedUpdate = false
             let unmodifiedConstraints = constraints
-            enumerateLabels(labels, block: { (label, nextLabel) in
+            enumerate(labels, block: { (label, nextLabel) in
                 let newConstraints = self.positioningConstraintsForLabel(nextLabel, constraints: unmodifiedConstraints)
                 let xMultiplier = newConstraints.xConstraint.multiplier
                 let yMultiplier = newConstraints.yConstraint.multiplier

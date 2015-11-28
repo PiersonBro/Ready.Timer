@@ -35,7 +35,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     
         super.init(nibName: nil, bundle: nil)
         engine = partialEngine(viewController: self)
-        tickerView = TickerView(frame: CGRect(), dataSource: self)
+        tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2

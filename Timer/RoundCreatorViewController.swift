@@ -49,7 +49,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
 
     init() {
         super.init(nibName: nil, bundle: nil)
-        tickerView = TickerView(frame: CGRect(), dataSource: self)
+        tickerView = TickerView(dataSource: self)
     }
 
     required init?(coder aDecoder: NSCoder) {
