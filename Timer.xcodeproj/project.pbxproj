@@ -7,15 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		20032E541BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20032E531BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift */; };
-		20032E5B1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20032E5A1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift */; };
-		20032E5D1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20032E5C1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift */; };
 		2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; };
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		200D1CEB1BE33FEF00F60F77 /* EngineProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 200D1CEA1BE33FEF00F60F77 /* EngineProxy.swift */; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
 		2035F7681BA6630E00FEDD11 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2035F7671BA6630E00FEDD11 /* Round.swift */; };
 		2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */; };
+		204BEB761C0D69290061C273 /* PListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB751C0D69290061C273 /* PListCreator.swift */; };
+		204BEB7F1C0D69390061C273 /* EngineProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB7E1C0D69390061C273 /* EngineProxy.swift */; };
+		204BEB811C0D69490061C273 /* RoundUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB801C0D69490061C273 /* RoundUIEngine.swift */; };
+		204BEB831C0D69530061C273 /* TimerUIEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB821C0D69530061C273 /* TimerUIEngineType.swift */; };
+		204BEB871C0D69680061C273 /* CountDownTimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB841C0D69680061C273 /* CountDownTimerUIEngine.swift */; };
+		204BEB881C0D69680061C273 /* CountUpTimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB851C0D69680061C273 /* CountUpTimerUIEngine.swift */; };
+		204BEB891C0D69680061C273 /* InfiniteTimerUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB861C0D69680061C273 /* InfiniteTimerUIEngine.swift */; };
+		204BEB8B1C0D69720061C273 /* UIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB8A1C0D69720061C273 /* UIConfiguration.swift */; };
 		204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204C58641BFD8783008D1FF2 /* DefaultRound.swift */; };
 		20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */; };
 		205C661719AD657900E14B30 /* Debate+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* Debate+Round.swift */; };
@@ -23,7 +27,6 @@
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
 		206BF1A01C099B7700375F52 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF19F1C099B7700375F52 /* Position.swift */; };
 		206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF18C1C099A4E00375F52 /* DragHandler.swift */; };
-		206E8E6E1BAE3F60001E2EA5 /* TimerUIEngineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */; };
 		20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
@@ -33,12 +36,9 @@
 		20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8F19A02E2E00477D3B /* ViewController.swift */; };
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
 		20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99BAA19A02F5A00477D3B /* TickerView.swift */; };
-		20CBC6C51BD07780001898E2 /* UIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20CBC6C41BD07780001898E2 /* UIConfiguration.swift */; };
 		20D523561AB5581A00A46760 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D523551AB5581A00A46760 /* StringExtension.swift */; };
 		20D523751AB635A600A46760 /* TimerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; };
 		20D523761AB635A600A46760 /* TimerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20D523721AB6359F00A46760 /* TimerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EDCC051B9FAB260058E168 /* PListCreator.swift */; };
-		20EF4A3F1BD6F7620045D233 /* RoundUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */; };
 		20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -181,14 +181,18 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		20032E531BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InfiniteTimerUIEngine.swift; path = ../InfiniteTimerUIEngine.swift; sourceTree = "<group>"; };
-		20032E5A1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CountDownTimerUIEngine.swift; path = ../CountDownTimerUIEngine.swift; sourceTree = "<group>"; };
-		20032E5C1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CountUpTimerUIEngine.swift; path = ../CountUpTimerUIEngine.swift; sourceTree = "<group>"; };
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
-		200D1CEA1BE33FEF00F60F77 /* EngineProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EngineProxy.swift; path = ../EngineProxy.swift; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		2035F7671BA6630E00FEDD11 /* Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DebateType-copy.plist"; sourceTree = "<group>"; };
+		204BEB751C0D69290061C273 /* PListCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PListCreator.swift; sourceTree = "<group>"; };
+		204BEB7E1C0D69390061C273 /* EngineProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineProxy.swift; sourceTree = "<group>"; };
+		204BEB801C0D69490061C273 /* RoundUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundUIEngine.swift; sourceTree = "<group>"; };
+		204BEB821C0D69530061C273 /* TimerUIEngineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerUIEngineType.swift; sourceTree = "<group>"; };
+		204BEB841C0D69680061C273 /* CountDownTimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountDownTimerUIEngine.swift; sourceTree = "<group>"; };
+		204BEB851C0D69680061C273 /* CountUpTimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CountUpTimerUIEngine.swift; sourceTree = "<group>"; };
+		204BEB861C0D69680061C273 /* InfiniteTimerUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfiniteTimerUIEngine.swift; sourceTree = "<group>"; };
+		204BEB8A1C0D69720061C273 /* UIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConfiguration.swift; sourceTree = "<group>"; };
 		204C58641BFD8783008D1FF2 /* DefaultRound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultRound.swift; sourceTree = "<group>"; };
 		20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCreatorViewController.swift; sourceTree = "<group>"; };
 		205C661619AD657900E14B30 /* Debate+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Debate+Round.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
@@ -196,7 +200,6 @@
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
 		206BF18C1C099A4E00375F52 /* DragHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragHandler.swift; sourceTree = "<group>"; };
 		206BF19F1C099B7700375F52 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
-		206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimerUIEngineType.swift; sourceTree = SOURCE_ROOT; };
 		20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvertimeUIEngine.swift; sourceTree = "<group>"; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StickyCorners-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -210,11 +213,8 @@
 		20C99B9A19A02E2E00477D3B /* TimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B9F19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99BAA19A02F5A00477D3B /* TickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = TickerView.swift; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		20CBC6C41BD07780001898E2 /* UIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIConfiguration.swift; path = ../UIConfiguration.swift; sourceTree = "<group>"; };
 		20D523551AB5581A00A46760 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		20D523691AB6359F00A46760 /* TimerKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TimerKit.xcodeproj; path = TimerKit/TimerKit.xcodeproj; sourceTree = "<group>"; };
-		20EDCC051B9FAB260058E168 /* PListCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PListCreator.swift; path = ../PListCreator.swift; sourceTree = "<group>"; };
-		20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundUIEngine.swift; path = ../RoundUIEngine.swift; sourceTree = "<group>"; };
 		20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectRoundViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,10 +255,10 @@
 		20837FA51BF9783800D7F23D /* Model-ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				200D1CEA1BE33FEF00F60F77 /* EngineProxy.swift */,
-				20EF4A3E1BD6F7620045D233 /* RoundUIEngine.swift */,
+				204BEB7E1C0D69390061C273 /* EngineProxy.swift */,
+				204BEB801C0D69490061C273 /* RoundUIEngine.swift */,
+				204BEB8A1C0D69720061C273 /* UIConfiguration.swift */,
 				20837FA81BFAF33C00D7F23D /* TimerUIEngineType */,
-				20CBC6C41BD07780001898E2 /* UIConfiguration.swift */,
 			);
 			name = "Model-ViewController";
 			sourceTree = "<group>";
@@ -266,11 +266,11 @@
 		20837FA81BFAF33C00D7F23D /* TimerUIEngineType */ = {
 			isa = PBXGroup;
 			children = (
-				206E8E6D1BAE3F60001E2EA5 /* TimerUIEngineType.swift */,
+				204BEB821C0D69530061C273 /* TimerUIEngineType.swift */,
 				20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */,
-				20032E5A1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift */,
-				20032E5C1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift */,
-				20032E531BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift */,
+				204BEB841C0D69680061C273 /* CountDownTimerUIEngine.swift */,
+				204BEB851C0D69680061C273 /* CountUpTimerUIEngine.swift */,
+				204BEB861C0D69680061C273 /* InfiniteTimerUIEngine.swift */,
 			);
 			name = TimerUIEngineType;
 			sourceTree = "<group>";
@@ -367,7 +367,7 @@
 		20F7EEBE1A488E6E0047DB98 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				20EDCC051B9FAB260058E168 /* PListCreator.swift */,
+				204BEB751C0D69290061C273 /* PListCreator.swift */,
 				20C99B8F19A02E2E00477D3B /* ViewController.swift */,
 				20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */,
 				20FB842C1BFEC28C001EE02B /* SelectRoundViewController.swift */,
@@ -592,27 +592,27 @@
 			files = (
 				2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */,
 				206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */,
+				204BEB811C0D69490061C273 /* RoundUIEngine.swift in Sources */,
 				20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */,
+				204BEB881C0D69680061C273 /* CountUpTimerUIEngine.swift in Sources */,
 				20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */,
-				20032E5B1BE9B0A800FFFDB3 /* CountDownTimerUIEngine.swift in Sources */,
+				204BEB7F1C0D69390061C273 /* EngineProxy.swift in Sources */,
+				204BEB891C0D69680061C273 /* InfiniteTimerUIEngine.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
 				204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */,
+				204BEB831C0D69530061C273 /* TimerUIEngineType.swift in Sources */,
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
 				206BF1A01C099B7700375F52 /* Position.swift in Sources */,
 				20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */,
-				20032E5D1BE9B0CD00FFFDB3 /* CountUpTimerUIEngine.swift in Sources */,
 				20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */,
-				20EDCC061B9FAB260058E168 /* PListCreator.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
-				20032E541BE9B07400FFFDB3 /* InfiniteTimerUIEngine.swift in Sources */,
 				205C661719AD657900E14B30 /* Debate+Round.swift in Sources */,
 				20D523561AB5581A00A46760 /* StringExtension.swift in Sources */,
+				204BEB761C0D69290061C273 /* PListCreator.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
+				204BEB871C0D69680061C273 /* CountDownTimerUIEngine.swift in Sources */,
 				20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */,
-				20CBC6C51BD07780001898E2 /* UIConfiguration.swift in Sources */,
-				20EF4A3F1BD6F7620045D233 /* RoundUIEngine.swift in Sources */,
-				200D1CEB1BE33FEF00F60F77 /* EngineProxy.swift in Sources */,
-				206E8E6E1BAE3F60001E2EA5 /* TimerUIEngineType.swift in Sources */,
+				204BEB8B1C0D69720061C273 /* UIConfiguration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
