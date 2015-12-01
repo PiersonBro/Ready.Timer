@@ -352,7 +352,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         }
         
         if finalSpeechIsAtCenter {
-            dataSource.tickerViewDidRotateToLastSpeech(centerLabel.index)
+            dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index, wasDragged: dragHandler?.didRotateUsingThisSystem ?? false, wasLast: true)
             removeLines()
             rightLabel.hidden = true
             bottomLabel.hidden = true
@@ -363,9 +363,13 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
             return
         }
         
-        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index)
+        dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index, wasDragged: dragHandler?.didRotateUsingThisSystem ?? false, wasLast: false)
+    
+        if dragHandler?.didRotateUsingThisSystem == true {
+            dragHandler?.didRotateUsingThisSystem = false
+        }
+    
         rightLabel.consumed = true
-        
         if (bottomLabel.consumed) {
             let optionalSpeechName = dataSource.stringForIndex(++speechCount)
             let speechName: String
@@ -448,6 +452,5 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
 protocol TickerViewDataSource {
     // Index - Starts from Zero .
     func stringForIndex(index: Int) -> String?
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int)
-    func tickerViewDidRotateToLastSpeech(index: Int)
+    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool)
 }

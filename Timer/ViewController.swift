@@ -93,7 +93,8 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             timerLabel.centerX == view.centerX
             timerLabel.centerY == view.centerY / 2
         }
-        tickerViewDidRotateStringAtIndexToCenterPosition(0)
+        //FIXME: Handle single string data sources.
+        tickerViewDidRotateStringAtIndexToCenterPosition(0, wasDragged: false, wasLast: false)
     }
     
     func setTimerLabelText(text: String) {
@@ -128,12 +129,11 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         return engine!.displayNameForSegmentIndex(index)
     }
     
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
-        // We don't have to do anything. 
-    }
-        
-    func tickerViewDidRotateToLastSpeech(index: Int) {
-        // FIXME: What happens when the round ends?
+    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
+        if wasDragged {
+            engine!.userFinished()
+            engine!.next()
+        }
     }
     
     // MARK: Next Speech

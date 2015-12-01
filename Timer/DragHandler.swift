@@ -30,6 +30,8 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     
     public var delegate: DragHandlerDelegate? = nil
     
+    public var didRotateUsingThisSystem = false
+    
     public init(orderedLabels: OrderedLabels) {
         self.labels = [orderedLabels.left, orderedLabels.top, orderedLabels.right, orderedLabels.bottom]
         view = labels.first!.superview!
@@ -86,6 +88,8 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
             bottomToLeft?.anchorPoint = bottomToLeft!.items.first!.center
             centerToRight?.anchorPoint = centerToRight!.items.first!.center
             rightToBottom?.anchorPoint = rightToBottom!.items.first!.center
+            didRotateUsingThisSystem = true
+            
         }
         
         guard let place = place else {

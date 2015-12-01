@@ -114,7 +114,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         return "    "
     }
 
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
+    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
         textBox.delegate = self
         textBox.backgroundColor = .grayColor()
         textBox.placeholder = "Insert Timer Name"
@@ -141,10 +141,6 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
     
-    func tickerViewDidRotateToLastSpeech(index: Int) {
-
-    }
-
     func keyboardWillShow(notification: NSNotification) {
         let windows = UIApplication.sharedApplication().windows
         let keyboardWindow = windows[2]
