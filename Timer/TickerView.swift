@@ -286,8 +286,10 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     }
     
     //MARK: DragHandler Delegate
-    func didFinishDrag() {
-        labelConstraintsNeedUpdate = true
+    func didFinishDrag(wasShift: Bool) {
+        if wasShift {
+            labelConstraintsNeedUpdate = true
+        }
     }
     
     func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {

@@ -25,12 +25,13 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     private var centerToRight: UIAttachmentBehavior? = nil
     
     private var panGestureRecognizer: UIPanGestureRecognizer? = nil
-        
+    
+    private var didShift: Bool? = nil
+    
     let positionTracker: PositionTracker
     
     public var delegate: DragHandlerDelegate? = nil
-    
-    public var didRotateUsingThisSystem = false
+    public var didRotateUsingThisSystem = true
     
     public init(orderedLabels: OrderedLabels) {
         self.labels = [orderedLabels.left, orderedLabels.top, orderedLabels.right, orderedLabels.bottom]
@@ -84,12 +85,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
             place = nil
             dynamicAnimator.removeAllBehaviors()
             configureSnapBehaviors()
-            leftToCenter?.anchorPoint = leftToCenter!.items.first!.center
-            bottomToLeft?.anchorPoint = bottomToLeft!.items.first!.center
-            centerToRight?.anchorPoint = centerToRight!.items.first!.center
-            rightToBottom?.anchorPoint = rightToBottom!.items.first!.center
             didRotateUsingThisSystem = true
-            
         }
         
         guard let place = place else {
@@ -108,7 +104,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     
     func configureSnapBehaviors() {
         dynamicAnimator.removeAllBehaviors()
-        positionTracker.shiftToPoints(centers!, updatingExternalAnimator: dynamicAnimator) {
+        positionTracker.shiftToPoints(centers!, updatingExternalAnimator: dynamicAnimator, shifted: { didShift = $0 }) {
             self.snapBehaviorsActive = false
             self.centers = nil
             self.configureAttachmentBehaviors()
@@ -127,7 +123,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
             snapBehaviorsActive = false
             animator.removeAllBehaviors()
             if let delegate = delegate {
-                delegate.didFinishDrag()
+                delegate.didFinishDrag(didShift!)
             }
         }
     }
@@ -214,7 +210,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
 }
 
 public protocol DragHandlerDelegate {
-    func didFinishDrag()
+    func didFinishDrag(wasShift: Bool)
 }
 
 public final class Inverter {
@@ -440,8 +436,8 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
         super.init()
         dynamicAnimator.delegate = self
     }
-    
-    func shiftToPoints(centers: Centers, updatingExternalAnimator: UIDynamicAnimator?, callback: () -> ()) {
+
+    func shiftToPoints(centers: Centers, updatingExternalAnimator: UIDynamicAnimator?, @noescape shifted: (shifted: Bool) -> (), callback: () -> ()) {
         externalAnimator = updatingExternalAnimator
         self.callback = callback
         
@@ -457,12 +453,19 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
             }.filter { bool in
                 return bool == false
             }.first
-        
+       
+        let shouldShift: Bool
         if shouldCleanUpAfterFailure != nil {
-            cleanUpAfterFailure(centers)
+            shouldShift = cleanUpAfterFailure(centers)
+        } else {
+            shouldShift = true
         }
         
-        pureShift()
+        if shouldShift {
+            pureShift()
+        }
+        
+        shifted(shifted: shouldShift)
         
         if shouldCleanUpAfterFailure == nil {
             callback()
@@ -481,7 +484,25 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
         bottomLabel = oldRightLabel
     }
     
-    func cleanUpAfterFailure(centers: Centers) {
+    func cleanUpAfterFailure(centers: Centers) -> Bool {
+        let leftIsClosestToTop = DragHandler.pointIsNearestToView(centers.top, labels: labels) == leftLabel
+        let topIsClosestToRight = DragHandler.pointIsNearestToView(centers.right, labels: labels) == topLabel
+        let rightIsClosestToBottom = DragHandler.pointIsNearestToView(centers.bottom, labels: labels) == rightLabel
+        let bottomIsClosestToLeft = DragHandler.pointIsNearestToView(centers.left, labels: labels) == bottomLabel
+        
+        if !leftIsClosestToTop && !topIsClosestToRight && !rightIsClosestToBottom && !bottomIsClosestToLeft {
+            let leftToLeft = UISnapBehavior(item: leftLabel, snapToPoint: centers.left)
+            let rightToRight = UISnapBehavior(item: rightLabel, snapToPoint: centers.right)
+            let topToTop = UISnapBehavior(item: topLabel, snapToPoint: centers.top)
+            let bottomToBottom = UISnapBehavior(item: bottomLabel, snapToPoint: centers.bottom)
+            
+            dynamicAnimator.addBehavior(leftToLeft)
+            dynamicAnimator.addBehavior(rightToRight)
+            dynamicAnimator.addBehavior(topToTop)
+            dynamicAnimator.addBehavior(bottomToBottom)
+            return false
+        }
+        
         let leftToTop = UISnapBehavior(item: leftLabel, snapToPoint: centers.top)
         let topToRight = UISnapBehavior(item: topLabel, snapToPoint: centers.right)
         let rightToBottom = UISnapBehavior(item: rightLabel, snapToPoint: centers.bottom)
@@ -491,6 +512,7 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
         dynamicAnimator.addBehavior(topToRight)
         dynamicAnimator.addBehavior(rightToBottom)
         dynamicAnimator.addBehavior(bottomToLeft)
+        return true
     }
     
     func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
