@@ -127,7 +127,7 @@ extension SpeechType: CustomStringConvertible {
 private extension OvertimeSegment {
     init(speechType: SpeechType, name: String) {
         self.name = name
-        timer = OvertimeTimer(timeLimitInMinutes: speechType.durationOfSpeech())
+        sketch = TimerSketch(durationInMinutes: speechType.durationOfSpeech())
     }
 }
 
@@ -136,13 +136,9 @@ extension Round {
         let path = NSBundle.mainBundle().pathForResource(PListKey.DebugNameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
         let debateRoundData = debates[type.rawValue] as! [NSObject: AnyObject]
-
         let prepTimeDuration = debateRoundData[PListKey.TotalPrepTime.rawValue] as! Int
-        let prepBlueprint = CountUpBlueprint(upperLimitInMinutes: prepTimeDuration)
-        let leftCountUpTimer = Timer(blueprint: prepBlueprint)
-        let rightCountUpTimer = Timer(blueprint: prepBlueprint)
 
-        let timers = generateSpeechesFromData(debateRoundData, debateType: type, intersperseLeft: leftCountUpTimer,intersperseRight: rightCountUpTimer) { segment -> Bool in
+        let timers = generateSpeechesFromData(debateRoundData, debateType: type, prepTime: prepTimeDuration) { segment -> Bool in
                 if segment.name == "CX" {
                     return true
                 } else {
@@ -150,7 +146,7 @@ extension Round {
                 }
         }
         
-        return Round(first: timers.0, third: timers.1, name: type.rawValue)
+        return Round(first: timers.0, fifth: timers.1, name: type.rawValue)
     }
 }
 
@@ -166,7 +162,7 @@ private func isRebuttal(x: OvertimeSegment) -> Bool {
     }
 }
 
-private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType, intersperseLeft: Timer<CountUpBlueprint>, intersperseRight: Timer<CountUpBlueprint>, shouldIntersperseAfterSegment: (overtimeSegment: OvertimeSegment) -> Bool) -> ([OvertimeSegment?], [CountUpSegment?])  {
+private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType, prepTime: Int, shouldIntersperseAfterSegment: (overtimeSegment: OvertimeSegment) -> Bool) -> ([OvertimeSegment?], [CountUpSegmentReference?])  {
     let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
     var speeches = stringOfSpeeches.map { speechName -> OvertimeSegment? in
         let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
@@ -181,10 +177,11 @@ private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], de
             }
         }
     }
-    let leftSegment = CountUpSegment(timer: intersperseLeft, name: "Aff Prep Timer")
-    let rightSegment = CountUpSegment(timer: intersperseRight, name: "Neg Prep Timer")
+    
+    let leftSegment = CountUpSegmentReference(sketch: TimerSketch(durationInMinutes: prepTime), name: "Aff Prep Timer")
+    let rightSegment = CountUpSegmentReference(sketch: TimerSketch(durationInMinutes: prepTime), name: "Neg Prep Timer")
     var left = false
-    let countUpSegment = speeches.map { segment -> CountUpSegment? in
+    let countUpSegment = speeches.map { segment -> CountUpSegmentReference? in
         if let _ = segment {
             return nil
         } else {

@@ -14,17 +14,19 @@ struct Round {
     typealias InfiniteTimerArray = [InfiniteSegment?]
     typealias CountUpTimerArray = [CountUpSegment?]
     typealias CountDownTimerArray = [CountDownSegment?]
+    typealias CountUpSegmentReferenceArray = [CountUpSegmentReference?]
     
     let segmentProxies: [SegmentProxy?]
     let name: String
     
-    init(first: OvertimeArray, second: InfiniteTimerArray = [], third: CountUpTimerArray = [], fourth: CountDownTimerArray = [], name: String) {
+    init(first: OvertimeArray, second: InfiniteTimerArray = [], third: CountUpTimerArray = [], fourth: CountDownTimerArray = [], fifth: CountUpSegmentReferenceArray = [], name: String) {
         self.name = name
         let count: Int
         var overtimeTimer: OvertimeArray
         var infiniteTimer: InfiniteTimerArray
         var countUpTimer: CountUpTimerArray
         var countDownTimer: CountDownTimerArray
+        var countUpSegmentReference: CountUpSegmentReferenceArray
         
         if !first.isEmpty {
             count = first.count
@@ -34,10 +36,12 @@ struct Round {
             count = third.count
         } else if !fourth.isEmpty {
             count = fourth.count
+        } else if !fifth.isEmpty {
+            count = fifth.count
         } else {
             fatalError("Cannot pass four empty arrays to `Round`.")
         }
-        
+                
         if first.isEmpty {
             overtimeTimer = Array(count: count, repeatedValue: nil)
         } else {
@@ -55,24 +59,33 @@ struct Round {
         } else {
             countUpTimer = third
         }
+        
         if fourth.isEmpty {
             countDownTimer = Array(count: count, repeatedValue: nil)
         } else {
             countDownTimer = fourth
         }
         
+        if fifth.isEmpty {
+            countUpSegmentReference = Array(count: count, repeatedValue: nil)
+        } else {
+            countUpSegmentReference = fifth
+        }
+        
+        
         segmentProxies = (0..<count).map { _ -> SegmentProxy? in
-            Round.nextSpeech(&overtimeTimer, infiniteTimer: &infiniteTimer, countUpTimer: &countUpTimer, countDownTimer: &countDownTimer)
+            Round.nextSpeech(&overtimeTimer, infiniteTimer: &infiniteTimer, countUpTimer: &countUpTimer, countDownTimer: &countDownTimer, countUpSegmentReference: &countUpSegmentReference)
         }
     }
     
-    private static func nextSpeech(inout overtimeTimer: OvertimeArray, inout infiniteTimer: InfiniteTimerArray, inout countUpTimer: CountUpTimerArray, inout countDownTimer: CountDownTimerArray) -> SegmentProxy? {
+    private static func nextSpeech(inout overtimeTimer: OvertimeArray, inout infiniteTimer: InfiniteTimerArray, inout countUpTimer: CountUpTimerArray, inout countDownTimer: CountDownTimerArray, inout countUpSegmentReference: CountUpSegmentReferenceArray) -> SegmentProxy? {
         let first = overtimeTimer.first
         let second = infiniteTimer.first
         let third = countUpTimer.first
         let fourth = countDownTimer.first
+        let fifth = countUpSegmentReference.first
 
-        guard let firstTimer = first, secondTimer = second, thirdTimer = third, fourthTimer = fourth else {
+        guard let firstSegment = first, secondSegment = second, thirdSegment = third, fourthSegment = fourth, fifthSegment = fifth else {
             return nil
         }
         
@@ -80,24 +93,40 @@ struct Round {
         infiniteTimer.removeFirst()
         countUpTimer.removeFirst()
         countDownTimer.removeFirst()
+        countUpSegmentReference.removeFirst()
         
-        let valueOne = firstTimer.flatMap{_ in true}
-        let valueTwo = secondTimer.flatMap{ _ in true}
-        let valueThree = thirdTimer.flatMap{_ in true}
-        let valueFour = fourthTimer.flatMap { _ in true}
+        let valueOne = first.flatMap{_ in true}
+        let valueTwo = second.flatMap{ _ in true}
+        let valueThree = third.flatMap{_ in true}
+        let valueFour = fourth.flatMap { _ in true}
+        let valueFive = fifth.flatMap {_ in true}
         
-        let values = [valueOne, valueTwo, valueThree, valueFour].filter{$0 == true}
+        let values = [valueOne, valueTwo, valueThree, valueFour, valueFive].filter{$0 == true}
         
         if values.count != 0 {
-            return SegmentProxy(segments: (firstTimer, secondTimer, thirdTimer, fourthTimer))
+            return SegmentProxy(segments: (firstSegment, secondSegment, thirdSegment, fourthSegment, fifthSegment))
         } else {
             return nil
+        }
+    }
+    
+    func resetReferenceSegments() {
+        segmentProxies.map {
+            $0?.segments
+        }.filter {
+            if let _ = $0!.4 {
+                return true
+            } else {
+                return false
+            }
+        }.forEach {
+            $0!.4!.reset()
         }
     }
 }
 
 struct SegmentProxy {
-    typealias Segments = (OvertimeSegment?, InfiniteSegment?, CountUpSegment?, CountDownSegment?)
+    typealias Segments = (OvertimeSegment?, InfiniteSegment?, CountUpSegment?, CountDownSegment?, CountUpSegmentReference?)
     let segments: Segments
     
     var name: String {
@@ -109,6 +138,8 @@ struct SegmentProxy {
             return countUpSegment.name
         } else if let countDownSegment = segments.3 {
             return countDownSegment.name
+        } else if let countUpSegmentReference = segments.4 {
+            return countUpSegmentReference.name
         } else {
             fatalError()
         }

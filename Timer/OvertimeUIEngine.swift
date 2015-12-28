@@ -14,14 +14,15 @@ final class OvertimeUIEngine<T: SegmentType where T.SegmentTimer == OvertimeTime
     typealias Configuration = OvertimeTimerUIConfiguration
     let segment: Segment
     let configuration = Configuration()
-    private let timer: Segment.SegmentTimer
+    let timer: Segment.SegmentTimer
+    
     private let viewController: TimerViewControllerType
     private var state: TimerButtonState? = nil
     
     init(segment: Segment, viewController: TimerViewControllerType) {
         self.segment = segment
         self.viewController = viewController
-        timer = segment.timer
+        timer = segment.generateTimer()
         viewController.setTimerLabelText(initialDisplayText)
     }
     

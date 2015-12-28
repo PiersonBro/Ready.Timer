@@ -19,12 +19,10 @@ class PlistCreator {
     func addTimer(ofType typeOfTimer: TimerKind, identifier: String, durationInSeconds: Int) {
         dictionary[PlistKeys.TypeOfTimer.rawValue + identifier] = typeOfTimer.rawValue
         dictionary[identifier] = durationInSeconds
-        //FIXME: Use an enum
         let speeches = dictionary[PlistKeys.Speeches.rawValue] as? [String]
         
-        if var speches = speeches {
-            speches.append(identifier)
-            dictionary[PlistKeys.Speeches.rawValue] = speches
+        if let speeches = speeches {
+            dictionary[PlistKeys.Speeches.rawValue] = speeches + [identifier]
         } else {
             dictionary[PlistKeys.Speeches.rawValue] = [identifier]
         }
@@ -117,18 +115,16 @@ extension Round {
     private static func createTimersOfType(timerType: TimerKind, durationInSeconds: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?) {
         switch timerType {
             case .OvertimeTimer:
-                let segment = OvertimeSegment(timer: OvertimeTimer(timeLimitInSeconds: durationInSeconds),  name: name)
+                let segment = OvertimeSegment(sketch: TimerSketch(durationInSeconds: durationInSeconds),  name: name)
                 return (segment, nil, nil, nil)
             case .InfiniteTimer:
-                let infinteSegment = InfiniteSegment(timer: Timer(blueprint: InfiniteBlueprint()), name: name)
+                let infinteSegment = InfiniteSegment(sketch: TimerSketch(durationInSeconds: 0), name: name)
                 return (nil, nil, nil, infinteSegment)
             case .CountUpTimer:
-                let timer = Timer(blueprint: CountUpBlueprint(upperLimitInSeconds: durationInSeconds))
-                let segment = CountUpSegment(timer: timer, name: name)
+                let segment = CountUpSegment(sketch: TimerSketch(durationInSeconds: durationInSeconds), name: name)
                 return (nil, nil, segment, nil)
             case .CountDownTimer:
-                let timer = Timer(blueprint: CountDownBlueprint(countDownFromInSeconds: durationInSeconds))
-                let segment = CountDownSegment(timer: timer, name: name)
+                let segment = CountDownSegment(sketch: TimerSketch(durationInSeconds: durationInSeconds), name: name)
                 return (nil, segment, nil, nil)
         }
     }

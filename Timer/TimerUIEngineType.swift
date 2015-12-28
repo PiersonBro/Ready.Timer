@@ -15,6 +15,7 @@ protocol TimerUIEngineType {
     // FIXME: Shouldn't this just be a property? Swift is either broken or my mental model is. :/
     typealias Configuration: UIConfigurationType
     var segment: Segment { get }
+    var timer: Segment.SegmentTimer { get }
     var configuration: Configuration  { get }
     init(segment: Segment, viewController: TimerViewControllerType)
     
@@ -26,24 +27,24 @@ protocol TimerUIEngineType {
 
 extension TimerUIEngineType where Segment.SegmentTimer.Status == TimerStatus {
     var initialDisplayText: String {
-        return initialDisplayTextForStatus(segment.timer.status, timer: segment.timer)
+        return initialDisplayTextForStatus(timer.status, timer: timer)
     }
 }
 
 extension TimerUIEngineType where Segment.SegmentTimer.Status == OvertimeStatus {
     var initialDisplayText: String {
         let status: TimerStatus
-        if segment.timer.status == .Paused {
+        if timer.status == .Paused {
             status = .Paused
-        } else if segment.timer.status == .Inactive {
+        } else if timer.status == .Inactive {
             status = .Inactive
-        } else if segment.timer.status == .Finished {
+        } else if timer.status == .Finished {
             status = .Finished
         } else {
             fatalError("Inconsistent State")
         }
 
-        return initialDisplayTextForStatus(status, timer: segment.timer)
+        return initialDisplayTextForStatus(status, timer: timer)
     }
 }
 

@@ -71,6 +71,7 @@ final class RoundUIEngine: RoundUIEngineType {
         } else {
             // FIXME: We just start over here instead of shelling out to the view controller.
             mutableSegmentProxies = round.segmentProxies
+            round.resetReferenceSegments()
             segment = mutableSegmentProxies.removeFirst()!
         }
         engine = .engineForSegment(segment, viewController: viewController)

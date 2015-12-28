@@ -15,12 +15,12 @@ final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<I
     
     let segment: T
     let configuration = Configuration()
-    private let timer: T.SegmentTimer
+    let timer: T.SegmentTimer
     private let viewController: TimerViewControllerType
     
     init(segment: Segment, viewController: TimerViewControllerType) {
         self.segment = segment
-        timer = segment.timer
+        timer = segment.generateTimer()
         self.viewController = viewController
         viewController.setTimerLabelText(initialDisplayText)
     }
