@@ -126,14 +126,19 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     
     //MARK: TickerView DataSource
     func stringForIndex(index: Int) -> String? {
-        return engine!.displayNameForSegmentIndex(index)
+        let result = engine!.displayNameForSegmentIndex(index)
+        return result
     }
+
+    var wasLast = false
     
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
         if wasDragged {
             engine!.userFinished()
             engine!.next()
         }
+        
+        self.wasLast = wasLast
     }
     
     // MARK: Next Speech
@@ -151,7 +156,12 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             self.engine!.userFinished()
             //FIXME: Should this be part of `userFinished`?
             self.engine!.next()
-            self.tickerView!.rotateToNextSegment()
+            if self.wasLast {
+                self.tickerView!.reset()
+                self.wasLast = false
+            } else {
+                self.tickerView!.rotateToNextSegment()
+            }
         }
         
         let actionController = UIAlertController(title: "Timer Done", message: nil, preferredStyle: .Alert)

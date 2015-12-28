@@ -60,7 +60,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     
     // Strongly held animator objects
     private var animator: UIDynamicAnimator
-    private let labels: [TickerLabel]
+    private var labels: [TickerLabel]
     
     var dragHandler: DragHandler? = nil
     var machineRotated = false
@@ -126,23 +126,32 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         }
         
 
-        topmostLabel = configureLabel(topmostLabel, text: self.dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
-        topmostLabel.index = speechCount
-
-        leftmostLabel = configureLabel(leftmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
-        leftmostLabel.index = speechCount
-        bottommostLabel = configureLabel(bottommostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticBottom)
-        bottommostLabel.index = speechCount
-        rightmostLabel = configureLabel(rightmostLabel, text: self.dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
-        rightmostLabel.index = speechCount
-       
+        setupInitialLabelState()
         animator = UIDynamicAnimator(referenceView: self)
         animator.delegate = self
         layer.masksToBounds = true
-        backgroundColor =  UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
+        backgroundColor = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
-        animator.debugEnabled = true
+//        animator.debugEnabled = true
+    }
+    
+    func setupInitialLabelState() {
+        topmostLabel = configureLabel(topmostLabel, text: dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
+        topmostLabel.index = speechCount
+        
+        leftmostLabel = configureLabel(leftmostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
+        leftmostLabel.index = speechCount
+        bottommostLabel = configureLabel(bottommostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticBottom)
+        bottommostLabel.index = speechCount
+        rightmostLabel = configureLabel(rightmostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
+        rightmostLabel.index = speechCount
+
+        bottommostLabel.backgroundColor = .redColor()
+        topmostLabel.backgroundColor = .blueColor()
+        rightmostLabel.backgroundColor = .purpleColor()
+        leftmostLabel.backgroundColor = .yellowColor()
+        setNeedsUpdateConstraints()
     }
     
     deinit {
@@ -213,7 +222,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         addLines(rect: rect)
         
         if dragHandler == nil {
-            dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
+            dragHandler = DragHandler(orderedLabels: OrderedLabels(left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
         }
         
         dragHandler?.delegate = self
@@ -245,7 +254,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         layer.addSublayer(rightLineShapeLayer)
     }
     
-    func removeLines() {
+    private func removeLines() {
         let layers = self.layer.sublayers!
         for subLayer in layers where subLayer.name != nil {
             switch subLayer.name! {
@@ -266,7 +275,26 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         rotate(ascending: false)
     }
     
-    func rotate(ascending ascending: Bool) {
+    func reset() {
+        labels.map {
+            constraintsForLabel($0, superviewConstraints: self.constraints)
+        }.forEach {
+            print($0.map {$0.multiplier})
+            self.removeConstraints($0)
+        }
+        setNeedsUpdateConstraints()
+        labels.forEach { $0.removeFromSuperview() }
+        
+        speechCount = 0
+        leftmostLabel = TickerLabel(frame: CGRect())
+        rightmostLabel = TickerLabel(frame: CGRect())
+        topmostLabel = TickerLabel(frame: CGRect())
+        rightmostLabel = TickerLabel(frame: CGRect())
+        labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel] 
+        setupInitialLabelState()
+    }
+    
+    private func rotate(ascending ascending: Bool) {
         let labelsToEnumerate = ascending ? labels : labels.reverse()
         animator.removeAllBehaviors()
         
