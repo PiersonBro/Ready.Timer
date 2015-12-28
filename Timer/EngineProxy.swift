@@ -8,10 +8,11 @@
 
 import Foundation
 
-// This erases TimerUIEngineType Assocaited Types.
+// This erases TimerUIEngineType Associated Types.
 struct EngineProxy /* TimerUIEngineType */ {
-    typealias Engines = (OvertimeUIEngine<OvertimeSegment>?, InfiniteTimerUIEngine<InfiniteSegment>?, CountUpTimerUIEngine?, CountDownTimerUIEngine?)
+    typealias Engines = (OvertimeUIEngine<OvertimeSegment>?, InfiniteTimerUIEngine<InfiniteSegment>?, CountUpTimerUIEngine<CountUpSegment>?, CountDownTimerUIEngine?, CountUpTimerUIEngine<CountUpSegmentReference>?)
     let engines: Engines
+    
     var configuration: UIConfigurationType {
         if let overtimeUIEngine = engines.0 {
             return overtimeUIEngine.configuration
@@ -21,8 +22,10 @@ struct EngineProxy /* TimerUIEngineType */ {
             return countUpUIEngine.configuration
         } else if let countDownEngine = engines.3 {
             return countDownEngine.configuration
+        } else if let countUpReferenceEngine = engines.4 {
+            return countUpReferenceEngine.configuration
         } else {
-            fatalError("Exhaustive list is not exhaustive")
+            fatalError("EngineProxy.configuration is incompletely implemented")
         }
     }
     
@@ -39,6 +42,10 @@ struct EngineProxy /* TimerUIEngineType */ {
             countUpUIEngine.buttonTapped()
         } else if let countDownEngine = engines.3 {
             countDownEngine.buttonTapped()
+        } else if let countUpReferenceEngine = engines.4 {
+            countUpReferenceEngine.buttonTapped()
+        } else {
+            fatalError("EngineProxy.buttonTapped() is incompletely implemented")
         }
     }
     
@@ -51,6 +58,10 @@ struct EngineProxy /* TimerUIEngineType */ {
             countUpUIEngine.doubleTapped()
         } else if let countDownEngine = engines.3 {
             countDownEngine.doubleTapped()
+        } else if let countUpReferenceEngine = engines.4 {
+            countUpReferenceEngine.doubleTapped()
+        } else {
+            fatalError("EngineProxy.doubleTapped() is incompletely implemented")
         }
     }
     
@@ -72,19 +83,23 @@ struct EngineProxy /* TimerUIEngineType */ {
         let infiniteSegment = segments.1
         let countUpSegment = segments.2
         let countDownSegment = segments.3
+        let countUpReference = segments.4
         
         if let overtimeSegment = overtimeSegment {
             let overtimeUIEngine: OvertimeUIEngine<OvertimeSegment> = OvertimeUIEngine(segment: overtimeSegment, viewController: viewController)
-            return EngineProxy(engines: (overtimeUIEngine, nil, nil, nil))
+            return EngineProxy(engines: (overtimeUIEngine, nil, nil, nil, nil))
         } else if let infiniteSegment = infiniteSegment {
             let infiniteUIEngine = InfiniteTimerUIEngine(segment: infiniteSegment, viewController: viewController)
-            return EngineProxy(engines: (nil, infiniteUIEngine, nil, nil))
+            return EngineProxy(engines: (nil, infiniteUIEngine, nil, nil, nil))
         } else if let countUpSegment = countUpSegment {
             let countUpUIEngine = CountUpTimerUIEngine(segment: countUpSegment, viewController: viewController)
-            return EngineProxy(engines: (nil, nil, countUpUIEngine, nil))
+            return EngineProxy(engines: (nil, nil, countUpUIEngine, nil, nil))
         } else if let countDownSegment = countDownSegment {
             let countDownUIEngine = CountDownTimerUIEngine(segment: countDownSegment, viewController: viewController)
-            return EngineProxy(engines: (nil, nil, nil, countDownUIEngine))
+            return EngineProxy(engines: (nil, nil, nil, countDownUIEngine, nil))
+        } else if let countUpReference = countUpReference {
+            let countDownReferenceUIEngine = CountUpTimerUIEngine(segment: countUpReference, viewController: viewController)
+            return EngineProxy(engines: (nil,nil, nil, nil, countDownReferenceUIEngine))
         } else {
             fatalError("Failed To Create Engine Proxy")
         }

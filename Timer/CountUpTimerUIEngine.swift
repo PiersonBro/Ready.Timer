@@ -9,8 +9,8 @@
 import Foundation
 import TimerKit
 
-final class CountUpTimerUIEngine: TimerUIEngineType {
-    typealias Segment = CountUpSegment
+final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<CountUpBlueprint>>: TimerUIEngineType {
+    typealias Segment = T
     typealias Configuration = DefaultConfiguration
     let segment: Segment
     let configuration = Configuration()
@@ -18,7 +18,9 @@ final class CountUpTimerUIEngine: TimerUIEngineType {
     
     private let viewController: TimerViewControllerType
     private var state: TimerButtonState? = nil
-    
+    private var shouldSuspend = false
+    private var shouldResume = false
+
     init(segment: Segment, viewController: TimerViewControllerType) {
         self.segment = segment
         self.viewController = viewController
@@ -26,10 +28,11 @@ final class CountUpTimerUIEngine: TimerUIEngineType {
         viewController.setTimerLabelText(initialDisplayText)
     }
     
-    private var shouldSuspend = false
-    private var shouldResume = false
     func buttonTapped() {
+        print("Hello World \(shouldResume)")
+        
         if shouldResume {
+            print("WHAT!!!")
             changeTimerToState(.Resume)
             shouldResume = false
             shouldPause = true

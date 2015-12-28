@@ -90,7 +90,7 @@ private func createTimerFromSketch(sketch: TimerSketch) -> Timer<CountUpBlueprin
     if let durationInSeconds = sketch.durationInSeconds {
         blueprint = CountUpBlueprint(upperLimitInSeconds: durationInSeconds)
     } else {
-        blueprint = CountUpBlueprint(upperLimitInSeconds: sketch.durationInMinutes!)
+        blueprint = CountUpBlueprint(upperLimitInMinutes: sketch.durationInMinutes!)
     }
     
     return Timer(blueprint: blueprint)
