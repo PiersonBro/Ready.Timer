@@ -146,12 +146,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         bottommostLabel.index = speechCount
         rightmostLabel = configureLabel(rightmostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
         rightmostLabel.index = speechCount
-
-        bottommostLabel.backgroundColor = .redColor()
-        topmostLabel.backgroundColor = .blueColor()
-        rightmostLabel.backgroundColor = .purpleColor()
-        leftmostLabel.backgroundColor = .yellowColor()
-        setNeedsUpdateConstraints()
     }
     
     deinit {
@@ -222,7 +216,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         addLines(rect: rect)
         
         if dragHandler == nil {
-            dragHandler = DragHandler(orderedLabels: OrderedLabels(left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
+            dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
         }
         
         dragHandler?.delegate = self
@@ -289,9 +283,10 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         leftmostLabel = TickerLabel(frame: CGRect())
         rightmostLabel = TickerLabel(frame: CGRect())
         topmostLabel = TickerLabel(frame: CGRect())
-        rightmostLabel = TickerLabel(frame: CGRect())
-        labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel] 
+        bottommostLabel = TickerLabel(frame: CGRect())
+        labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         setupInitialLabelState()
+        dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
     }
     
     private func rotate(ascending ascending: Bool) {
@@ -345,41 +340,12 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     }
     
     var finalSpeechIsAtCenter = false
-    var shouldReloadDataSource = false
     
     func makeDataSourceCalls() {
         let centerLabel = labelForPosition(.staticCenter)
         let rightLabel = labelForPosition(.staticRight)
         let leftLabel = labelForPosition(.staticLeft)
         let bottomLabel = labelForPosition(.staticBottom)
-        
-        if shouldReloadDataSource {
-            addLines(rect: bounds)
-            speechCount = 0
-            
-            func configureLabel(label: TickerLabel) {
-                if speechCount != 0 {
-                    ++speechCount
-                }
-                
-                label.index = speechCount
-                label.text = dataSource.stringForIndex(speechCount)
-                label.consumed = false
-                label.hidden = false
-
-                if speechCount == 0 {
-                    ++speechCount
-                }
-            }
-            
-            configureLabel(centerLabel)
-            configureLabel(leftLabel)
-            configureLabel(bottomLabel)
-            configureLabel(rightLabel)
-            
-            shouldReloadDataSource = false
-            return
-        }
         
         if finalSpeechIsAtCenter {
             dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index, wasDragged: dragHandler?.didRotateUsingThisSystem ?? false, wasLast: true)
@@ -388,7 +354,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
             bottomLabel.hidden = true
             leftLabel.hidden = true
             
-            shouldReloadDataSource = true
             finalSpeechIsAtCenter = false
             return
         }
