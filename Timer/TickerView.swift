@@ -270,22 +270,16 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     }
     
     func reset() {
-        labels.map {
-            constraintsForLabel($0, superviewConstraints: self.constraints)
-        }.forEach {
-            print($0.map {$0.multiplier})
-            self.removeConstraints($0)
-        }
-        setNeedsUpdateConstraints()
-        labels.forEach { $0.removeFromSuperview() }
-        
         speechCount = 0
+        labels.forEach { $0.removeFromSuperview() }
         leftmostLabel = TickerLabel(frame: CGRect())
         rightmostLabel = TickerLabel(frame: CGRect())
         topmostLabel = TickerLabel(frame: CGRect())
         bottommostLabel = TickerLabel(frame: CGRect())
+        
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         setupInitialLabelState()
+        addLines(rect: bounds)
         dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
     }
     
