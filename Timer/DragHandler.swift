@@ -8,23 +8,12 @@
 
 import UIKit
 
-public struct OrderedLabels {
-    let left: UILabel
-    let right: UILabel
-    let top: UILabel
-    let bottom: UILabel
-}
-
 //FIXME: Change deployment target to iOS 9.
 @available(iOS 9.0, *)
 public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
-//    public typealias OrderedLabels = (left: UILabel, right: UILabel, top: UILabel, bottom: UILabel)
+    public typealias OrderedLabels = (left: UILabel, right: UILabel, top: UILabel, bottom: UILabel)
     
-    private let orderedLabels: OrderedLabels
-    
-    private var labels: [UILabel] {
-        return [orderedLabels.left, orderedLabels.top, orderedLabels.right, orderedLabels.bottom]
-    }
+    private let labels: [UILabel]
     
     private let view: UIView
     
@@ -46,9 +35,10 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     public var didRotateUsingThisSystem = false
     
     public init(orderedLabels: OrderedLabels) {
-        self.orderedLabels = orderedLabels
-        view = orderedLabels.left.superview!
+        self.labels = [orderedLabels.left, orderedLabels.top, orderedLabels.right, orderedLabels.bottom]
+        view = labels.first!.superview!
         dynamicAnimator = UIDynamicAnimator(referenceView: view)
+        dynamicAnimator.debugEnabled = true
         positionTracker = PositionTracker(orderedLabels: orderedLabels)
     }
     
@@ -429,9 +419,7 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
     var topLabel: UILabel
     var bottomLabel: UILabel
     
-    var labels: [UILabel] {
-        return [leftLabel, topLabel, rightLabel, bottomLabel]
-    }
+    let labels: [UILabel]
     
     let dynamicAnimator: UIDynamicAnimator
     var externalAnimator: UIDynamicAnimator? = nil
@@ -439,11 +427,12 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
     
     // `labels` -- The four labels that make up the PositionTracker
     // `centers` -- The locations where the labels should be at the end of animation.
-    init(orderedLabels: OrderedLabels) {
+    init(orderedLabels: DragHandler.OrderedLabels) {
         leftLabel = orderedLabels.left
         rightLabel = orderedLabels.right
         topLabel = orderedLabels.top
         bottomLabel = orderedLabels.bottom
+        labels = [leftLabel, topLabel, rightLabel, bottomLabel]
         dynamicAnimator = UIDynamicAnimator(referenceView: topLabel.superview!)
         super.init()
         dynamicAnimator.delegate = self
