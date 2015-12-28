@@ -14,14 +14,15 @@ final class CountUpTimerUIEngine: TimerUIEngineType {
     typealias Configuration = DefaultConfiguration
     let segment: Segment
     let configuration = Configuration()
+    let timer: Segment.SegmentTimer
+    
     private let viewController: TimerViewControllerType
-    private let timer: Segment.SegmentTimer
     private var state: TimerButtonState? = nil
     
     init(segment: Segment, viewController: TimerViewControllerType) {
         self.segment = segment
         self.viewController = viewController
-        timer = segment.timer
+        timer = segment.generateTimer()
         viewController.setTimerLabelText(initialDisplayText)
     }
     

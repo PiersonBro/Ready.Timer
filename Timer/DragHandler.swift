@@ -31,7 +31,8 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     let positionTracker: PositionTracker
     
     public var delegate: DragHandlerDelegate? = nil
-    public var didRotateUsingThisSystem = true
+    //FIXME: Is this the correct inital value?
+    public var didRotateUsingThisSystem = false
     
     public init(orderedLabels: OrderedLabels) {
         self.labels = [orderedLabels.left, orderedLabels.top, orderedLabels.right, orderedLabels.bottom]
