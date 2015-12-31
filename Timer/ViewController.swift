@@ -136,8 +136,15 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         if wasDragged {
             engine!.userFinished()
             engine!.next()
+            
+            if self.wasLast {
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.tickerView?.reset()
+                    self.wasLast = false
+                }
+            }
         }
-        
         self.wasLast = wasLast
     }
     
