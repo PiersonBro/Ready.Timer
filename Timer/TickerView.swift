@@ -280,7 +280,14 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         setupInitialLabelState()
         addLines(rect: bounds)
+        dragHandler?.deactivate()
         dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue()) {
+            self.dragHandler?.delegate = self
+            self.dragHandler?.activate()
+        }
     }
     
     private func rotate(ascending ascending: Bool) {
