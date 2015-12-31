@@ -16,7 +16,6 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     private let labels: [UILabel]
     
     private let view: UIView
-    
     let dynamicAnimator: UIDynamicAnimator
     
     private var leftToCenter: UIAttachmentBehavior? = nil
@@ -107,9 +106,9 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
         dynamicAnimator.removeAllBehaviors()
         positionTracker.shiftToPoints(centers!, updatingExternalAnimator: dynamicAnimator, shifted: { didShift = $0 }) {
             self.snapBehaviorsActive = false
-            self.centers = nil
             self.configureAttachmentBehaviors()
         }
+        centers = nil
         snapBehaviorsActive = true
     }
     
