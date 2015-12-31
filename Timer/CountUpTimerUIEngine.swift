@@ -29,10 +29,7 @@ final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<Co
     }
     
     func buttonTapped() {
-        print("Hello World \(shouldResume)")
-        
         if shouldResume {
-            print("WHAT!!!")
             changeTimerToState(.Resume)
             shouldResume = false
             shouldPause = true
