@@ -133,7 +133,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         backgroundColor = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
-//        animator.debugEnabled = true
+        animator.debugEnabled = true
     }
     
     func setupInitialLabelState() {
