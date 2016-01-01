@@ -1,5 +1,5 @@
 //
-//  DebateRoundManager.swift
+//  Debate+Round.swift
 //  Timer
 //
 //  Created by E&Z Pierson on 8/26/14.
@@ -10,9 +10,7 @@ import Foundation
 import TimerKit
 
 enum DebateType: String {
-    case Parli = "Parli"
-    case TeamPolicy = "TeamPolicy"
-    case LincolnDouglas = "LincolnDouglas"
+    case Parli, TeamPolicy, LincolnDouglas
 }
 
 private enum DurationKey: String {
@@ -126,58 +124,94 @@ extension SpeechType: CustomStringConvertible {
     }
 }
 
-struct Speech {
-    let speechType: SpeechType
-    let name: String
-    let overtimeTimer: OvertimeTimer
-    
+private extension OvertimeSegment {
     init(speechType: SpeechType, name: String) {
         self.name = name
-        self.speechType = speechType
-        let duration = NSTimeInterval(speechType.durationOfSpeech() * 60)
-        overtimeTimer = OvertimeTimer(timeLimit: duration)
+        sketch = TimerSketch(durationInMinutes: speechType.durationOfSpeech())
     }
 }
 
-extension Speech: CustomStringConvertible {
-    var description: String {
-        return "Name: \(name) \n SpeechType: \(speechType) \n timer controller \(overtimeTimer)"
-    }
-}
-
-class DebateRoundManager {
-    let debateType: DebateType
-    let speechCount: Int
-    let affPrepTime: Timer<CountUpBlueprint>
-    let negPrepTime: Timer<CountUpBlueprint>
-    
-    let speeches: [Speech]
-    private let debateRoundData: [NSObject : AnyObject]
-    
-    init(type: DebateType) {
-        debateType = type
+extension Round {
+    static func roundFromDebateType(type: DebateType) -> Round {
         let path = NSBundle.mainBundle().pathForResource(PListKey.DebugNameOfPlist.rawValue, ofType: "plist")
         let debates = NSDictionary(contentsOfFile: path!)!
-        debateRoundData = debates[debateType.rawValue] as! [NSObject: AnyObject]
-        speeches = DebateRoundManager.generateSpeechesFromData(debateRoundData, debateType: debateType)
-        speechCount = speeches.count
+        let debateRoundData = debates[type.rawValue] as! [NSObject: AnyObject]
+        let prepTimeDuration = debateRoundData[PListKey.TotalPrepTime.rawValue] as! Int
 
-        let prepTimeDuration = (debateRoundData[PListKey.TotalPrepTime.rawValue] as! NSNumber).doubleValue * 60.0
-        let prepBlueprint = CountUpBlueprint(upperLimit: prepTimeDuration)
-        
-        affPrepTime = Timer(blueprint: prepBlueprint)
-        negPrepTime = Timer(blueprint: prepBlueprint)
-    }
-
-    private class func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType) -> [Speech] {
-        let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
-      
-        let speeches = stringOfSpeeches.map { (speechName: String) -> Speech in
-            let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
-        
-            return Speech(speechType: speechType, name: speechName)
+        let timers = generateSpeechesFromData(debateRoundData, debateType: type, prepTime: prepTimeDuration) { segment -> Bool in
+                if segment.name == "CX" {
+                    return true
+                } else {
+                    return isRebuttal(segment)
+                }
         }
         
-        return speeches
+        return Round(first: timers.0, fifth: timers.1, name: type.rawValue)
     }
+}
+
+private func isRebuttal(x: OvertimeSegment) -> Bool {
+    if x.name == "1 AR" {
+        return true
+    } else if x.name == "1 NR" || x.name == "NR" {
+        return true
+    } else if x.name == "2 NR" {
+        return true
+    } else {
+        return false
+    }
+}
+
+private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType, prepTime: Int, shouldIntersperseAfterSegment: (overtimeSegment: OvertimeSegment) -> Bool) -> ([OvertimeSegment?], [CountUpSegmentReference?])  {
+    let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
+    let segments = stringOfSpeeches.map { speechName -> OvertimeSegment in
+        let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
+        return OvertimeSegment(speechType: speechType, name: speechName)
+    }
+    
+    var classySegments = segments.map { segment -> Box<OvertimeSegment>? in
+        Box(value: segment)
+    }
+    
+    classySegments.filter {
+        shouldIntersperseAfterSegment(overtimeSegment: $0!.value)
+    }.forEach { box in
+        let index = classySegments.indexOf { $0 == box}
+        classySegments.insert(nil, atIndex: index! + 1)
+    }
+    
+    let leftSegment = CountUpSegmentReference(sketch: TimerSketch(durationInMinutes: prepTime), name: "Aff Prep Timer")
+    let rightSegment = CountUpSegmentReference(sketch: TimerSketch(durationInMinutes: prepTime), name: "Neg Prep Timer")
+    var left = false
+    let countUpSegment = classySegments.map { segment -> CountUpSegmentReference? in
+        if let _ = segment {
+            return nil
+        } else {
+            if left {
+                left = false
+                return leftSegment
+            } else {
+                left = true
+                return rightSegment
+            }
+        }
+    }
+    let finalSegments = classySegments.map { $0?.value}
+    
+    return (finalSegments, countUpSegment)
+}
+
+
+private class Box<T: Equatable> {
+    let value: T
+    
+    init(value: T) {
+        self.value = value
+    }
+}
+
+extension Box: Equatable {}
+
+private func ==<T: Equatable>(lhs: Box<T>, rhs:Box<T>) -> Bool {
+    return lhs.value == rhs.value && ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
 }

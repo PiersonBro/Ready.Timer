@@ -42,7 +42,7 @@ class CircleButton: UIControl {
         label.adjustsFontSizeToFitWidth = true
 
         addSubview(label)
-        layout(label, self) { (label, view) in
+        constrain(label, self) { (label, view) in
             label.center == view.center
             label.size == view.size
         }

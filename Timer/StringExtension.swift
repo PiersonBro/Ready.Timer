@@ -10,9 +10,9 @@ import Foundation
 
 public extension String {
     
-    public static func formattedStringForDuration(duration: NSTimeInterval) -> String {
-        let minute = Int(duration) / 60
-        let second = Int(duration) % 60
+    public static func formattedStringForDuration(duration: Int) -> String {
+        let minute = duration / 60
+        let second = duration % 60
         let secondString: String
         
         if second < 10 {

@@ -10,34 +10,44 @@ import UIKit
 import QuartzCore
 import Cartography
 import Din
+import TimerKit
 
-class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognizerDelegate {
+protocol TimerViewControllerType {
+    // FIXME: Change these to properties.
+    func setTimerLabelText(text: String)
+    func setTimerButtonText(text: String)
+    func timerDidFinish()
+}
+
+class ViewController : UIViewController, TickerViewDataSource, TimerViewControllerType, UIGestureRecognizerDelegate {
     var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
     let clockwiseButton: CircleButton
     
     var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
-    var debateRoundManager: DebateRoundManager
-    var currentSpeech: Speech?
+    var engine: RoundUIEngine? = nil
     
-    required init?(coder aDecoder: NSCoder) {
+    init(partialEngine: (viewController: TimerViewControllerType) -> RoundUIEngine) {
         timerLabel = UILabel(frame: CGRect())
-        debateRoundManager = DebateRoundManager(type: .TeamPolicy)
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
-        
-        super.init(coder: aDecoder)
-        
+    
+        super.init(nibName: nil, bundle: nil)
+        engine = partialEngine(viewController: self)
         tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
         
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
+        view.backgroundColor = .whiteColor()
     }
-    
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+
     //MARK: ViewController Lifecycle.
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
@@ -45,7 +55,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         guard let tickerView = tickerView else { return }
         
         view.addSubview(tickerView)
-        layout(tickerView, view) { (tickerView, view) in
+        constrain(tickerView, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
             tickerView.width == view.width * 1 ~ 750
@@ -57,7 +67,7 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         startButton.addTarget(self, action: "timerButtonPressed", forControlEvents: .TouchUpInside)
         startButton.labelText = "Start"
         view.addSubview(startButton)
-        layout(startButton, view, tickerView) { (startButton, view, tickerView) in
+        constrain(startButton, view, tickerView) { (startButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             startButton.centerX == view.centerX * 1.5
             startButton.centerY == tickerView.top - 100
@@ -65,10 +75,10 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
             startButton.height == startButton.width
         }
         
-        clockwiseButton.addTarget(self, action: "clockwise:", forControlEvents: .TouchUpInside)
-        clockwiseButton.labelText = "Clockwise"
+        clockwiseButton.addTarget(self, action: "selectRound:", forControlEvents: .TouchUpInside)
+        clockwiseButton.labelText = "Select Round"
         view.addSubview(clockwiseButton)
-        layout(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
+        constrain(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
             // FIXME: Mispositioned Constraints
             counterClockwiseButton.centerX == view.centerX * 0.4
             counterClockwiseButton.centerY == tickerView.top - 100
@@ -79,87 +89,31 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         
         timerLabel.font = UIFont.systemFontOfSize(160)
         view.addSubview(timerLabel)
-        layout(timerLabel, view) { (timerLabel, view) in
+        constrain(timerLabel, view) { (timerLabel, view) in
             timerLabel.centerX == view.centerX
             timerLabel.centerY == view.centerY / 2
         }
-        tickerViewDidRotateStringAtIndexToCenterPosition(0)
+        //FIXME: Handle single string data sources.
+        tickerViewDidRotateStringAtIndexToCenterPosition(0, wasDragged: false, wasLast: false)
+    }
+    
+    func setTimerLabelText(text: String) {
+        timerLabel.text = text
+    }
+    
+    func setTimerButtonText(text: String) {
+        //FIXME: Add proper localization support:
+        startButton.labelText = text
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
     //MARK: TimerButton
     func timerButtonPressed() {
-        //FIXME: This is confusing!
-        changeTimerToState(.CurrentState)
+        engine!.buttonTapped()
     }
-    
-    enum TimerButtonState: String {
-        case Start = "Start"
-        case Cancel = "Cancel"
-        case Pause = "Pause"
-        case Resume = "Resume"
-        case CurrentState = ""
-    }
-    
-    var shouldSkip = true
-    
-    func changeTimerToState(state: TimerButtonState) {
-        switch state {
-            case .Start:
-                startButton.labelText = TimerButtonState.Start.rawValue
-            case .Cancel:
-                startButton.labelText = TimerButtonState.Cancel.rawValue
-            case .Pause:
-                startButton.labelText = TimerButtonState.Pause.rawValue
-            case .Resume:
-                startButton.labelText = TimerButtonState.Resume.rawValue
-            case .CurrentState:
-                break
-        }
-        
-        if (startButton.labelText == "Start" || startButton.labelText == "Resume") {
-                if shouldSkip {
-                    transitionToNextSpeech()
-                    return
-                }
-                startButton.labelText = "Cancel"
-                currentSpeech?.overtimeTimer.onTick { elapsedTime in
-                    self.timerLabel.text = .formattedStringForDuration(elapsedTime)
-                } .onConclusion { conclusionResult in
-                    switch conclusionResult {
-                        case .Overtime:
-                            self.transitionToNextSpeech()
-                        case .Reset:
-                            self.timerLabel.text = "\(self.currentSpeech!.speechType.durationOfSpeech()):00"
-                        default:
-                            break
-                    }
-                }.activate()
-        } else if (startButton.labelText == "Cancel") {
-                startButton.labelText = "Start"
-                currentSpeech?.overtimeTimer.concludeWithStatus(.Reset)
-        } else if (startButton.labelText == "Pause") {
-                startButton.labelText = "Resume"
-                currentSpeech?.overtimeTimer.concludeWithStatus(.Pause)
-        }
-    }
-    
+
     // MARK: Gesture Recognizers
-    
     func tapped() {
-        if let currentSpeech = currentSpeech {
-            switch(currentSpeech.overtimeTimer.status) {
-                case .Running:
-                    changeTimerToState(.Pause)
-                case .Paused:
-                    changeTimerToState(.Resume)
-                default:
-                    break
-            }
-        }
+        engine!.doubleTapped()
     }
     
     func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
@@ -170,55 +124,32 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
         }
     }
     
-    //MARK: Debug
-    func clockwise(sender: CircleButton) {
-        let transitionViewController = TransitionViewController(countUpTimer: debateRoundManager.affPrepTime)
-        self.presentViewController(transitionViewController, animated: true, completion: nil)
-    }
-    
-    func rotateToNextSpeechIfPossible() {
-        if let currentSpeech = currentSpeech {
-            if currentSpeech.overtimeTimer.status != .Running && currentSpeech.overtimeTimer.status != .Paused {
-                tickerView!.rotateToNextSegment()
-            } else {
-                // FIXME: Add a better denied animation here.
-                let animation = CAKeyframeAnimation(keyPath: "transform")
-                let initialValue = NSValue(CATransform3D: CATransform3DMakeTranslation(-6.0, 0.0, 0.0))
-                let finalValue = NSValue(CATransform3D: CATransform3DMakeTranslation(6.0, 0.0, 0.0))
-                animation.values = [initialValue, finalValue]
-                animation.autoreverses = true
-                animation.duration = 0.5
-                animation.repeatCount = 2.0
-                clockwiseButton.layer.addAnimation(animation, forKey:nil)
-            }
-        } else {
-            tickerView!.rotateToNextSegment()
-        }
-    }
-    
     //MARK: TickerView DataSource
     func stringForIndex(index: Int) -> String? {
-        if index >= debateRoundManager.speechCount {
-            // We are at the end of the Debate Round.
-            return nil
-        }
-        let speech = debateRoundManager.speeches[index]
-        return speech.name
+        let result = engine!.displayNameForSegmentIndex(index)
+        return result
     }
+
+    var wasLast = false
     
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int) {
-        let speech = debateRoundManager.speeches[index]
-        timerLabel.text = "\(speech.speechType.durationOfSpeech()):00"
-        currentSpeech = speech
-    }
-        
-    func tickerViewDidRotateToLastSpeech(index: Int) {
-        //FIXME: This needs to change before release.
-        debateRoundManager = DebateRoundManager(type: .LincolnDouglas)
+    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
+        if wasDragged {
+            engine!.userFinished()
+            engine!.next()
+            
+            if self.wasLast {
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
+                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                    self.tickerView?.reset()
+                    self.wasLast = false
+                }
+            }
+        }
+        self.wasLast = wasLast
     }
     
     // MARK: Next Speech
-    func transitionToNextSpeech() {
+    func timerDidFinish() {
         #if !(arch(i386) || !arch(x86_64))
             let audioController = AudioController(type: Ringtone())
             let soundManager = audioController.playSound(.Ascending, repeating: true)
@@ -229,13 +160,25 @@ class ViewController: UIViewController, TickerViewDataSource, UIGestureRecognize
                 soundManager.stop()
             #endif
             self.startButton.labelText = "Start"
-            // Calling this will also mark the speech as consumed, yay side effects.
-            self.currentSpeech?.overtimeTimer.concludeWithStatus(.Finish)
-            self.tickerView!.rotateToNextSegment()
+            self.engine!.userFinished()
+            //FIXME: Should this be part of `userFinished`?
+            self.engine!.next()
+            if self.wasLast {
+                self.tickerView!.reset()
+                self.wasLast = false
+            } else {
+                self.tickerView!.rotateToNextSegment()
+            }
         }
         
         let actionController = UIAlertController(title: "Timer Done", message: nil, preferredStyle: .Alert)
         actionController.addAction(action)
-        self.presentViewController(actionController, animated: true, completion: nil)
+        presentViewController(actionController, animated: true, completion: nil)
+    }
+    
+    func selectRound(sender: CircleButton) {
+        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+        selectionViewController.modalPresentationStyle = .FormSheet
+        presentViewController(selectionViewController, animated: true, completion: nil)
     }
 }

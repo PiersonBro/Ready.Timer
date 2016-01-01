@@ -10,12 +10,29 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-                            
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        
+        let creator = PlistCreator()
+        creator.addTimer(ofType: .InfiniteTimer, identifier: "Infinity", durationInMinutes: 0)
+        creator.addTimer(ofType: .OvertimeTimer, identifier: "Hello", durationInMinutes: 5)
+        creator.addTimer(ofType: .CountDownTimer, identifier: "Snot", durationInMinutes: 5)
+        creator.addTimer(ofType: .CountUpTimer, identifier: "terrible", durationInMinutes: 4)
+        creator.finish(name: "Brilliant")
+
+        let round = Round.roundForName("Brilliant")
+        round.registerAsDefaultRound()
+        let unarchivedRound = Round.defaultRound()!
+        let partialEngine = RoundUIEngine.createEngine(unarchivedRound)
+        let viewController = ViewController(partialEngine: partialEngine)
+        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+        window?.rootViewController = viewController
+        window?.makeKeyAndVisible()
+        selectionViewController.modalPresentationStyle = .FormSheet
+        window?.rootViewController?.presentViewController(selectionViewController, animated: true, completion: nil)
+
         return true
     }
 
