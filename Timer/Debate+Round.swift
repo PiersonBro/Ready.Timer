@@ -164,24 +164,26 @@ private func isRebuttal(x: OvertimeSegment) -> Bool {
 
 private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], debateType: DebateType, prepTime: Int, shouldIntersperseAfterSegment: (overtimeSegment: OvertimeSegment) -> Bool) -> ([OvertimeSegment?], [CountUpSegmentReference?])  {
     let stringOfSpeeches = debateRoundData[PListKey.Speeches.rawValue] as! [String]
-    var speeches = stringOfSpeeches.map { speechName -> OvertimeSegment? in
+    let segments = stringOfSpeeches.map { speechName -> OvertimeSegment in
         let speechType = SpeechType.typeOfSpeech(speechName, debateRoundData: debateRoundData, debateType: debateType)
         return OvertimeSegment(speechType: speechType, name: speechName)
     }
-    //FIXME: This is pure mutation and grossness.
-    speeches.forEach { segment in
-        if let segment = segment {
-            let index = speeches.indexOf { $0 == segment }
-            if shouldIntersperseAfterSegment(overtimeSegment: segment) {
-                speeches.insert(nil, atIndex: index! + 1)
-            }
-        }
+    
+    var classySegments = segments.map { segment -> Box<OvertimeSegment>? in
+        Box(value: segment)
+    }
+    
+    classySegments.filter {
+        shouldIntersperseAfterSegment(overtimeSegment: $0!.value)
+    }.forEach { box in
+        let index = classySegments.indexOf { $0 == box}
+        classySegments.insert(nil, atIndex: index! + 1)
     }
     
     let leftSegment = CountUpSegmentReference(sketch: TimerSketch(durationInMinutes: prepTime), name: "Aff Prep Timer")
     let rightSegment = CountUpSegmentReference(sketch: TimerSketch(durationInMinutes: prepTime), name: "Neg Prep Timer")
     var left = false
-    let countUpSegment = speeches.map { segment -> CountUpSegmentReference? in
+    let countUpSegment = classySegments.map { segment -> CountUpSegmentReference? in
         if let _ = segment {
             return nil
         } else {
@@ -194,6 +196,22 @@ private func generateSpeechesFromData(debateRoundData: [NSObject: AnyObject], de
             }
         }
     }
+    let finalSegments = classySegments.map { $0?.value}
+    
+    return (finalSegments, countUpSegment)
+}
 
-    return (speeches, countUpSegment)
+
+private class Box<T: Equatable> {
+    let value: T
+    
+    init(value: T) {
+        self.value = value
+    }
+}
+
+extension Box: Equatable {}
+
+private func ==<T: Equatable>(lhs: Box<T>, rhs:Box<T>) -> Bool {
+    return lhs.value == rhs.value && ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
 }
