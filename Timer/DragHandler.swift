@@ -37,7 +37,9 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
         self.labels = [orderedLabels.left, orderedLabels.top, orderedLabels.right, orderedLabels.bottom]
         view = labels.first!.superview!
         dynamicAnimator = UIDynamicAnimator(referenceView: view)
-        dynamicAnimator.debugEnabled = true
+        #if DEBUG
+            dynamicAnimator.debugEnabled = true
+        #endif
         positionTracker = PositionTracker(orderedLabels: orderedLabels)
     }
     
