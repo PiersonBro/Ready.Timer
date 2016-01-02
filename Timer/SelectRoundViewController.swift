@@ -44,6 +44,7 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: "")
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addRound")
         toolbar.items = [doneButton, spacer, addButton]
+        toolbar.tintColor = .purpleColor()
     }
 
     required init?(coder aDecoder: NSCoder) {
