@@ -29,6 +29,10 @@ class PlistCreator {
     }
     
     func finish(name name: String) -> Bool {
+        guard name != "" && dictionary.count != 0 else {
+            return false
+        }
+        
         let defaultManager = NSFileManager.defaultManager()
         if !defaultManager.fileExistsAtPath(FSKeys.folderPath) {
             try! defaultManager.createDirectoryAtPath(FSKeys.folderPath, withIntermediateDirectories: false, attributes: nil)
@@ -61,8 +65,11 @@ enum FSKeys: String {
 }
 
 extension Round {
-    static func roundForName(name: String) -> Round {
-        let dictionary = NSDictionary(contentsOfFile: FSKeys.pathForName(name))! as! [String : AnyObject]
+    static func roundForName(name: String) -> Round? {
+        guard let dictionary = NSDictionary(contentsOfFile: FSKeys.pathForName(name)) as? [String : AnyObject] where dictionary.count != 0 else {
+            return nil
+        }
+        
         let names = dictionary[PlistKeys.Speeches.rawValue] as! [String]
         let numbers = names.map {
             dictionary[$0] as! Int

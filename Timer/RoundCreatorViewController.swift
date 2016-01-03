@@ -241,10 +241,12 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
         let doneAction = UIAlertAction(title: "Done", style: .Default) { action in
             let text = controller.textFields![0].text!
-            self.plistCreator.finish(name: text)
-            let selectVC = SelectRoundViewController(rounds: Round.allRounds())
-            selectVC.modalPresentationStyle = .FormSheet
-            self.presentViewController(selectVC, animated: true, completion: nil)
+            let didFinish = self.plistCreator.finish(name: text)
+            if didFinish {
+                let selectVC = SelectRoundViewController(rounds: Round.allRounds())
+                selectVC.modalPresentationStyle = .FormSheet
+                self.presentViewController(selectVC, animated: true, completion: nil)
+            }
         }
         controller.addAction(cancelAction)
         controller.addAction(doneAction)

@@ -38,7 +38,7 @@ extension Round {
         var rounds = [Round.roundFromDebateType(.Parli), Round.roundFromDebateType(.LincolnDouglas), Round.roundFromDebateType(.TeamPolicy)]
         if let paths = try? fileManager.contentsOfDirectoryAtPath(FSKeys.folderPath) {
             let names = paths.map {(($0 as NSString).lastPathComponent as NSString).stringByDeletingPathExtension}
-            names.map {Round.roundForName($0)}.forEach { rounds.append($0) }
+            names.flatMap {Round.roundForName($0)}.forEach { rounds.append($0) }
         }
         
         return rounds
