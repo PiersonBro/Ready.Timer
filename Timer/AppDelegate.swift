@@ -15,24 +15,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        let creator = PlistCreator()
-        creator.addTimer(ofType: .InfiniteTimer, identifier: "Infinity", durationInMinutes: 0)
-        creator.addTimer(ofType: .OvertimeTimer, identifier: "Hello", durationInMinutes: 5)
-        creator.addTimer(ofType: .CountDownTimer, identifier: "Snot", durationInMinutes: 5)
-        creator.addTimer(ofType: .CountUpTimer, identifier: "terrible", durationInMinutes: 4)
-        creator.finish(name: "Brilliant")
+        if let defaultRound = Round.defaultRound() {
+            let partialEngine = RoundUIEngine.createEngine(defaultRound)
+            let viewController = ViewController(partialEngine: partialEngine)
+            window?.rootViewController = viewController
+        } else {
+            // FIXME: Create
+            let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+            selectionViewController.modalPresentationStyle = .FormSheet
+            window?.rootViewController = UIViewController(nibName: nil, bundle: nil)
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                self.window?.rootViewController?.presentViewController(selectionViewController, animated: true, completion: nil)
+            }
+        }
 
-        let round = Round.roundForName("Brilliant")
-        round.registerAsDefaultRound()
-        let unarchivedRound = Round.defaultRound()!
-        let partialEngine = RoundUIEngine.createEngine(unarchivedRound)
-        let viewController = ViewController(partialEngine: partialEngine)
-        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
-        window?.rootViewController = viewController
         window?.makeKeyAndVisible()
-        selectionViewController.modalPresentationStyle = .FormSheet
-        window?.rootViewController?.presentViewController(selectionViewController, animated: true, completion: nil)
-
         return true
     }
 
