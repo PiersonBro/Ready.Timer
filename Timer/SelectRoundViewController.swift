@@ -11,7 +11,7 @@ import Cartography
 
 let reuseIdentifier = "ReuseIdentifier"
 class SelectRoundViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    private let rounds: [Round]
+    private var rounds: [Round]
     private let tableView = UITableView(frame: CGRect(), style: .Plain)
     private let toolbar = UIToolbar(frame: CGRect())
     
@@ -71,7 +71,42 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
             UIApplication.sharedApplication().delegate?.window!?.rootViewController = viewController
         }
     }
+
+    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let setDefaultRowAction = UITableViewRowAction(style: .Normal, title: "Set as Default") { action, indexPath in
+            let round = self.rounds[indexPath.row]
+            round.registerAsDefaultRound()
+            tableView.setEditing(false, animated: true)
+        }
+        setDefaultRowAction.backgroundColor = .purpleColor()
+        var rowActions = [setDefaultRowAction]
+        
+        if !isDebateName(rounds[indexPath.row].name) {
+            let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { action, indexPath in
+                let round = self.rounds[indexPath.row]
+                round.delete()
+                self.rounds.removeAtIndex(indexPath.row)
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            }
+            rowActions.append(deleteRowAction)
+        }
+        
+        return rowActions
+    }
     
+    private func isDebateName(name: String) -> Bool {
+        switch name {
+            case DebateType.LincolnDouglas.rawValue:
+                return true
+            case DebateType.Parli.rawValue:
+                return true
+            case DebateType.TeamPolicy.rawValue:
+                return true
+            default:
+                return false
+        }
+    }
+
     func addRound() {
         let createRoundVC = CreateRoundViewController()
         presentingViewController?.dismissViewControllerAnimated(true) {

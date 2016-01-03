@@ -115,6 +115,12 @@ extension Round {
         return Round(first: overtimeSegments, second: infiniteSegments, third: countUpSegments, fourth: countDownSegments, name: name)
     }
     
+    func delete() {
+        let path = FSKeys.pathForName(self.name)
+        let fileManager = NSFileManager.defaultManager()
+        try! fileManager.removeItemAtPath(path)
+    }
+    
     private static func createTimersOfType(timerType: TimerKind, durationInMinutes: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?) {
         return Round.createTimersOfType(timerType, durationInMinutes: durationInMinutes * 60, name: name)
     }
