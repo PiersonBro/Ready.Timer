@@ -102,7 +102,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             finishCircleButton.width == finishCircleButton.superview!.width * 0.2
             finishCircleButton.height == finishCircleButton.width
         }
-        finishCircleButton.labelText = "Finish"
+        finishCircleButton.labelText = "Cancel"
         finishCircleButton.addTarget(self, action: "finishButtonTapped", forControlEvents: .TouchUpInside)
     }
     
@@ -212,6 +212,9 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             if typeOfTimer != .InfiniteTimer && duration == 0 {
                 rejectAnimation()
             } else {
+                if finishCircleButton.labelText == "Cancel" {
+                    finishCircleButton.labelText = "Finish"
+                }
                 plistCreator.addTimer(ofType: typeOfTimer, identifier: identifier, durationInSeconds: duration)
                 textBox.text = ""
                 pickerView.selectRow(0, inComponent: 0, animated: true)
@@ -236,22 +239,26 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     }
     
     func finishButtonTapped() {
-        let controller = UIAlertController(title: "Enter Round Name", message: nil, preferredStyle: .Alert)
-        controller.addTextFieldWithConfigurationHandler(nil)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-        let doneAction = UIAlertAction(title: "Done", style: .Default) { action in
-            let text = controller.textFields![0].text!
-            let didFinish = self.plistCreator.finish(name: text)
-            if didFinish {
-                let selectVC = SelectRoundViewController(rounds: Round.allRounds())
-                selectVC.modalPresentationStyle = .FormSheet
-                self.presentViewController(selectVC, animated: true, completion: nil)
+        if finishCircleButton.labelText == "Finish" {
+            let controller = UIAlertController(title: "Enter Round Name", message: nil, preferredStyle: .Alert)
+            controller.addTextFieldWithConfigurationHandler(nil)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
+            let doneAction = UIAlertAction(title: "Done", style: .Default) { action in
+                let text = controller.textFields![0].text!
+                let didFinish = self.plistCreator.finish(name: text)
+                if didFinish {
+                    let selectVC = SelectRoundViewController(rounds: Round.allRounds())
+                    selectVC.modalPresentationStyle = .FormSheet
+                    self.presentViewController(selectVC, animated: true, completion: nil)
+                }
             }
+            controller.addAction(cancelAction)
+            controller.addAction(doneAction)
+            controller.preferredAction = doneAction
+            self.presentViewController(controller, animated: true, completion: nil)
+        } else {
+
         }
-        controller.addAction(cancelAction)
-        controller.addAction(doneAction)
-        controller.preferredAction = doneAction
-        self.presentViewController(controller, animated: true, completion: nil)
     }
 }
 
