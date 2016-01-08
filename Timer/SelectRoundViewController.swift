@@ -14,7 +14,10 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     private var rounds: [Round]
     private let tableView = UITableView(frame: CGRect(), style: .Plain)
     private let toolbar = UIToolbar(frame: CGRect())
-    
+    let toolbarDelegate = BarPositionDelegate()
+    let statusBarView = UIView(frame: UIApplication.sharedApplication().statusBarFrame ?? CGRect())
+    var topConstraint: NSLayoutConstraint? = nil
+
     init(rounds: [Round]) {
         self.rounds = rounds
         super.init(nibName: nil, bundle: nil)
@@ -24,12 +27,25 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         super.viewDidLoad()
         view.addSubview(tableView)
         view.addSubview(toolbar)
-        constrain(tableView, toolbar) { tableView, toolbar in
+        view.addSubview(statusBarView)
+        
+        let shouldBeUnderStatusBar: Bool
+        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            shouldBeUnderStatusBar = true
+        } else {
+            shouldBeUnderStatusBar = false
+        }
+        
+        constrain(tableView, toolbar,statusBarView) { tableView, toolbar, statusBarView in
             tableView.height == (tableView.superview!.height - 45)
             tableView.bottom == tableView.superview!.bottom
             tableView.width == tableView.superview!.width
             toolbar.bottom == tableView.top
-            toolbar.top == toolbar.superview!.top
+            if shouldBeUnderStatusBar {
+                topConstraint = toolbar.top == statusBarView.bottom
+            } else {
+                topConstraint = toolbar.top == toolbar.superview!.top
+            }
             toolbar.width == toolbar.superview!.width
         }
         tableView.dataSource = self
@@ -45,6 +61,9 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addRound")
         toolbar.items = [doneButton, spacer, addButton]
         toolbar.tintColor = .purpleColor()
+
+        toolbar.delegate = toolbarDelegate
+        toolbar.setBackgroundImage(nil, forToolbarPosition: .TopAttached, barMetrics: .Compact)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -110,11 +129,36 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     func addRound() {
         let createRoundVC = CreateRoundViewController()
         presentingViewController?.dismissViewControllerAnimated(true) {
-            UIApplication.sharedApplication().delegate?.window!?.rootViewController = createRoundVC
+            if let rootViewController = UIApplication.sharedApplication().delegate?.window!?.rootViewController {
+                rootViewController.presentViewController(createRoundVC, animated: true, completion: nil)
+            } else {
+                fatalError("HMM")
+            }
         }
     }
 
     func done() {
         presentingViewController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        
+        if UIDeviceOrientationIsLandscape(UIDevice.currentDevice().orientation) && UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            NSLayoutConstraint.deactivateConstraints([topConstraint!])
+            constrain(toolbar) { toolbar in
+                self.topConstraint = toolbar.top == toolbar.superview!.top
+            }
+        } else if UIDeviceOrientationIsPortrait(UIDevice.currentDevice().orientation) && UIDevice.currentDevice().userInterfaceIdiom == .Phone {
+            NSLayoutConstraint.deactivateConstraints([topConstraint!])
+            constrain(toolbar, statusBarView) { toolbar, statusBarView in
+                self.topConstraint = toolbar.top == statusBarView.bottom
+            }
+        }
+    }
+}
+
+class BarPositionDelegate: NSObject, UIToolbarDelegate {
+    func positionForBar(bar: UIBarPositioning) -> UIBarPosition {
+        return .TopAttached
     }
 }
