@@ -148,17 +148,26 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         self.wasLast = wasLast
     }
     
+    #if (arch(i386) || arch(x86_64)) && os(iOS)
+    let deviceIsSimulator = true
+    #else
+    let deviceIsSimulator = false
+    #endif
+    
     // MARK: Next Speech
     func timerDidFinish() {
-        #if !(arch(i386) || !arch(x86_64))
+        let soundManager: SoundManager?
+        if deviceIsSimulator == false {
             let audioController = AudioController(type: Ringtone())
-            let soundManager = audioController.playSound(.Ascending, repeating: true)
-        #endif
+             soundManager = audioController.playSound(.Ascending, repeating: true)
+        } else {
+            soundManager = nil
+        }
 
         let action = UIAlertAction(title: "Done", style: .Default) { action in
-            #if !(arch(i386) || !arch(x86_64))
-                soundManager.stop()
-            #endif
+            if self.deviceIsSimulator == false {
+                soundManager?.stop()
+            }
             self.startButton.labelText = "Start"
             self.engine!.userFinished()
             //FIXME: Should this be part of `userFinished`?
