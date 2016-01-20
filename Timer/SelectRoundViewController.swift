@@ -92,13 +92,7 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let setDefaultRowAction = UITableViewRowAction(style: .Normal, title: "Set as Default") { action, indexPath in
-            let round = self.rounds[indexPath.row]
-            round.registerAsDefaultRound()
-            tableView.setEditing(false, animated: true)
-        }
-        setDefaultRowAction.backgroundColor = .purpleColor()
-        var rowActions = [setDefaultRowAction]
+        var rowActions: [UITableViewRowAction] = []
         
         if !isDebateName(rounds[indexPath.row].name) {
             let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { action, indexPath in
@@ -109,6 +103,14 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
             }
             rowActions.append(deleteRowAction)
         }
+        
+        let setDefaultRowAction = UITableViewRowAction(style: .Normal, title: "Set as Default") { action, indexPath in
+            let round = self.rounds[indexPath.row]
+            round.registerAsDefaultRound()
+            tableView.setEditing(false, animated: true)
+        }
+        setDefaultRowAction.backgroundColor = .purpleColor()
+        rowActions.append(setDefaultRowAction)
         
         return rowActions
     }
