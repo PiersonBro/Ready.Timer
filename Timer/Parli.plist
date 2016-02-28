@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Speeches</key>
+	<array>
+		<string>zPM_C</string>
+		<string>zLO_C</string>
+		<string>zMOG_C</string>
+		<string>zMO_C</string>
+		<string>zLO_R</string>
+		<string>zPM_R</string>
+	</array>
+	<key>TypeOfTimerzLO_C</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzLO_R</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzMOG_C</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzMO_C</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzPM_C</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzPM_R</key>
+	<string>OvertimeTimer</string>
+	<key>zLO_C</key>
+	<integer>420</integer>
+	<key>zLO_R</key>
+	<integer>300</integer>
+	<key>zMOG_C</key>
+	<integer>420</integer>
+	<key>zMO_C</key>
+	<integer>420</integer>
+	<key>zPM_C</key>
+	<integer>420</integer>
+	<key>zPM_R</key>
+	<integer>300</integer>
+</dict>
+</plist>

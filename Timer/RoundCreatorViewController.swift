@@ -8,6 +8,7 @@
 
 import UIKit
 import Cartography
+import CloudKit
 
 enum TimerItem: String {
     case Infinite
@@ -41,13 +42,14 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     let finishCircleButton = CircleButton(frame: CGRect())
     
     let plistCreator = PlistCreator()
-    
     // STATE:
     var keyboardConstraint: NSLayoutConstraint? = nil
     var constraint = [NSLayoutConstraint]()
     var centerToFind = CGPoint()
-
-    init() {
+    let configuration: UIConfigurationType
+    
+    init(configuration: UIConfigurationType) {
+        self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
         tickerView = TickerView(dataSource: self)
     }
@@ -58,7 +60,13 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .whiteColor()
+        view.backgroundColor = configuration.backgroundColor
+        view.tintColor = configuration.dominantTheme
+        tickerView?.accentColor = configuration.accentColor
+        enterCircleButton.accentColor = configuration.accentColor
+//        segmentedControl.tintColor = configuration.dominantTheme
+        finishCircleButton.accentColor = configuration.accentColor
+        
         view.addSubview(tickerView!)
         view.addSubview(keyboardView)
         
@@ -78,13 +86,8 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             segmentedControl.leading == segmentedControl.superview!.leading
             segmentedControl.trailing == segmentedControl.superview!.trailing
         }
-        segmentedControl.tintColor = .purpleColor()
+        
         segmentedControl.addTarget(self, action: "segmentedControlTapped:", forControlEvents: .ValueChanged)
-        
-        pickerView.delegate = pickerViewHandler
-        pickerView.dataSource = pickerViewHandler
-        addPickerView()
-        
         view.addSubview(enterCircleButton)
         constrain(enterCircleButton, tickerView!) { circleButton, tickerView in
             circleButton.centerX == circleButton.superview!.centerX * 1.5
@@ -104,6 +107,10 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         }
         finishCircleButton.labelText = "Cancel"
         finishCircleButton.addTarget(self, action: "finishButtonTapped", forControlEvents: .TouchUpInside)
+        
+        pickerView.delegate = pickerViewHandler
+        pickerView.dataSource = pickerViewHandler
+        addPickerView()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -137,6 +144,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         constrain(textBox, label) { textBox, label in
             constraint = textBox.center == label.center
         }
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidHide:", name: UIKeyboardWillHideNotification, object: nil)
     }
@@ -191,7 +199,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     
     func addPickerView() {
         view.addSubview(pickerView)
-        constrain(pickerView, segmentedControl, tickerView!) { pickerView, segmentedControl, tickerView in
+        constrain(pickerView, segmentedControl) { pickerView, segmentedControl in
             pickerView.centerX == pickerView.superview!.centerX
             pickerView.centerY == pickerView.superview!.centerY / 2
         }
@@ -207,21 +215,22 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             index = nil
         }
         
-        if let newIndex = index, let title = segmentedControl.titleForSegmentAtIndex(newIndex) where identifier != "" {
-            let typeOfTimer = TimerItem(rawValue: title)!.timerKind
-            if typeOfTimer != .InfiniteTimer && duration == 0 {
-                rejectAnimation()
-            } else {
-                if finishCircleButton.labelText == "Cancel" {
-                    finishCircleButton.labelText = "Finish"
-                }
-                plistCreator.addTimer(ofType: typeOfTimer, identifier: identifier, durationInSeconds: duration)
-                textBox.text = ""
-                pickerView.selectRow(0, inComponent: 0, animated: true)
-                pickerView.selectRow(0, inComponent: 1, animated: true)
-                pickerView.selectRow(0, inComponent: 2, animated: true)
-                tickerView?.rotateToNextSegment()
+        if let newIndex = index, let typeOfTimer = TimerItem(rawValue: segmentedControl.titleForSegmentAtIndex(newIndex) ?? "")?.timerKind where identifier != "" && (duration != 0 || typeOfTimer == .InfiniteTimer) {
+            
+            if finishCircleButton.labelText == "Cancel" {
+                finishCircleButton.labelText = "Finish"
             }
+            
+            if textBox.isFirstResponder() {
+                view.endEditing(true)
+            }
+            
+            plistCreator.addTimer(ofType: typeOfTimer, identifier: identifier, durationInSeconds: duration)
+            textBox.text = ""
+            pickerView.selectRow(0, inComponent: 0, animated: true)
+            pickerView.selectRow(0, inComponent: 1, animated: true)
+            pickerView.selectRow(0, inComponent: 2, animated: true)
+            tickerView?.rotateToNextSegment()
         } else {
             rejectAnimation()
         }
@@ -247,9 +256,21 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
                 let text = controller.textFields![0].text!
                 let didFinish = self.plistCreator.finish(name: text)
                 if didFinish {
-                    let selectVC = SelectRoundViewController(rounds: Round.allRounds())
-                    selectVC.modalPresentationStyle = .FormSheet
-                    self.presentViewController(selectVC, animated: true, completion: nil)
+                    let round = Round.roundForName(text)!
+                    let partialEngine = RoundUIEngine.createEngine(round)
+                    let vc = ViewController(partialEngine: partialEngine)
+                    self.presentingViewController?.dismissViewControllerAnimated(true) {
+                        if let rootViewController = UIApplication.sharedApplication().delegate?.window!?.rootViewController {
+                            rootViewController.presentViewController(vc, animated: true) {
+                                UIApplication.sharedApplication().delegate?.window!?.rootViewController = vc
+                                round.uploadToCloudKit() { error in
+                                    if error == .noInternet {
+                                        Round.addRoundNameToUpload(round.name)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             controller.addAction(cancelAction)
@@ -257,7 +278,8 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             controller.preferredAction = doneAction
             self.presentViewController(controller, animated: true, completion: nil)
         } else {
-
+            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
+            delegate.window?.rootViewController!.dismissViewControllerAnimated(true, completion: nil)
         }
     }
 }
@@ -285,6 +307,7 @@ class PickerViewHandler: NSObject, UIPickerViewDelegate, UIPickerViewDataSource 
         let title = dataSource[component][row]
         return title
     }
+    
     func calculatedDurationFromPickerView(pickerView: UIPickerView) -> Int {
         let minutes = Int(dataSource[0][pickerView.selectedRowInComponent(0)])! * 60
         let tenths = Int(dataSource[1][pickerView.selectedRowInComponent(1)])! * 10

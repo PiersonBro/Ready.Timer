@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Speeches</key>
+	<array>
+		<string>zAC</string>
+		<string>zCX</string>
+		<string>zNeg_Prep_Timer</string>
+		<string>zNC</string>
+		<string>zCX</string>
+		<string>zAff_Prep_Timer</string>
+		<string>z1_AR</string>
+		<string>zNeg_Prep_Timer</string>
+		<string>zNR</string>
+		<string>zAff_Prep_Timer</string>
+		<string>z2_AR</string>
+	</array>
+	<key>TypeOfTimerz1_AR</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerz2_AR</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzAC</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzAff_Prep_Timer</key>
+	<string>CountUpTimerReference</string>
+	<key>TypeOfTimerzCX</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzNC</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzNR</key>
+	<string>OvertimeTimer</string>
+	<key>TypeOfTimerzNeg_Prep_Timer</key>
+	<string>CountUpTimerReference</string>
+	<key>z1_AR</key>
+	<integer>240</integer>
+	<key>z2_AR</key>
+	<integer>180</integer>
+	<key>zAC</key>
+	<integer>360</integer>
+	<key>zAff_Prep_Timer</key>
+	<integer>180</integer>
+	<key>zCX</key>
+	<integer>180</integer>
+	<key>zNC</key>
+	<integer>360</integer>
+	<key>zNR</key>
+	<integer>360</integer>
+	<key>zNeg_Prep_Timer</key>
+	<integer>180</integer>
+</dict>
+</plist>

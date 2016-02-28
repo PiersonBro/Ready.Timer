@@ -12,7 +12,14 @@ import Cartography
 class CircleButton: UIControl {
     private let label: UILabel
     private let overlayView: UIView
-   
+    
+    var accentColor: UIColor = .cyanColor() {
+        didSet {
+            label.textColor = accentColor
+        }
+    }
+    
+    
     var labelText: String? {
         set {
             self.label.text = newValue 
@@ -26,15 +33,13 @@ class CircleButton: UIControl {
         label = UILabel(frame: CGRect())
         overlayView = UIView(frame: frame)
         super.init(frame: frame)
-        backgroundColor = UIColor.purpleColor()
         setupLabel(label)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
     }
     
-    
     func setupLabel(label: UILabel) {
-        label.textColor = UIColor.cyanColor()
+        label.textColor = accentColor
         label.font = UIFont.systemFontOfSize(20)
         // The baseline keeps the label vertically aligned in the center of the circle, while the textAlignment property keeps the label horizontally aligned.
         label.baselineAdjustment = .AlignCenters
@@ -63,6 +68,10 @@ class CircleButton: UIControl {
         shapeLayer.path = bezierPath.CGPath
         
         layer.mask = shapeLayer
+    }
+    
+    override func willMoveToSuperview(newSuperview: UIView?) {
+        backgroundColor = newSuperview?.tintColor
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

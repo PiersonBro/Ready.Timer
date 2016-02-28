@@ -20,11 +20,11 @@ protocol TimerViewControllerType {
 }
 
 class ViewController : UIViewController, TickerViewDataSource, TimerViewControllerType, UIGestureRecognizerDelegate {
-    var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
     let clockwiseButton: CircleButton
     
+    var tickerView: TickerView? = nil
     var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
     var engine: RoundUIEngine? = nil
     
@@ -37,10 +37,14 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         engine = partialEngine(viewController: self)
         tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
-        
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
-        view.backgroundColor = .whiteColor()
+        
+        view.backgroundColor = engine?.configuration.backgroundColor
+        view.tintColor = engine?.configuration.dominantTheme
+        tickerView?.accentColor = engine!.configuration.accentColor
+        startButton.accentColor = engine!.configuration.accentColor
+        clockwiseButton.accentColor = engine!.configuration.accentColor
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -50,9 +54,11 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     //MARK: ViewController Lifecycle.
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
+        view.tintColor = engine?.configuration.dominantTheme
 
-        guard let tickerView = tickerView else { return }
+        guard let tickerView = tickerView else { fatalError() }
         
         view.addSubview(tickerView)
         constrain(tickerView, view) { (tickerView, view) in
@@ -157,7 +163,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     // MARK: Next Speech
     func timerDidFinish() {
         let soundManager: SoundManager?
-        if deviceIsSimulator == false {
+        if deviceIsSimulator == false && engine?.configuration.ringerEnabled == true {
             let audioController = AudioController(type: Ringtone())
              soundManager = audioController.playSound(.Ascending, repeating: true)
         } else {
@@ -186,7 +192,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     }
     
     func selectRound(sender: CircleButton) {
-        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds(), configuration: engine!.configuration)
         selectionViewController.modalPresentationStyle = .FormSheet
         presentViewController(selectionViewController, animated: true, completion: nil)
     }

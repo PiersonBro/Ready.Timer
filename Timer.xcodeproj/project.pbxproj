@@ -11,7 +11,9 @@
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
 		2035F7681BA6630E00FEDD11 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2035F7671BA6630E00FEDD11 /* Round.swift */; };
-		2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */; };
+		203E29AA1C7915F000A5574C /* LincolnDouglas.plist in Resources */ = {isa = PBXBuildFile; fileRef = 203E29A71C7915F000A5574C /* LincolnDouglas.plist */; };
+		203E29AB1C7915F000A5574C /* Parli.plist in Resources */ = {isa = PBXBuildFile; fileRef = 203E29A81C7915F000A5574C /* Parli.plist */; };
+		203E29AC1C7915F000A5574C /* TeamPolicy.plist in Resources */ = {isa = PBXBuildFile; fileRef = 203E29A91C7915F000A5574C /* TeamPolicy.plist */; };
 		204BEB761C0D69290061C273 /* PListCreator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB751C0D69290061C273 /* PListCreator.swift */; };
 		204BEB7F1C0D69390061C273 /* EngineProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB7E1C0D69390061C273 /* EngineProxy.swift */; };
 		204BEB811C0D69490061C273 /* RoundUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB801C0D69490061C273 /* RoundUIEngine.swift */; };
@@ -22,12 +24,12 @@
 		204BEB8B1C0D69720061C273 /* UIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB8A1C0D69720061C273 /* UIConfiguration.swift */; };
 		204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204C58641BFD8783008D1FF2 /* DefaultRound.swift */; };
 		20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */; };
-		205C661719AD657900E14B30 /* Debate+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205C661619AD657900E14B30 /* Debate+Round.swift */; };
-		205C661919AD6C7100E14B30 /* DebateType.plist in Resources */ = {isa = PBXBuildFile; fileRef = 205C661819AD6C7100E14B30 /* DebateType.plist */; };
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
 		206BF1A01C099B7700375F52 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF19F1C099B7700375F52 /* Position.swift */; };
 		206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF18C1C099A4E00375F52 /* DragHandler.swift */; };
 		20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */; };
+		20A26EE01C58392C005200D8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A26EDF1C58392C005200D8 /* CloudKit.framework */; };
+		20A26EE21C5842DE005200D8 /* CloudKit+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A26EE11C5842DE005200D8 /* CloudKit+Round.swift */; };
 		20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20A73A281B2A11BB0088EE4F /* LaunchScreen.storyboard */; };
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
 		20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; };
@@ -184,7 +186,9 @@
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		2035F7671BA6630E00FEDD11 /* Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
-		2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "DebateType-copy.plist"; sourceTree = "<group>"; };
+		203E29A71C7915F000A5574C /* LincolnDouglas.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LincolnDouglas.plist; sourceTree = "<group>"; };
+		203E29A81C7915F000A5574C /* Parli.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Parli.plist; sourceTree = "<group>"; };
+		203E29A91C7915F000A5574C /* TeamPolicy.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TeamPolicy.plist; sourceTree = "<group>"; };
 		204BEB751C0D69290061C273 /* PListCreator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PListCreator.swift; sourceTree = "<group>"; };
 		204BEB7E1C0D69390061C273 /* EngineProxy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EngineProxy.swift; sourceTree = "<group>"; };
 		204BEB801C0D69490061C273 /* RoundUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundUIEngine.swift; sourceTree = "<group>"; };
@@ -195,12 +199,13 @@
 		204BEB8A1C0D69720061C273 /* UIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConfiguration.swift; sourceTree = "<group>"; };
 		204C58641BFD8783008D1FF2 /* DefaultRound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultRound.swift; sourceTree = "<group>"; };
 		20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCreatorViewController.swift; sourceTree = "<group>"; };
-		205C661619AD657900E14B30 /* Debate+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; lineEnding = 0; path = "Debate+Round.swift"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.swift; };
-		205C661819AD6C7100E14B30 /* DebateType.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DebateType.plist; sourceTree = "<group>"; };
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
 		206BF18C1C099A4E00375F52 /* DragHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragHandler.swift; sourceTree = "<group>"; };
 		206BF19F1C099B7700375F52 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
 		20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvertimeUIEngine.swift; sourceTree = "<group>"; };
+		20A26EDE1C583927005200D8 /* Timer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Timer.entitlements; sourceTree = "<group>"; };
+		20A26EDF1C58392C005200D8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		20A26EE11C5842DE005200D8 /* CloudKit+Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CloudKit+Round.swift"; sourceTree = "<group>"; };
 		20A73A291B2A11BB0088EE4F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StickyCorners-Bridging-Header.h"; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
@@ -224,6 +229,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */,
+				20A26EE01C58392C005200D8 /* CloudKit.framework in Frameworks */,
 				20D523751AB635A600A46760 /* TimerKit.framework in Frameworks */,
 				20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */,
 			);
@@ -309,14 +315,14 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
-				204C58641BFD8783008D1FF2 /* DefaultRound.swift */,
+				20A26EE11C5842DE005200D8 /* CloudKit+Round.swift */,
 				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
+				204C58641BFD8783008D1FF2 /* DefaultRound.swift */,
 				20837FA51BF9783800D7F23D /* Model-ViewController */,
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
 				206BF19F1C099B7700375F52 /* Position.swift */,
 				206BF18C1C099A4E00375F52 /* DragHandler.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
-				205C661619AD657900E14B30 /* Debate+Round.swift */,
 				2035F7671BA6630E00FEDD11 /* Round.swift */,
 				2061A90D1BE4AA4700345C49 /* SegmentType.swift */,
 				20D523551AB5581A00A46760 /* StringExtension.swift */,
@@ -332,9 +338,12 @@
 		20C99B8B19A02E2E00477D3B /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2044614C1B2EB52F00B2E767 /* DebateType-copy.plist */,
+				203E29A71C7915F000A5574C /* LincolnDouglas.plist */,
+				203E29A81C7915F000A5574C /* Parli.plist */,
+				203E29A91C7915F000A5574C /* TeamPolicy.plist */,
+				20A26EDE1C583927005200D8 /* Timer.entitlements */,
+				20A26EDF1C58392C005200D8 /* CloudKit.framework */,
 				20C99B8C19A02E2E00477D3B /* Info.plist */,
-				205C661819AD6C7100E14B30 /* DebateType.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -434,6 +443,14 @@
 					20C99B8719A02E2E00477D3B = {
 						CreatedOnToolsVersion = 6.0;
 						DevelopmentTeam = R2HR4QQ5DH;
+						SystemCapabilities = {
+							com.apple.Maps.iOS = {
+								enabled = 0;
+							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
+						};
 					};
 					20C99B9919A02E2E00477D3B = {
 						CreatedOnToolsVersion = 6.0;
@@ -552,10 +569,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				203E29AA1C7915F000A5574C /* LincolnDouglas.plist in Resources */,
+				203E29AB1C7915F000A5574C /* Parli.plist in Resources */,
+				203E29AC1C7915F000A5574C /* TeamPolicy.plist in Resources */,
 				20A73A2A1B2A11BB0088EE4F /* LaunchScreen.storyboard in Resources */,
 				20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */,
-				2044614D1B2EB52F00B2E767 /* DebateType-copy.plist in Resources */,
-				205C661919AD6C7100E14B30 /* DebateType.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -599,6 +617,7 @@
 				204BEB7F1C0D69390061C273 /* EngineProxy.swift in Sources */,
 				204BEB891C0D69680061C273 /* InfiniteTimerUIEngine.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
+				20A26EE21C5842DE005200D8 /* CloudKit+Round.swift in Sources */,
 				204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */,
 				204BEB831C0D69530061C273 /* TimerUIEngineType.swift in Sources */,
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
@@ -606,7 +625,6 @@
 				20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */,
 				20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */,
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
-				205C661719AD657900E14B30 /* Debate+Round.swift in Sources */,
 				20D523561AB5581A00A46760 /* StringExtension.swift in Sources */,
 				204BEB761C0D69290061C273 /* PListCreator.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
@@ -759,13 +777,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Timer/Timer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Timer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.rezworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/EandZ/Documents/Ready.Timer/Timer/StickyCorners-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -775,13 +796,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Timer/Timer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = Timer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.rezworks.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "/Users/EandZ/Documents/Ready.Timer/Timer/StickyCorners-Bridging-Header.h";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
