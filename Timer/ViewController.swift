@@ -20,11 +20,11 @@ protocol TimerViewControllerType {
 }
 
 class ViewController : UIViewController, TickerViewDataSource, TimerViewControllerType, UIGestureRecognizerDelegate {
-    var tickerView: TickerView? = nil
     let timerLabel: UILabel
     let startButton: CircleButton
     let clockwiseButton: CircleButton
     
+    var tickerView: TickerView? = nil
     var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
     var engine: RoundUIEngine? = nil
     
@@ -37,10 +37,14 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         engine = partialEngine(viewController: self)
         tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
-        
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
-        view.backgroundColor = .whiteColor()
+        
+        view.backgroundColor = engine?.configuration.backgroundColor
+        view.tintColor = engine?.configuration.dominantTheme
+        tickerView?.accentColor = engine!.configuration.accentColor
+        startButton.accentColor = engine!.configuration.accentColor
+        clockwiseButton.accentColor = engine!.configuration.accentColor
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -50,9 +54,11 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     //MARK: ViewController Lifecycle.
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
+        view.tintColor = engine?.configuration.dominantTheme
 
-        guard let tickerView = tickerView else { return }
+        guard let tickerView = tickerView else { fatalError() }
         
         view.addSubview(tickerView)
         constrain(tickerView, view) { (tickerView, view) in
@@ -148,17 +154,26 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         self.wasLast = wasLast
     }
     
+    #if (arch(i386) || arch(x86_64)) && os(iOS)
+    let deviceIsSimulator = true
+    #else
+    let deviceIsSimulator = false
+    #endif
+    
     // MARK: Next Speech
     func timerDidFinish() {
-        #if !(arch(i386) || !arch(x86_64))
+        let soundManager: SoundManager?
+        if deviceIsSimulator == false && engine?.configuration.ringerEnabled == true {
             let audioController = AudioController(type: Ringtone())
-            let soundManager = audioController.playSound(.Ascending, repeating: true)
-        #endif
+             soundManager = audioController.playSound(.Ascending, repeating: true)
+        } else {
+            soundManager = nil
+        }
 
         let action = UIAlertAction(title: "Done", style: .Default) { action in
-            #if !(arch(i386) || !arch(x86_64))
-                soundManager.stop()
-            #endif
+            if self.deviceIsSimulator == false {
+                soundManager?.stop()
+            }
             self.startButton.labelText = "Start"
             self.engine!.userFinished()
             //FIXME: Should this be part of `userFinished`?
@@ -177,7 +192,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     }
     
     func selectRound(sender: CircleButton) {
-        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds(), configuration: engine!.configuration)
         selectionViewController.modalPresentationStyle = .FormSheet
         presentViewController(selectionViewController, animated: true, completion: nil)
     }

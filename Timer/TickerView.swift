@@ -66,7 +66,11 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     var machineRotated = false
     
     let dataSource: TickerViewDataSource
-
+    var accentColor: UIColor = .cyanColor() {
+        didSet {
+            labels.forEach{$0.textColor = accentColor}
+        }
+    }
     required init(coder aDecoder: NSCoder) {
         fatalError("Initializer Not Supported")
     }
@@ -130,7 +134,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         animator = UIDynamicAnimator(referenceView: self)
         animator.delegate = self
         layer.masksToBounds = true
-        backgroundColor = UIColor(red: 0.5, green: 0, blue: 0.5, alpha: 1)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
         contentMode = .Redraw
         #if DEBUG
@@ -150,13 +153,17 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         rightmostLabel.index = speechCount
     }
     
+    override func willMoveToSuperview(newSuperview: UIView?) {
+        backgroundColor = newSuperview?.tintColor
+    }
+    
     deinit {
         dragHandler?.deactivate()
     }
     
     private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
         label.font = UIFont.systemFontOfSize(50)
-        label.textColor = UIColor.cyanColor()
+        label.textColor = accentColor
         label.text = text
         
         addSubview(label)
@@ -234,7 +241,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         leftLinePath.addLineToPoint(CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMinY(rect)))
         
         leftLineShapeLayer.path = leftLinePath.CGPath
-        leftLineShapeLayer.strokeColor = UIColor.cyanColor().CGColor
+        leftLineShapeLayer.strokeColor = accentColor.CGColor
         leftLineShapeLayer.lineWidth = 5
         layer.addSublayer(leftLineShapeLayer)
         
@@ -245,7 +252,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         rightLinePath.addLineToPoint(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)))
         rightLinePath.addLineToPoint(CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMinY(rect)))
         rightLineShapeLayer.path = rightLinePath.CGPath
-        rightLineShapeLayer.strokeColor = UIColor.cyanColor().CGColor
+        rightLineShapeLayer.strokeColor = accentColor.CGColor
         rightLineShapeLayer.lineWidth = 5
         layer.addSublayer(rightLineShapeLayer)
     }

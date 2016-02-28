@@ -17,9 +17,11 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     let toolbarDelegate = BarPositionDelegate()
     let statusBarView = UIView(frame: UIApplication.sharedApplication().statusBarFrame ?? CGRect())
     var topConstraint: NSLayoutConstraint? = nil
-
-    init(rounds: [Round]) {
+    let configuration: UIConfigurationType
+    
+    init(rounds: [Round], configuration: UIConfigurationType) {
         self.rounds = rounds
+        self.configuration = configuration
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -28,6 +30,8 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         view.addSubview(tableView)
         view.addSubview(toolbar)
         view.addSubview(statusBarView)
+        
+        view.tintColor = configuration.dominantTheme
         
         let shouldBeUnderStatusBar: Bool
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
@@ -60,7 +64,6 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: "")
         let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addRound")
         toolbar.items = [doneButton, spacer, addButton]
-        toolbar.tintColor = .purpleColor()
 
         toolbar.delegate = toolbarDelegate
         toolbar.setBackgroundImage(nil, forToolbarPosition: .TopAttached, barMetrics: .Compact)
@@ -92,42 +95,25 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     }
 
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { action, indexPath in
+            let round = self.rounds[indexPath.row]
+            round.delete()
+            self.rounds.removeAtIndex(indexPath.row)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        }
         let setDefaultRowAction = UITableViewRowAction(style: .Normal, title: "Set as Default") { action, indexPath in
             let round = self.rounds[indexPath.row]
             round.registerAsDefaultRound()
             tableView.setEditing(false, animated: true)
         }
-        setDefaultRowAction.backgroundColor = .purpleColor()
-        var rowActions = [setDefaultRowAction]
+        setDefaultRowAction.backgroundColor = configuration.dominantTheme
+
         
-        if !isDebateName(rounds[indexPath.row].name) {
-            let deleteRowAction = UITableViewRowAction(style: .Default, title: "Delete") { action, indexPath in
-                let round = self.rounds[indexPath.row]
-                round.delete()
-                self.rounds.removeAtIndex(indexPath.row)
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
-            }
-            rowActions.append(deleteRowAction)
-        }
-        
-        return rowActions
+        return [deleteRowAction, setDefaultRowAction]
     }
     
-    private func isDebateName(name: String) -> Bool {
-        switch name {
-            case DebateType.LincolnDouglas.rawValue:
-                return true
-            case DebateType.Parli.rawValue:
-                return true
-            case DebateType.TeamPolicy.rawValue:
-                return true
-            default:
-                return false
-        }
-    }
-
     func addRound() {
-        let createRoundVC = CreateRoundViewController()
+        let createRoundVC = CreateRoundViewController(configuration: configuration)
         presentingViewController?.dismissViewControllerAnimated(true) {
             if let rootViewController = UIApplication.sharedApplication().delegate?.window!?.rootViewController {
                 rootViewController.presentViewController(createRoundVC, animated: true, completion: nil)

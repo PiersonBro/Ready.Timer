@@ -9,7 +9,7 @@
 import Foundation
 import TimerKit
 
-struct Round {
+struct Round: Equatable {
     typealias OvertimeArray = [OvertimeSegment?]
     typealias InfiniteTimerArray = [InfiniteSegment?]
     typealias CountUpTimerArray = [CountUpSegment?]
@@ -125,7 +125,25 @@ struct Round {
     }
 }
 
-struct SegmentProxy {
+func ==(rhs: Round, lhs: Round) -> Bool {
+    let segmentProxiesEqual = zip(rhs.segmentProxies, lhs.segmentProxies).map { $0! == $1! }.filter {
+        $0 == false
+    }.count == 0
+    
+    return segmentProxiesEqual && rhs.name == lhs.name
+}
+
+extension Round: Hashable {
+    var hashValue: Int {
+        return segmentProxies.flatMap {
+            $0?.hashValue
+        }.reduce(0) { accumulator, value in
+            return accumulator ^ value
+        }
+    }
+}
+
+struct SegmentProxy: Equatable {
     typealias Segments = (OvertimeSegment?, InfiniteSegment?, CountUpSegment?, CountDownSegment?, CountUpSegmentReference?)
     let segments: Segments
     
@@ -144,8 +162,78 @@ struct SegmentProxy {
             fatalError()
         }
     }
-
+    
+    var kind: TimerKind {
+        if let _ = segments.0 {
+            return .OvertimeTimer
+        } else if let _ = segments.1 {
+            return .InfiniteTimer
+        } else if let _ = segments.2 {
+            return .CountUpTimer
+        } else if let _ = segments.3 {
+            return .CountDownTimer
+        } else if let _ = segments.4 {
+            return .CountUpTimerReference
+        } else {
+            fatalError()
+        }
+    }
+    
+    var sketch: TimerSketch {
+        if let overtimeSegment = segments.0 {
+            return overtimeSegment.sketch
+        } else if let infiniteSegment = segments.1 {
+            return infiniteSegment.sketch
+        } else if let countUpSegment = segments.2 {
+            return countUpSegment.sketch
+        } else if let countDownSegment = segments.3 {
+            return countDownSegment.sketch
+        } else if let countUpSegmentReference = segments.4 {
+            return countUpSegmentReference.sketch
+        } else {
+            fatalError()
+        }
+    }
+    
     init(segments: Segments) {
         self.segments = segments
+    }
+}
+
+//NOTE: `==` treats CountUpSegmentReference types as a normal value type. It doesn't have any concept at all about the (hacky) reset function. 
+func ==(rhs: SegmentProxy, lhs: SegmentProxy) -> Bool {
+    if let rhsOvertime = rhs.segments.0, let lhsOvertime = lhs.segments.0 {
+        return rhsOvertime == lhsOvertime
+    } else if let rhsInfiniteSegment = rhs.segments.1, let lhsInfiniteSegment = lhs.segments.1 {
+        return rhsInfiniteSegment == lhsInfiniteSegment
+    } else if let rhsCountUpSegment = rhs.segments.2, let lhsCountUpSegment = lhs.segments.2 {
+        return rhsCountUpSegment == lhsCountUpSegment
+    } else if let rhsCountDownSegment = rhs.segments.3, let lhsCountDownSegment = lhs.segments.3 {
+        return rhsCountDownSegment == lhsCountDownSegment
+    } else if let rhsCountUpSegmentReference = rhs.segments.4, let lhsCountUpSegmentReference = lhs.segments.4 {
+        let x = rhsCountUpSegmentReference.name == lhsCountUpSegmentReference.name
+        let y = rhsCountUpSegmentReference.sketch == lhsCountUpSegmentReference.sketch
+        return x && y == true
+    } else {
+        return false
+    }
+}
+
+extension SegmentProxy: Hashable {
+    var hashValue: Int {
+        if let overtimeSegment = segments.0 {
+            return overtimeSegment.hashValue ^ name.hashValue
+        } else if let infiniteSegment = segments.1 {
+            return infiniteSegment.hashValue ^ name.hashValue
+        } else if let countUpSegment = segments.2 {
+            return countUpSegment.hashValue ^ name.hashValue
+        } else if let countDownSegment = segments.3 {
+            return countDownSegment.hashValue ^ name.hashValue
+        } else if let countUpSegmentReference = segments.4 {
+            return countUpSegmentReference.hashValue ^ name.hashValue
+        } else {
+            fatalError()
+        }
+
     }
 }

@@ -9,13 +9,19 @@
 import Foundation
 import TimerKit
 
-protocol SegmentType: Equatable {
+protocol SegmentType: Equatable, Hashable {
     typealias SegmentTimer: TimerType
     
     var name: String {get}
     var sketch: TimerSketch {get}
     
     func generateTimer() -> SegmentTimer
+}
+
+extension SegmentType {
+    var hashValue: Int {
+        return name.hashValue ^ sketch.hashValue
+    }
 }
 
 // Similer to the concept of a `Blueprint` in Timer<T>, except it has a more specfic implementation.
@@ -43,8 +49,13 @@ func ==(lhs: TimerSketch, rhs: TimerSketch) -> Bool {
     } else if let leftDurationInMinutes = lhs.durationInMinutes, rightDurationInMinutes = rhs.durationInMinutes {
         return leftDurationInMinutes == rightDurationInMinutes
     } else {
-        //FIXME: 300 seconds is not equal to 5 minutes.
-        return false
+        return lhs.durationInSeconds ?? (lhs.durationInMinutes! * 60) == rhs.durationInSeconds ?? (rhs.durationInMinutes! * 60)
+    }
+}
+
+extension TimerSketch: Hashable {
+    var hashValue: Int {
+        return durationInMinutes?.hashValue ?? durationInSeconds!.hashValue
     }
 }
 

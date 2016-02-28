@@ -14,14 +14,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        Round.copyResourceFilesToDocuments()
+        // Temporarily avoid, Ryan's crash until the onboarding process is finished.
+        let parliRound = Round.roundForName("LincolnDouglas")!
+        parliRound.registerAsDefaultRound()
         
+        Round.updateFromCloudKit()
         if let defaultRound = Round.defaultRound() {
             let partialEngine = RoundUIEngine.createEngine(defaultRound)
             let viewController = ViewController(partialEngine: partialEngine)
             window?.rootViewController = viewController
         } else {
             // FIXME: Create
-            let selectionViewController = SelectRoundViewController(rounds: Round.allRounds())
+            let selectionViewController = SelectRoundViewController(rounds: Round.allRounds(), configuration: DefaultConfiguration())
             selectionViewController.modalPresentationStyle = .FormSheet
             window?.rootViewController = UIViewController(nibName: nil, bundle: nil)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
@@ -33,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         return true
     }
-
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.

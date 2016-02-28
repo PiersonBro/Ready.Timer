@@ -11,7 +11,7 @@ import TimerKit
 
 final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<InfiniteBlueprint>>: TimerUIEngineType {
     typealias Segment = T
-    typealias Configuration = DefaultConfiguration
+    typealias Configuration = InfiniteUIConfiguration
     
     let segment: T
     let configuration = Configuration()

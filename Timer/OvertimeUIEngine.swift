@@ -11,7 +11,7 @@ import TimerKit
 
 final class OvertimeUIEngine<T: SegmentType where T.SegmentTimer == OvertimeTimer>: TimerUIEngineType {
     typealias Segment = T
-    typealias Configuration = OvertimeTimerUIConfiguration
+    typealias Configuration = DefaultConfiguration
     let segment: Segment
     let configuration = Configuration()
     let timer: Segment.SegmentTimer
