@@ -83,9 +83,7 @@ extension Round {
         let defaults = NSUserDefaults.standardUserDefaults()
         return defaults.arrayForKey(DefaultsKey.roundNamesToUpload.rawValue) as? [String] ?? []
     }
-    
-    
-    
+   
     static func addRoundNameToDelete(name: String) {
         let defaults = NSUserDefaults.standardUserDefaults()
         defaults.setValue(roundNamesToDelete() + [name], forKey: DefaultsKey.roundNamesToDelete.rawValue)
