@@ -145,11 +145,11 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         topmostLabel = configureLabel(topmostLabel, text: dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
         topmostLabel.index = speechCount
         
-        leftmostLabel = configureLabel(leftmostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticLeft)
+        leftmostLabel = configureLabel(leftmostLabel, text: dataSource.stringForIndex(speechCount.successor()) ?? "E", positions: Position.staticLeft)
         leftmostLabel.index = speechCount
-        bottommostLabel = configureLabel(bottommostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions: Position.staticBottom)
+        bottommostLabel = configureLabel(bottommostLabel, text: dataSource.stringForIndex(speechCount.successor()) ?? "E", positions: Position.staticBottom)
         bottommostLabel.index = speechCount
-        rightmostLabel = configureLabel(rightmostLabel, text: dataSource.stringForIndex(++speechCount) ?? "E", positions:Position.staticRight)
+        rightmostLabel = configureLabel(rightmostLabel, text: dataSource.stringForIndex(speechCount.successor()) ?? "E", positions:Position.staticRight)
         rightmostLabel.index = speechCount
     }
     
@@ -376,7 +376,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     
         rightLabel.consumed = true
         if (bottomLabel.consumed) {
-            let optionalSpeechName = dataSource.stringForIndex(++speechCount)
+            let optionalSpeechName = dataSource.stringForIndex(speechCount.successor())
             let speechName: String
             
             if let name = optionalSpeechName {

@@ -10,7 +10,7 @@ import Foundation
 import TimerKit
 
 protocol SegmentType: Equatable, Hashable {
-    typealias SegmentTimer: TimerType
+    associatedtype SegmentTimer: TimerType
     
     var name: String {get}
     var sketch: TimerSketch {get}

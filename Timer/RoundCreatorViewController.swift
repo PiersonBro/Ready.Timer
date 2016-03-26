@@ -87,7 +87,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             segmentedControl.trailing == segmentedControl.superview!.trailing
         }
         
-        segmentedControl.addTarget(self, action: "segmentedControlTapped:", forControlEvents: .ValueChanged)
+        segmentedControl.addTarget(self, action: #selector(segmentedControlTapped(_:)), forControlEvents: .ValueChanged)
         view.addSubview(enterCircleButton)
         constrain(enterCircleButton, tickerView!) { circleButton, tickerView in
             circleButton.centerX == circleButton.superview!.centerX * 1.5
@@ -96,7 +96,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             circleButton.height == circleButton.width
         }
         enterCircleButton.labelText = "Next"
-        enterCircleButton.addTarget(self, action: "enterButtonTapped", forControlEvents: .TouchUpInside)
+        enterCircleButton.addTarget(self, action: #selector(enterButtonTapped), forControlEvents: .TouchUpInside)
         
         view.addSubview(finishCircleButton)
         constrain(finishCircleButton, tickerView!) { finishCircleButton, tickerView in
@@ -106,7 +106,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             finishCircleButton.height == finishCircleButton.width
         }
         finishCircleButton.labelText = "Cancel"
-        finishCircleButton.addTarget(self, action: "finishButtonTapped", forControlEvents: .TouchUpInside)
+        finishCircleButton.addTarget(self, action: #selector(finishButtonTapped), forControlEvents: .TouchUpInside)
         
         pickerView.delegate = pickerViewHandler
         pickerView.dataSource = pickerViewHandler
@@ -145,8 +145,8 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             constraint = textBox.center == label.center
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardDidHide:", name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     func keyboardWillShow(notification: NSNotification) {

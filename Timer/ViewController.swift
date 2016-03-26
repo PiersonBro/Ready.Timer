@@ -36,7 +36,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         super.init(nibName: nil, bundle: nil)
         engine = partialEngine(viewController: self)
         tickerView = TickerView(dataSource: self)
-        doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: "tapped")
+        doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
         
@@ -70,7 +70,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             tickerView.height <= view.height * 0.8
         }
 
-        startButton.addTarget(self, action: "timerButtonPressed", forControlEvents: .TouchUpInside)
+        startButton.addTarget(self, action: #selector(timerButtonPressed), forControlEvents: .TouchUpInside)
         startButton.labelText = "Start"
         view.addSubview(startButton)
         constrain(startButton, view, tickerView) { (startButton, view, tickerView) in
@@ -81,7 +81,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             startButton.height == startButton.width
         }
         
-        clockwiseButton.addTarget(self, action: "selectRound:", forControlEvents: .TouchUpInside)
+        clockwiseButton.addTarget(self, action: #selector(selectRound), forControlEvents: .TouchUpInside)
         clockwiseButton.labelText = "Select Round"
         view.addSubview(clockwiseButton)
         constrain(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in

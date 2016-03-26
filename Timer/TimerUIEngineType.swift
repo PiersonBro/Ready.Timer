@@ -11,9 +11,9 @@ import UIKit
 import TimerKit
 
 protocol TimerUIEngineType {
-    typealias Segment: SegmentType
+    associatedtype Segment: SegmentType
     // FIXME: Shouldn't this just be a property? Swift is either broken or my mental model is. :/
-    typealias Configuration: UIConfigurationType
+    associatedtype Configuration: UIConfigurationType
     var segment: Segment { get }
     var timer: Segment.SegmentTimer { get }
     var configuration: Configuration  { get }

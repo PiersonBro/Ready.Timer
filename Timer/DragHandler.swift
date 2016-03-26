@@ -59,7 +59,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     // MARK: Public API
     public func activate() {
         if panGestureRecognizer == nil {
-            panGestureRecognizer = UIPanGestureRecognizer(target: self, action: "didDrag:")
+            panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didDrag(_:)))
         }
 
         dynamicAnimator.removeAllBehaviors()

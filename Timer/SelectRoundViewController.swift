@@ -57,12 +57,12 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         
         let doneButton: UIBarButtonItem
         if let _ = Round.defaultRound() {
-            doneButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: "done")
+            doneButton = UIBarButtonItem(barButtonSystemItem: .Done, target: self, action: #selector(done))
         } else {
-            doneButton = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: "")
+            doneButton = UIBarButtonItem(barButtonSystemItem: .FixedSpace, target: nil, action: Selector(""))
         }
-        let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: "")
-        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: "addRound")
+        let spacer = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: Selector(""))
+        let addButton = UIBarButtonItem(barButtonSystemItem: .Add, target: self, action: #selector(addRound))
         toolbar.items = [doneButton, spacer, addButton]
 
         toolbar.delegate = toolbarDelegate
