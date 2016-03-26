@@ -65,7 +65,13 @@ final class CountDownTimerUIEngine: TimerUIEngineType {
                     if status == .Finish {
                         self.viewController.timerDidFinish()
                     } else if status == .Reset {
-                        self.viewController.setTimerLabelText("\(self.timer.startingTimeInMinutes!):00")
+                        if let startingTimeInMinutes = self.timer.startingTimeInMinutes {
+                            self.viewController.setTimerLabelText("\(startingTimeInMinutes):00")
+                        } else if let startingTimeInSeconds = self.timer.startingTimeInSeconds {
+                            self.viewController.setTimerLabelText(.formattedStringForDuration(startingTimeInSeconds))
+                        } else {
+                            fatalError("Both startingTimeInMinutes and startingTimeInSeconds cannot be nil")
+                        }
                     }
                 }.activate()
         } else if state == .Cancel {

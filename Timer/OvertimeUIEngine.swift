@@ -66,7 +66,13 @@ final class OvertimeUIEngine<T: SegmentType where T.SegmentTimer == OvertimeTime
                     case .Overtime:
                         self.viewController.timerDidFinish()
                     case .Reset:
-                        self.viewController.setTimerLabelText("\(self.timer.startingTimeInMinutes!):00")
+                        if let startingTimeInMinutes = self.timer.startingTimeInMinutes {
+                            self.viewController.setTimerLabelText("\(startingTimeInMinutes):00")
+                        } else if let startingTimeInSeconds = self.timer.startingTimeInSeconds {
+                            self.viewController.setTimerLabelText(.formattedStringForDuration(startingTimeInSeconds))
+                        } else {
+                            fatalError("Both startingTimeInMinutes and startingTimeInSeconds cannot be nil")
+                        }
                     default:
                         break
                     }
