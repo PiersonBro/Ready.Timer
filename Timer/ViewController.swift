@@ -191,9 +191,8 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         presentViewController(actionController, animated: true, completion: nil)
     }
     
-    func selectRound(sender: CircleButton) {
-        let selectionViewController = SelectRoundViewController(rounds: Round.allRounds(), configuration: engine!.configuration)
-        selectionViewController.modalPresentationStyle = .FormSheet
-        presentViewController(selectionViewController, animated: true, completion: nil)
+    func selectRound() {
+        transitioningDelegate = presentingViewController! as! RoundCollectionViewController
+        dismissViewControllerAnimated(true, completion: nil)
     }
 }

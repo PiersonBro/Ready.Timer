@@ -20,9 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         parliRound.registerAsDefaultRound()
         
         Round.updateFromCloudKit()
-        if let defaultRound = Round.defaultRound() {
-            let partialEngine = RoundUIEngine.createEngine(defaultRound)
-            let viewController = ViewController(partialEngine: partialEngine)
+        if Round.defaultRound() != nil {
+            let viewController = RoundCollectionViewController(nibName: nil, bundle: nil)
             window?.rootViewController = viewController
         } else {
             // FIXME: Create

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; };
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		202580401C97A03400FBFB71 /* DraggingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2025803F1C97A03400FBFB71 /* DraggingHandler.swift */; };
+		202580491C97A0C100FBFB71 /* RoundCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
 		2035F7681BA6630E00FEDD11 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2035F7671BA6630E00FEDD11 /* Round.swift */; };
 		203E29AA1C7915F000A5574C /* LincolnDouglas.plist in Resources */ = {isa = PBXBuildFile; fileRef = 203E29A71C7915F000A5574C /* LincolnDouglas.plist */; };
@@ -24,6 +26,7 @@
 		204BEB8B1C0D69720061C273 /* UIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204BEB8A1C0D69720061C273 /* UIConfiguration.swift */; };
 		204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 204C58641BFD8783008D1FF2 /* DefaultRound.swift */; };
 		20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */; };
+		205FA4231CA661AF00A538D7 /* RoundCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205FA4221CA661AF00A538D7 /* RoundCollectionViewCell.swift */; };
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
 		206BF1A01C099B7700375F52 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF19F1C099B7700375F52 /* Position.swift */; };
 		206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF18C1C099A4E00375F52 /* DragHandler.swift */; };
@@ -184,6 +187,8 @@
 
 /* Begin PBXFileReference section */
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
+		2025803F1C97A03400FBFB71 /* DraggingHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggingHandler.swift; sourceTree = "<group>"; };
+		202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCollectionViewController.swift; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		2035F7671BA6630E00FEDD11 /* Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		203E29A71C7915F000A5574C /* LincolnDouglas.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LincolnDouglas.plist; sourceTree = "<group>"; };
@@ -199,6 +204,7 @@
 		204BEB8A1C0D69720061C273 /* UIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIConfiguration.swift; sourceTree = "<group>"; };
 		204C58641BFD8783008D1FF2 /* DefaultRound.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DefaultRound.swift; sourceTree = "<group>"; };
 		20503F9F1C01408C00918028 /* RoundCreatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCreatorViewController.swift; sourceTree = "<group>"; };
+		205FA4221CA661AF00A538D7 /* RoundCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCollectionViewCell.swift; sourceTree = "<group>"; };
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
 		206BF18C1C099A4E00375F52 /* DragHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragHandler.swift; sourceTree = "<group>"; };
 		206BF19F1C099B7700375F52 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
@@ -315,6 +321,8 @@
 			isa = PBXGroup;
 			children = (
 				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
+				202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */,
+				205FA4221CA661AF00A538D7 /* RoundCollectionViewCell.swift */,
 				20A26EE11C5842DE005200D8 /* CloudKit+Round.swift */,
 				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
 				204C58641BFD8783008D1FF2 /* DefaultRound.swift */,
@@ -322,6 +330,7 @@
 				20C99BAA19A02F5A00477D3B /* TickerView.swift */,
 				206BF19F1C099B7700375F52 /* Position.swift */,
 				206BF18C1C099A4E00375F52 /* DragHandler.swift */,
+				2025803F1C97A03400FBFB71 /* DraggingHandler.swift */,
 				20329B7E19C4B834001591F8 /* TickerLabel.swift */,
 				2035F7671BA6630E00FEDD11 /* Round.swift */,
 				2061A90D1BE4AA4700345C49 /* SegmentType.swift */,
@@ -617,10 +626,13 @@
 				204BEB7F1C0D69390061C273 /* EngineProxy.swift in Sources */,
 				204BEB891C0D69680061C273 /* InfiniteTimerUIEngine.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
+				202580401C97A03400FBFB71 /* DraggingHandler.swift in Sources */,
+				202580491C97A0C100FBFB71 /* RoundCollectionViewController.swift in Sources */,
 				20A26EE21C5842DE005200D8 /* CloudKit+Round.swift in Sources */,
 				204C58651BFD8783008D1FF2 /* DefaultRound.swift in Sources */,
 				204BEB831C0D69530061C273 /* TimerUIEngineType.swift in Sources */,
 				2035F7681BA6630E00FEDD11 /* Round.swift in Sources */,
+				205FA4231CA661AF00A538D7 /* RoundCollectionViewCell.swift in Sources */,
 				206BF1A01C099B7700375F52 /* Position.swift in Sources */,
 				20FB842D1BFEC28C001EE02B /* SelectRoundViewController.swift in Sources */,
 				20503FA01C01408C00918028 /* RoundCreatorViewController.swift in Sources */,
