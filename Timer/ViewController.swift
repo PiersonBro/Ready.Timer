@@ -20,13 +20,16 @@ protocol TimerViewControllerType {
 }
 
 class ViewController : UIViewController, TickerViewDataSource, TimerViewControllerType, UIGestureRecognizerDelegate {
-    let timerLabel: UILabel
-    let startButton: CircleButton
-    let clockwiseButton: CircleButton
+    private let timerLabel: UILabel
+    private let startButton: CircleButton
+    private let clockwiseButton: CircleButton
     
-    var tickerView: TickerView? = nil
-    var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
-    var engine: RoundUIEngine? = nil
+    private var tickerView: TickerView? = nil
+    private var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
+    private var engine: RoundUIEngine? = nil
+    
+    // FIXME: Flesh this out into full on public API.
+    var theme = DefaultTheme()
     
     init(partialEngine: (viewController: TimerViewControllerType) -> RoundUIEngine) {
         timerLabel = UILabel(frame: CGRect())
@@ -39,12 +42,6 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
-        
-        view.backgroundColor = engine?.configuration.backgroundColor
-        view.tintColor = engine?.configuration.dominantTheme
-        tickerView?.accentColor = engine!.configuration.accentColor
-        startButton.accentColor = engine!.configuration.accentColor
-        clockwiseButton.accentColor = engine!.configuration.accentColor
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -55,8 +52,15 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // MARK: Themeing
+        view.backgroundColor = theme.backgroundColor
+        view.tintColor = theme.dominantTheme
+        tickerView?.accentColor = theme.accentColor
+        startButton.accentColor = theme.accentColor
+        clockwiseButton.accentColor = theme.accentColor
+        
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
-        view.tintColor = engine?.configuration.dominantTheme
+        view.tintColor = theme.dominantTheme
 
         guard let tickerView = tickerView else { fatalError() }
         

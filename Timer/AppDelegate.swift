@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             window?.rootViewController = viewController
         } else {
             // FIXME: Create
-            let selectionViewController = SelectRoundViewController(rounds: Round.allRounds(), configuration: DefaultConfiguration())
+            let selectionViewController = SelectRoundViewController(rounds: Round.allRounds(), theme: DefaultTheme())
             selectionViewController.modalPresentationStyle = .FormSheet
             window?.rootViewController = UIViewController(nibName: nil, bundle: nil)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))

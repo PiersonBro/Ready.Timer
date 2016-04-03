@@ -17,11 +17,11 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     let toolbarDelegate = BarPositionDelegate()
     let statusBarView = UIView(frame: UIApplication.sharedApplication().statusBarFrame ?? CGRect())
     var topConstraint: NSLayoutConstraint? = nil
-    let configuration: UIConfigurationType
+    let theme: ColorTheme
     
-    init(rounds: [Round], configuration: UIConfigurationType) {
+    init(rounds: [Round], theme: ColorTheme) {
         self.rounds = rounds
-        self.configuration = configuration
+        self.theme = theme
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -31,7 +31,7 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
         view.addSubview(toolbar)
         view.addSubview(statusBarView)
         
-        view.tintColor = configuration.dominantTheme
+        view.tintColor = theme.dominantTheme
         
         let shouldBeUnderStatusBar: Bool
         if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
@@ -106,14 +106,14 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
             round.registerAsDefaultRound()
             tableView.setEditing(false, animated: true)
         }
-        setDefaultRowAction.backgroundColor = configuration.dominantTheme
+        setDefaultRowAction.backgroundColor = theme.dominantTheme
 
         
         return [deleteRowAction, setDefaultRowAction]
     }
     
     func addRound() {
-        let createRoundVC = CreateRoundViewController(configuration: configuration)
+        let createRoundVC = CreateRoundViewController(theme: theme)
         presentingViewController?.dismissViewControllerAnimated(true) {
             if let rootViewController = UIApplication.sharedApplication().delegate?.window!?.rootViewController {
                 rootViewController.presentViewController(createRoundVC, animated: true, completion: nil)

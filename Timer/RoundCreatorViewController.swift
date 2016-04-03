@@ -46,10 +46,10 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     var keyboardConstraint: NSLayoutConstraint? = nil
     var constraint = [NSLayoutConstraint]()
     var centerToFind = CGPoint()
-    let configuration: UIConfigurationType
+    let theme: ColorTheme
     
-    init(configuration: UIConfigurationType) {
-        self.configuration = configuration
+    init(theme: ColorTheme) {
+        self.theme = theme
         super.init(nibName: nil, bundle: nil)
         tickerView = TickerView(dataSource: self)
     }
@@ -60,12 +60,12 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = configuration.backgroundColor
-        view.tintColor = configuration.dominantTheme
-        tickerView?.accentColor = configuration.accentColor
-        enterCircleButton.accentColor = configuration.accentColor
-//        segmentedControl.tintColor = configuration.dominantTheme
-        finishCircleButton.accentColor = configuration.accentColor
+        view.backgroundColor = theme.backgroundColor
+        view.tintColor = theme.dominantTheme
+        tickerView?.accentColor = theme.accentColor
+        enterCircleButton.accentColor = theme.accentColor
+        // FIXME: Is the segment bar done right?
+        finishCircleButton.accentColor = theme.accentColor
         
         view.addSubview(tickerView!)
         view.addSubview(keyboardView)

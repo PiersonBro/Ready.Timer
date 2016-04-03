@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2005BD1D19E50BAD00843B00 /* Cartography.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; };
 		2005BD1E19E50BAD00843B00 /* Cartography.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 2005BD1319E50B6800843B00 /* Cartography.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		2023B6F21CB0BDC1006B78FF /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */; };
 		202580401C97A03400FBFB71 /* DraggingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2025803F1C97A03400FBFB71 /* DraggingHandler.swift */; };
 		202580491C97A0C100FBFB71 /* RoundCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
@@ -187,6 +188,7 @@
 
 /* Begin PBXFileReference section */
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
+		2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorTheme.swift; path = Timer/ColorTheme.swift; sourceTree = "<group>"; };
 		2025803F1C97A03400FBFB71 /* DraggingHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggingHandler.swift; sourceTree = "<group>"; };
 		202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCollectionViewController.swift; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
@@ -299,6 +301,7 @@
 		20C99B7F19A02E2E00477D3B = {
 			isa = PBXGroup;
 			children = (
+				2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */,
 				20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */,
 				20D523691AB6359F00A46760 /* TimerKit.xcodeproj */,
 				2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */,
@@ -626,6 +629,7 @@
 				204BEB7F1C0D69390061C273 /* EngineProxy.swift in Sources */,
 				204BEB891C0D69680061C273 /* InfiniteTimerUIEngine.swift in Sources */,
 				20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */,
+				2023B6F21CB0BDC1006B78FF /* ColorTheme.swift in Sources */,
 				202580401C97A03400FBFB71 /* DraggingHandler.swift in Sources */,
 				202580491C97A0C100FBFB71 /* RoundCollectionViewController.swift in Sources */,
 				20A26EE21C5842DE005200D8 /* CloudKit+Round.swift in Sources */,
