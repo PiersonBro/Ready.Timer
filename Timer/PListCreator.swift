@@ -71,6 +71,7 @@ class PlistCreator {
         return (dictionary as NSDictionary).writeToFile(FSKeys.pathForName(name), atomically: false)
     }
     
+    // FIXME: Handle aprostophes!
     static func sanitizeIdentifier(identifier: String) -> String {
         let placeHolder = "z" + identifier.stringByReplacingOccurrencesOfString(" ", withString: "_")
         return placeHolder.stringByReplacingOccurrencesOfString("-", withString: "__")
