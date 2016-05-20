@@ -107,6 +107,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     func configureSnapBehaviors() {
         dynamicAnimator.removeAllBehaviors()
         positionTracker.shiftToPoints(centers!, updatingExternalAnimator: dynamicAnimator, shifted: { didShift = $0 }) {
+            self.panGestureRecognizer?.enabled = true
             self.snapBehaviorsActive = false
             self.configureAttachmentBehaviors()
         }
@@ -122,6 +123,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     
     public func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
         if snapBehaviorsActive {
+            panGestureRecognizer?.enabled = false
             snapBehaviorsActive = false
             animator.removeAllBehaviors()
             if let delegate = delegate {
