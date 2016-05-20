@@ -12,9 +12,14 @@ protocol ColorTheme {
     var dominantTheme: UIColor { get }
     var backgroundColor: UIColor { get }
     var accentColor: UIColor { get }
+    var identifier: String {get}
 }
 
 extension ColorTheme {
+    var identifier: String {
+        return "Default"
+    }
+    
     var dominantTheme: UIColor {
         return UIColor(red:0.83, green:0.33, blue:0, alpha:1)
     }
@@ -42,6 +47,10 @@ struct SecondTheme: ColorTheme {
     var accentColor: UIColor {
         return UIColor(red:0.32, green:0.7, blue:0.85, alpha:1)
     }
+    
+    var identifier: String {
+        return "Second"
+    }
 }
 
 struct ThirdTheme: ColorTheme {
@@ -57,4 +66,28 @@ struct ThirdTheme: ColorTheme {
     var accentColor: UIColor {
         return UIColor(red:0.78, green:0.97, blue:0.77, alpha:1)
     }
+    
+    var identifier: String {
+        return "Third"
+    }
 }
+
+
+struct FourthTheme: ColorTheme {
+    var dominantTheme: UIColor {
+        return UIColor(red:0.51, green:0.19, blue:0.11, alpha:1.00)
+    }
+    
+    var backgroundColor: UIColor {
+        return UIColor(red:0.55, green:0.31, blue:0.22, alpha:1.00) //UIColor(red:0.85, green:0.54, blue:0.23, alpha:1.00)
+    }
+    
+    var accentColor: UIColor {
+        return UIColor(red:0.85, green:0.54, blue:0.23, alpha:1.00)
+    }
+    
+    var identifier: String {
+        return "Fourth"
+    }
+}
+

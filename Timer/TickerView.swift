@@ -68,7 +68,9 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     let dataSource: TickerViewDataSource
     var accentColor: UIColor = .cyanColor() {
         didSet {
-            labels.forEach{$0.textColor = accentColor}
+            labels.forEach {$0.textColor = accentColor}
+            removeLines()
+            addLines(rect: bounds)
         }
     }
     required init(coder aDecoder: NSCoder) {
@@ -158,8 +160,8 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         rightmostLabel.index = speechCount
     }
     
-    override func willMoveToSuperview(newSuperview: UIView?) {
-        backgroundColor = newSuperview?.tintColor
+    override func tintColorDidChange() {
+        backgroundColor = superview?.tintColor
     }
     
     deinit {

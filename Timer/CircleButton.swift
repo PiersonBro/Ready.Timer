@@ -62,7 +62,7 @@ class CircleButton: UIControl {
         bezierPath.moveToPoint(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)))
         
         bezierPath.addArcWithCenter(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)), radius: rect.size.width / 2, startAngle: CGFloat(M_PI), endAngle: CGFloat(-M_PI), clockwise: false)
-        
+
         let shapeLayer = CAShapeLayer()
         shapeLayer.frame = bounds
         shapeLayer.path = bezierPath.CGPath
@@ -70,8 +70,8 @@ class CircleButton: UIControl {
         layer.mask = shapeLayer
     }
     
-    override func willMoveToSuperview(newSuperview: UIView?) {
-        backgroundColor = newSuperview?.tintColor
+    override func tintColorDidChange() {
+        backgroundColor = superview?.tintColor
     }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {

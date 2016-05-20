@@ -64,9 +64,9 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         view.tintColor = theme.dominantTheme
         tickerView?.accentColor = theme.accentColor
         enterCircleButton.accentColor = theme.accentColor
-        // FIXME: Is the segment bar done right?
         finishCircleButton.accentColor = theme.accentColor
-        
+        UISegmentedControl.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: theme.accentColor], forState: .Selected)
+
         view.addSubview(tickerView!)
         view.addSubview(keyboardView)
         
@@ -111,6 +111,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         pickerView.delegate = pickerViewHandler
         pickerView.dataSource = pickerViewHandler
         addPickerView()
+
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -123,7 +124,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
 
     func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
         textBox.delegate = self
-        textBox.backgroundColor = .grayColor()
+        textBox.backgroundColor = theme.accentColor
         textBox.placeholder = "Insert Timer Name"
         view.addSubview(textBox)
         

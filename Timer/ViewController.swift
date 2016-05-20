@@ -28,9 +28,6 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     private var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
     private var engine: RoundUIEngine? = nil
     
-    // FIXME: Flesh this out into full on public API.
-    var theme = DefaultTheme()
-    
     init(partialEngine: (viewController: TimerViewControllerType) -> RoundUIEngine) {
         timerLabel = UILabel(frame: CGRect())
         startButton = CircleButton(frame: CGRect())
@@ -52,16 +49,9 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // MARK: Themeing
-        view.backgroundColor = theme.backgroundColor
-        view.tintColor = theme.dominantTheme
-        tickerView?.accentColor = theme.accentColor
-        startButton.accentColor = theme.accentColor
-        clockwiseButton.accentColor = theme.accentColor
-        
         view.addGestureRecognizer(doubleTapGestureRecognizer!)
-        view.tintColor = theme.dominantTheme
-
+        updateTheme(DefaultTheme())
+        
         guard let tickerView = tickerView else { fatalError() }
         
         view.addSubview(tickerView)
@@ -105,6 +95,15 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         }
         //FIXME: Handle single string data sources.
         tickerViewDidRotateStringAtIndexToCenterPosition(0, wasDragged: false, wasLast: false)
+    }
+    
+    func updateTheme(theme: ColorTheme) {
+        // MARK: Themeing
+        view.backgroundColor = theme.backgroundColor
+        view.tintColor = theme.dominantTheme
+        tickerView?.accentColor = theme.accentColor
+        startButton.accentColor = theme.accentColor
+        clockwiseButton.accentColor = theme.accentColor
     }
     
     func setTimerLabelText(text: String) {
