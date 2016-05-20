@@ -12,6 +12,7 @@ import TimerKit
 protocol RoundUIEngineType {
     var configuration: UIConfigurationType { get }
     var segment: SegmentProxy { get }
+    var name: String { get }
     static func createEngine(round: Round) -> (viewController: TimerViewControllerType) -> Self
     // UI Interaction
     func buttonTapped()
@@ -25,6 +26,7 @@ final class RoundUIEngine: RoundUIEngineType {
     var configuration: UIConfigurationType {
         return engine.configuration
     }
+    let name: String
     
     private let round: Round
 
@@ -43,6 +45,7 @@ final class RoundUIEngine: RoundUIEngineType {
     
     init(round: Round, viewController: TimerViewControllerType) {
         self.round = round
+        name = round.name
         self.viewController = viewController
         mutableSegmentProxies = round.segmentProxies
         segment = mutableSegmentProxies.removeFirst()!

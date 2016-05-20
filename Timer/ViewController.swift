@@ -39,6 +39,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
         doubleTapGestureRecognizer!.delegate = self
+        title = engine?.name
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -135,8 +136,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     
     //MARK: TickerView DataSource
     func stringForIndex(index: Int) -> String? {
-        let result = engine!.displayNameForSegmentIndex(index)
-        return result
+        return engine!.displayNameForSegmentIndex(index)
     }
 
     var wasLast = false

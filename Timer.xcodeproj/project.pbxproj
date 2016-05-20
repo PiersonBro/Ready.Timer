@@ -12,6 +12,7 @@
 		2023B6F21CB0BDC1006B78FF /* ColorTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */; };
 		202580401C97A03400FBFB71 /* DraggingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2025803F1C97A03400FBFB71 /* DraggingHandler.swift */; };
 		202580491C97A0C100FBFB71 /* RoundCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */; };
+		20321E371CA8CA7F00AB1369 /* ShapeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20321E361CA8CA7F00AB1369 /* ShapeButton.swift */; };
 		20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20329B7E19C4B834001591F8 /* TickerLabel.swift */; };
 		2035F7681BA6630E00FEDD11 /* Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2035F7671BA6630E00FEDD11 /* Round.swift */; };
 		203E29AA1C7915F000A5574C /* LincolnDouglas.plist in Resources */ = {isa = PBXBuildFile; fileRef = 203E29A71C7915F000A5574C /* LincolnDouglas.plist */; };
@@ -31,6 +32,7 @@
 		2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2061A90D1BE4AA4700345C49 /* SegmentType.swift */; };
 		206BF1A01C099B7700375F52 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF19F1C099B7700375F52 /* Position.swift */; };
 		206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206BF18C1C099A4E00375F52 /* DragHandler.swift */; };
+		206E06201CACE15C001C737A /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206E061F1CACE15C001C737A /* SettingsViewController.swift */; };
 		20837FA71BFADEE900D7F23D /* OvertimeUIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */; };
 		20A26EE01C58392C005200D8 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20A26EDF1C58392C005200D8 /* CloudKit.framework */; };
 		20A26EE21C5842DE005200D8 /* CloudKit+Round.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20A26EE11C5842DE005200D8 /* CloudKit+Round.swift */; };
@@ -38,6 +40,7 @@
 		20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20BB1A4E19D2758600568046 /* CircleButton.swift */; };
 		20BF4C751B2E46E100AB2F87 /* Din.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; };
 		20BF4C761B2E46E100AB2F87 /* Din.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 20BF4C711B2E46D100AB2F87 /* Din.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		20C2119F1CEB7B4200BE32C4 /* ViewProducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C2119E1CEB7B4200BE32C4 /* ViewProducer.swift */; };
 		20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8D19A02E2E00477D3B /* AppDelegate.swift */; };
 		20C99B9019A02E2E00477D3B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C99B8F19A02E2E00477D3B /* ViewController.swift */; };
 		20C99B9519A02E2E00477D3B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20C99B9419A02E2E00477D3B /* Images.xcassets */; };
@@ -188,9 +191,10 @@
 
 /* Begin PBXFileReference section */
 		2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Cartography.xcodeproj; path = Cartography/Cartography.xcodeproj; sourceTree = "<group>"; };
-		2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColorTheme.swift; path = Timer/ColorTheme.swift; sourceTree = "<group>"; };
+		2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTheme.swift; sourceTree = "<group>"; };
 		2025803F1C97A03400FBFB71 /* DraggingHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DraggingHandler.swift; sourceTree = "<group>"; };
 		202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundCollectionViewController.swift; sourceTree = "<group>"; };
+		20321E361CA8CA7F00AB1369 /* ShapeButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShapeButton.swift; path = ../ShapeButton.swift; sourceTree = "<group>"; };
 		20329B7E19C4B834001591F8 /* TickerLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TickerLabel.swift; sourceTree = "<group>"; };
 		2035F7671BA6630E00FEDD11 /* Round.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Round.swift; sourceTree = "<group>"; };
 		203E29A71C7915F000A5574C /* LincolnDouglas.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = LincolnDouglas.plist; sourceTree = "<group>"; };
@@ -210,6 +214,7 @@
 		2061A90D1BE4AA4700345C49 /* SegmentType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SegmentType.swift; sourceTree = "<group>"; };
 		206BF18C1C099A4E00375F52 /* DragHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DragHandler.swift; sourceTree = "<group>"; };
 		206BF19F1C099B7700375F52 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		206E061F1CACE15C001C737A /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		20837FA61BFADEE900D7F23D /* OvertimeUIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OvertimeUIEngine.swift; sourceTree = "<group>"; };
 		20A26EDE1C583927005200D8 /* Timer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = Timer.entitlements; sourceTree = "<group>"; };
 		20A26EDF1C58392C005200D8 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -218,6 +223,7 @@
 		20B95B731B584DFE009675B7 /* StickyCorners-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "StickyCorners-Bridging-Header.h"; sourceTree = "<group>"; };
 		20BB1A4E19D2758600568046 /* CircleButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleButton.swift; sourceTree = "<group>"; };
 		20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Din.xcodeproj; path = Din/Din.xcodeproj; sourceTree = "<group>"; };
+		20C2119E1CEB7B4200BE32C4 /* ViewProducer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewProducer.swift; sourceTree = "<group>"; };
 		20C99B8819A02E2E00477D3B /* Timer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Timer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20C99B8C19A02E2E00477D3B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20C99B8D19A02E2E00477D3B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -301,7 +307,6 @@
 		20C99B7F19A02E2E00477D3B = {
 			isa = PBXGroup;
 			children = (
-				2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */,
 				20BF4C681B2E46D100AB2F87 /* Din.xcodeproj */,
 				20D523691AB6359F00A46760 /* TimerKit.xcodeproj */,
 				2005BD0B19E50B6800843B00 /* Cartography.xcodeproj */,
@@ -323,8 +328,12 @@
 		20C99B8A19A02E2E00477D3B /* Timer */ = {
 			isa = PBXGroup;
 			children = (
-				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
 				202580481C97A0C100FBFB71 /* RoundCollectionViewController.swift */,
+				20C2119E1CEB7B4200BE32C4 /* ViewProducer.swift */,
+				2023B6F11CB0BDC1006B78FF /* ColorTheme.swift */,
+				20C99B8D19A02E2E00477D3B /* AppDelegate.swift */,
+				206E061F1CACE15C001C737A /* SettingsViewController.swift */,
+				20321E361CA8CA7F00AB1369 /* ShapeButton.swift */,
 				205FA4221CA661AF00A538D7 /* RoundCollectionViewCell.swift */,
 				20A26EE11C5842DE005200D8 /* CloudKit+Round.swift */,
 				20F7EEBE1A488E6E0047DB98 /* ViewControllers */,
@@ -621,6 +630,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2061A90E1BE4AA4700345C49 /* SegmentType.swift in Sources */,
+				20321E371CA8CA7F00AB1369 /* ShapeButton.swift in Sources */,
+				20C2119F1CEB7B4200BE32C4 /* ViewProducer.swift in Sources */,
 				206BF1A11C099BE500375F52 /* DragHandler.swift in Sources */,
 				204BEB811C0D69490061C273 /* RoundUIEngine.swift in Sources */,
 				20BB1A4F19D2758600568046 /* CircleButton.swift in Sources */,
@@ -643,6 +654,7 @@
 				20329B7F19C4B834001591F8 /* TickerLabel.swift in Sources */,
 				20D523561AB5581A00A46760 /* StringExtension.swift in Sources */,
 				204BEB761C0D69290061C273 /* PListCreator.swift in Sources */,
+				206E06201CACE15C001C737A /* SettingsViewController.swift in Sources */,
 				20C99B8E19A02E2E00477D3B /* AppDelegate.swift in Sources */,
 				204BEB871C0D69680061C273 /* CountDownTimerUIEngine.swift in Sources */,
 				20C99BAB19A02F5A00477D3B /* TickerView.swift in Sources */,

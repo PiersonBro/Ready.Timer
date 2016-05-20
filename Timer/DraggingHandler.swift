@@ -19,6 +19,8 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
     // This is so that when `dynamicAnimatorDidPause` is called we can intelligently dispose of resources.
     var gestureRecognizerState: UIGestureRecognizerState? = nil
     var currentIndexPath: NSIndexPath? = nil
+    var delegate: CellDraggingDelegate? = nil
+    var deleteOccured: Bool = false
     
     init(collectionView: UICollectionView) {
         self.collectionView = collectionView
@@ -57,24 +59,16 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
             currentAttachmentBehavior?.anchorPoint = location
         case .Ended:
             if let currentSnapBehavior = currentSnapBehavior, let currentAttachmentBehavior = currentAttachmentBehavior, let successSnapBehavior = successSnapBehavior {
-                
-                if location.y <= 100 {
-                    let alertController = UIAlertController(title: "Confirm Delete", message: "Are you sure you want to delete x?", preferredStyle: .Alert)
-                    alertController.addAction(UIAlertAction(title: "Delete", style: .Destructive, handler: { action in
-                        self.dynamicAnimator.addBehavior(successSnapBehavior)
-                        //FIXME: Figure out how to delete.
-                        self.collectionView.performBatchUpdates({
-                            self.collectionView.deleteItemsAtIndexPaths([self.currentIndexPath!])
-                            self.collectionView.reloadSections(NSIndexSet(index: 0))
-                        }, completion: nil)
-                        
-                    }))
-                    
-                    alertController.addAction(UIAlertAction(title: "Cancel", style: .Default, handler: { action in
-                        self.dynamicAnimator.addBehavior(currentSnapBehavior)
-                    }))
-                    UIApplication.sharedApplication().keyWindow?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
-                    
+                if location.y <= 200 {
+                    delegate!.delete(currentIndexPath!) { shouldDelete in
+                        if shouldDelete {
+                            self.dynamicAnimator.addBehavior(successSnapBehavior)
+                            self.deleteOccured = true
+                        } else {
+                            self.dynamicAnimator.addBehavior(currentSnapBehavior)
+                            self.deleteOccured = false
+                        }
+                    }
                 } else {
                     dynamicAnimator.addBehavior(currentSnapBehavior)
                 }
@@ -97,12 +91,16 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
     public func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
         if gestureRecognizerState == .Ended || gestureRecognizerState == .Cancelled {
             cleanUpState()
+            if deleteOccured {
+                delegate!.deleteDidOccur()
+                deleteOccured = false
+            }
+            
         }
     }
     
     private func cleanUpState() {
         dynamicAnimator.removeAllBehaviors()
-
         currentAttachmentBehavior = nil
         currentGestureRecognizer = nil
         currentSnapBehavior = nil
@@ -110,3 +108,9 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
         currentIndexPath = nil
     }
 }
+
+protocol CellDraggingDelegate {
+    func delete(indexPath: NSIndexPath, completion: (shouldDelete: Bool) -> ())
+    func deleteDidOccur()
+}
+

@@ -44,7 +44,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     let plistCreator = PlistCreator()
     // STATE:
     var keyboardConstraint: NSLayoutConstraint? = nil
-    var constraint = [NSLayoutConstraint]()
+    var constraints = [NSLayoutConstraint]()
     var centerToFind = CGPoint()
     let theme: ColorTheme
     
@@ -52,6 +52,10 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         self.theme = theme
         super.init(nibName: nil, bundle: nil)
         tickerView = TickerView(dataSource: self)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -126,6 +130,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         textBox.delegate = self
         textBox.backgroundColor = theme.accentColor
         textBox.placeholder = "Insert Timer Name"
+        textBox.textAlignment = .Center
         view.addSubview(textBox)
         
         let label: UILabel
@@ -138,36 +143,37 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             }
             label = views.last as! UILabel
         }
-        constraint.forEach {
+        constraints.forEach {
             $0.active = false
         }
 
         constrain(textBox, label) { textBox, label in
-            constraint = textBox.center == label.center
+            constraints = textBox.center == label.center
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
-    
+    //FIXME: This logic is broken.
     func keyboardWillShow(notification: NSNotification) {
         let windows = UIApplication.sharedApplication().windows
         let keyboardWindow = windows[2]
-        let visibleRect = CGRectIntersection(tickerView!.frame, tickerView!.superview!.bounds);
-
-        pickerView.hidden = true
-        if let _ = keyboardConstraint {
-            keyboardView.frame = keyboardWindow.subviews[0].subviews.first!.frame
-            view.setNeedsUpdateConstraints()
-            keyboardWindow.subviews[0].subviews.first!.setNeedsUpdateConstraints()
-        } else {
-            keyboardView.frame = keyboardWindow.subviews[0].subviews.first!.frame
-            constrain(keyboardView, tickerView!) { keyboardView, tickerView in
-                keyboardConstraint = tickerView.bottom == keyboardView.top + visibleRect.height
+        if view.frame.height <= keyboardWindow.subviews[0].subviews.first!.frame.height {
+            let visibleRect = CGRectIntersection(tickerView!.frame, tickerView!.superview!.bounds);
+            pickerView.hidden = true
+            if let _ = keyboardConstraint {
+                keyboardView.frame = keyboardWindow.subviews[0].subviews.first!.frame
+                view.setNeedsUpdateConstraints()
+                keyboardWindow.subviews[0].subviews.first!.setNeedsUpdateConstraints()
+            } else {
+                keyboardView.frame = keyboardWindow.subviews[0].subviews.first!.frame
+                constrain(keyboardView, tickerView!) { keyboardView, tickerView in
+                    keyboardConstraint = tickerView.bottom == keyboardView.bottom - visibleRect.height
+                }
+                keyboardConstraint?.identifier = "Keyboard Constraint"
             }
-            keyboardConstraint?.identifier = "Keyboard Constraint"
+            animateWithKeyboardLayout(notification.userInfo)
         }
-        animateWithKeyboardLayout(notification.userInfo)
     }
     
     func keyboardDidHide(notification: NSNotification) {
@@ -203,6 +209,9 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         constrain(pickerView, segmentedControl) { pickerView, segmentedControl in
             pickerView.centerX == pickerView.superview!.centerX
             pickerView.centerY == pickerView.superview!.centerY / 2
+        }
+        constrain(pickerView, finishCircleButton) { pickerView, finishCircleButton in
+            pickerView.bottom == finishCircleButton.top
         }
     }
 
@@ -258,26 +267,16 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
                 let didFinish = self.plistCreator.finish(name: text)
                 if didFinish {
                     let round = Round.roundForName(text)!
-                    let partialEngine = RoundUIEngine.createEngine(round)
-                    let vc = ViewController(partialEngine: partialEngine)
+                    let pVC = self.presentingViewController!
                     self.presentingViewController?.dismissViewControllerAnimated(true) {
-                        if let rootViewController = UIApplication.sharedApplication().delegate?.window!?.rootViewController {
-                            rootViewController.presentViewController(vc, animated: true) {
-                                UIApplication.sharedApplication().delegate?.window!?.rootViewController = vc
-                                round.uploadToCloudKit() { error in
-                                    if error == .noInternet {
-                                        Round.addRoundNameToUpload(round.name)
-                                    }
-                                }
-                            }
-                        }
+                        (pVC as! RoundCollectionViewController).addRound(round)
                     }
                 }
             }
             controller.addAction(cancelAction)
             controller.addAction(doneAction)
             controller.preferredAction = doneAction
-            self.presentViewController(controller, animated: true, completion: nil)
+            presentViewController(controller, animated: true, completion: nil)
         } else {
             let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
             delegate.window?.rootViewController!.dismissViewControllerAnimated(true, completion: nil)
