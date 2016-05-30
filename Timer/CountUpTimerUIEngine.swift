@@ -35,7 +35,7 @@ final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<Co
             shouldPause = true
             return
         }
-        
+        // If we've reached this point, it's backed by a `CountUpSegmentReference`.
         if shouldSuspend {
             shouldSuspend = false
             changeTimerToState(.Suspend)

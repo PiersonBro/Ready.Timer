@@ -61,19 +61,19 @@ final class CountDownTimerUIEngine: TimerUIEngineType {
         if state == .Start || state == .Resume {
             timer.onTick { elapsedTime in
                 self.viewController.setTimerLabelText(.formattedStringForDuration(elapsedTime))
-                }.onConclusion { status in
-                    if status == .Finish {
-                        self.viewController.timerDidFinish()
-                    } else if status == .Reset {
-                        if let startingTimeInMinutes = self.timer.startingTimeInMinutes {
-                            self.viewController.setTimerLabelText("\(startingTimeInMinutes):00")
-                        } else if let startingTimeInSeconds = self.timer.startingTimeInSeconds {
-                            self.viewController.setTimerLabelText(.formattedStringForDuration(startingTimeInSeconds))
-                        } else {
-                            fatalError("Both startingTimeInMinutes and startingTimeInSeconds cannot be nil")
-                        }
+            }.onConclusion { status in
+                if status == .Finish {
+                    self.viewController.timerDidFinish()
+                } else if status == .Reset {
+                    if let startingTimeInMinutes = self.timer.startingTimeInMinutes {
+                        self.viewController.setTimerLabelText("\(startingTimeInMinutes):00")
+                    } else if let startingTimeInSeconds = self.timer.startingTimeInSeconds {
+                        self.viewController.setTimerLabelText(.formattedStringForDuration(startingTimeInSeconds))
+                    } else {
+                        fatalError("Both startingTimeInMinutes and startingTimeInSeconds cannot be nil")
                     }
-                }.activate()
+                }
+            }.activate()
         } else if state == .Cancel {
             timer.concludeWithStatus(.Reset)
         } else if state == .Pause {
