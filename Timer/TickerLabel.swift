@@ -22,9 +22,9 @@ class TickerLabel: UILabel {
     override init(frame: CGRect) {
         index = 0
         super.init(frame: frame)
-        textAlignment = .Center
-        baselineAdjustment = .AlignCenters
+        textAlignment = .center
+        baselineAdjustment = .alignCenters
         adjustsFontSizeToFitWidth = true
-        snapBehavior = UISnapBehavior(item: self, snapToPoint: CGPoint())
+        snapBehavior = UISnapBehavior(item: self, snapTo: CGPoint())
     }
 }

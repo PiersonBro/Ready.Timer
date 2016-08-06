@@ -18,7 +18,7 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
     var successSnapBehavior: UISnapBehavior? = nil
     // This is so that when `dynamicAnimatorDidPause` is called we can intelligently dispose of resources.
     var gestureRecognizerState: UIGestureRecognizerState? = nil
-    var currentIndexPath: NSIndexPath? = nil
+    var currentIndexPath: IndexPath? = nil
     var delegate: CellDraggingDelegate? = nil
     var deleteOccured: Bool = false
     
@@ -29,35 +29,35 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
         dynamicAnimator.delegate = self
     }
     
-    public func cellWasDragged(gestureRecognizer: UIGestureRecognizer) {
+    public func cellWasDragged(_ gestureRecognizer: UIGestureRecognizer) {
         if gestureRecognizer != currentGestureRecognizer && currentGestureRecognizer != nil {
             return
         } else {
             currentGestureRecognizer = gestureRecognizer
         }
         
-        let location = gestureRecognizer.locationInView(collectionView)
+        let location = gestureRecognizer.location(in: collectionView)
         gestureRecognizerState = gestureRecognizer.state
         
         switch gestureRecognizer.state {
-        case .Began:
+        case .began:
             
-            let indexPath = collectionView.indexPathForItemAtPoint(location)
+            let indexPath = collectionView.indexPathForItem(at: location)
         
-            collectionView.selectItemAtIndexPath(indexPath, animated: true, scrollPosition: [.CenteredVertically, .CenteredHorizontally])
+            collectionView.selectItem(at: indexPath, animated: true, scrollPosition: [.centeredVertically, .centeredHorizontally])
             if let indexPath = indexPath {
                 currentIndexPath = indexPath
-                let cell = collectionView.cellForItemAtIndexPath(indexPath)! /* as! RolodexCollectionViewCell */
+                let cell = collectionView.cellForItem(at: indexPath)! /* as! RolodexCollectionViewCell */
                 
-                currentAttachmentBehavior = UIAttachmentBehavior.slidingAttachmentWithItem(cell, attachmentAnchor: cell.center, axisOfTranslation: CGVector(dx: 1, dy: 0))
+                currentAttachmentBehavior = UIAttachmentBehavior.slidingAttachment(with: cell, attachmentAnchor: cell.center, axisOfTranslation: CGVector(dx: 1, dy: 0))
                 dynamicAnimator.addBehavior(currentAttachmentBehavior!)
-                currentSnapBehavior = UISnapBehavior(item: cell, snapToPoint: cell.center)
+                currentSnapBehavior = UISnapBehavior(item: cell, snapTo: cell.center)
                 let offScreenPoint = CGPoint(x: cell.center.x, y: cell.center.y - 2000)
-                successSnapBehavior = UISnapBehavior(item: cell, snapToPoint: offScreenPoint)
+                successSnapBehavior = UISnapBehavior(item: cell, snapTo: offScreenPoint)
             }
-        case .Changed:
+        case .changed:
             currentAttachmentBehavior?.anchorPoint = location
-        case .Ended:
+        case .ended:
             if let currentSnapBehavior = currentSnapBehavior, let currentAttachmentBehavior = currentAttachmentBehavior, let successSnapBehavior = successSnapBehavior {
                 if location.y <= 200 {
                     delegate!.delete(currentIndexPath!) { shouldDelete in
@@ -75,21 +75,21 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
                 
                 dynamicAnimator.removeBehavior(currentAttachmentBehavior)
             }
-        case .Cancelled:
-            gestureRecognizer.enabled = true
+        case .cancelled:
+            gestureRecognizer.isEnabled = true
             
         default:
             break
         }
     }
     
-    public func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
-        let translation = (gestureRecognizer as! UIPanGestureRecognizer).translationInView(collectionView)
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        let translation = (gestureRecognizer as! UIPanGestureRecognizer).translation(in: collectionView)
         let result = translation.x * translation.x > translation.y * translation.y
         return !result
     }
-    public func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
-        if gestureRecognizerState == .Ended || gestureRecognizerState == .Cancelled {
+    public func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
+        if gestureRecognizerState == .ended || gestureRecognizerState == .cancelled {
             cleanUpState()
             if deleteOccured {
                 delegate!.deleteDidOccur()
@@ -110,7 +110,7 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
 }
 
 protocol CellDraggingDelegate {
-    func delete(indexPath: NSIndexPath, completion: (shouldDelete: Bool) -> ())
+    func delete(_ indexPath: IndexPath, completion: (shouldDelete: Bool) -> ())
     func deleteDidOccur()
 }
 

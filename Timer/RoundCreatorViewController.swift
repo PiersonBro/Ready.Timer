@@ -55,7 +55,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     }
     
     deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -69,15 +69,15 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         tickerView?.accentColor = theme.accentColor
         enterCircleButton.accentColor = theme.accentColor
         finishCircleButton.accentColor = theme.accentColor
-        UISegmentedControl.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: theme.accentColor], forState: .Selected)
+        UISegmentedControl.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: theme.accentColor], for: .selected)
 
         view.addSubview(tickerView!)
         view.addSubview(keyboardView)
         
         constrain(tickerView!, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
-            tickerView.centerY == view.centerY * 2 ~ 750
-            tickerView.width == view.width * 1 ~ 750
+            tickerView.centerY == view.centerY * 2 ~ LayoutPriority(750)
+            tickerView.width == view.width * 1 ~ LayoutPriority(750)
             tickerView.width == view.width * 0.8 ~ 500
             tickerView.height == tickerView.width
             tickerView.height <= view.height * 0.8
@@ -91,7 +91,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             segmentedControl.trailing == segmentedControl.superview!.trailing
         }
         
-        segmentedControl.addTarget(self, action: #selector(segmentedControlTapped(_:)), forControlEvents: .ValueChanged)
+        segmentedControl.addTarget(self, action: #selector(segmentedControlTapped(_:)), for: .valueChanged)
         view.addSubview(enterCircleButton)
         constrain(enterCircleButton, tickerView!) { circleButton, tickerView in
             circleButton.centerX == circleButton.superview!.centerX * 1.5
@@ -100,7 +100,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             circleButton.height == circleButton.width
         }
         enterCircleButton.labelText = "Next"
-        enterCircleButton.addTarget(self, action: #selector(enterButtonTapped), forControlEvents: .TouchUpInside)
+        enterCircleButton.addTarget(self, action: #selector(enterButtonTapped), for: .touchUpInside)
         
         view.addSubview(finishCircleButton)
         constrain(finishCircleButton, tickerView!) { finishCircleButton, tickerView in
@@ -110,7 +110,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             finishCircleButton.height == finishCircleButton.width
         }
         finishCircleButton.labelText = "Cancel"
-        finishCircleButton.addTarget(self, action: #selector(finishButtonTapped), forControlEvents: .TouchUpInside)
+        finishCircleButton.addTarget(self, action: #selector(finishButtonTapped), for: .touchUpInside)
         
         pickerView.delegate = pickerViewHandler
         pickerView.dataSource = pickerViewHandler
@@ -118,19 +118,19 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
 
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         tickerView?.rotateToNextSegment()
     }
 
-    func stringForIndex(index: Int) -> String? {
+    func stringForIndex(_ index: Int) -> String? {
         return "    "
     }
 
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
+    func tickerViewDidRotateStringAtIndexToCenterPosition(_ index: Int, wasDragged: Bool, wasLast: Bool) {
         textBox.delegate = self
         textBox.backgroundColor = theme.accentColor
         textBox.placeholder = "Insert Timer Name"
-        textBox.textAlignment = .Center
+        textBox.textAlignment = .center
         view.addSubview(textBox)
         
         let label: UILabel
@@ -144,23 +144,40 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             label = views.last as! UILabel
         }
         constraints.forEach {
-            $0.active = false
+            $0.isActive = false
         }
 
         constrain(textBox, label) { textBox, label in
             constraints = textBox.center == label.center
         }
+        textBox.inputAssistantItem.leadingBarButtonGroups = []
+        textBox.inputAssistantItem.trailingBarButtonGroups = []
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(keyboardDidHide(_:)), name: UIKeyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardDidHide(_:)), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-    //FIXME: This logic is broken.
-    func keyboardWillShow(notification: NSNotification) {
-        let windows = UIApplication.sharedApplication().windows
+
+    func keyboardWillShow(_ notification: Notification) {
+        
+        func isExternalKeyboard() -> Bool {
+            let kbFrame = (notification as NSNotification).userInfo![UIKeyboardFrameEndUserInfoKey]!.cgRectValue
+            let kb = view.convert(kbFrame!, from: view)
+            let height = view.superview!.superview!.frame.size.height
+            if kb.origin.y + kb.size.height > height {
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        let windows = UIApplication.shared.windows
         let keyboardWindow = windows[2]
-        if view.frame.height <= keyboardWindow.subviews[0].subviews.first!.frame.height {
-            let visibleRect = CGRectIntersection(tickerView!.frame, tickerView!.superview!.bounds);
-            pickerView.hidden = true
+        if !isExternalKeyboard() {
+            let visibleRect = tickerView!.frame.intersection(tickerView!.superview!.frame);
+            print(tickerView?.frame.height)
+            print(visibleRect.height / 7)
+            pickerView.isHidden = true
+            pickerViewConstraint?.isActive = false
             if let _ = keyboardConstraint {
                 keyboardView.frame = keyboardWindow.subviews[0].subviews.first!.frame
                 view.setNeedsUpdateConstraints()
@@ -168,42 +185,44 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             } else {
                 keyboardView.frame = keyboardWindow.subviews[0].subviews.first!.frame
                 constrain(keyboardView, tickerView!) { keyboardView, tickerView in
-                    keyboardConstraint = tickerView.bottom == keyboardView.bottom - visibleRect.height
+                    //FIXME: This only works for iPad 2.
+                    keyboardConstraint = tickerView.bottom == keyboardView.top + (visibleRect.height / 6)
                 }
                 keyboardConstraint?.identifier = "Keyboard Constraint"
             }
-            animateWithKeyboardLayout(notification.userInfo)
+            animateWithKeyboardLayout((notification as NSNotification).userInfo)
         }
     }
     
-    func keyboardDidHide(notification: NSNotification) {
-        keyboardConstraint?.active = false
+    func keyboardDidHide(_ notification: Notification) {
         keyboardConstraint = nil
-        pickerView.hidden = false
-        animateWithKeyboardLayout(notification.userInfo)
+        pickerView.isHidden = false
+        animateWithKeyboardLayout((notification as NSNotification).userInfo)
+        pickerViewConstraint?.isActive = true
     }
     
-    func animateWithKeyboardLayout(userInfo: [NSObject: AnyObject]?) {
+    func animateWithKeyboardLayout(_ userInfo: [NSObject: AnyObject]?) {
         UIView.beginAnimations(nil, context: nil)
         UIView.setAnimationDuration(userInfo![UIKeyboardAnimationDurationUserInfoKey]!.doubleValue)
-        UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: userInfo![UIKeyboardAnimationCurveUserInfoKey]!.integerValue)!)
+        UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: userInfo![UIKeyboardAnimationCurveUserInfoKey]!.intValue)!)
         UIView.setAnimationBeginsFromCurrentState(true)
         view.layoutIfNeeded()
         UIView.commitAnimations()
     }
     
-    func segmentedControlTapped(segmentedControl: UISegmentedControl) {
-        let item = TimerItem(rawValue: segmentedControl.titleForSegmentAtIndex(segmentedControl.selectedSegmentIndex)!)!
+    func segmentedControlTapped(_ segmentedControl: UISegmentedControl) {
+        let item = TimerItem(rawValue: segmentedControl.titleForSegment(at: segmentedControl.selectedSegmentIndex)!)!
         switch item {
             case .Infinite:
                 pickerView.removeFromSuperview()
             default:
-                if !pickerView.isDescendantOfView(view) {
+                if !pickerView.isDescendant(of: view) {
                     addPickerView()
                 }
         }
     }
     
+    var pickerViewConstraint: NSLayoutConstraint? = nil
     func addPickerView() {
         view.addSubview(pickerView)
         constrain(pickerView, segmentedControl) { pickerView, segmentedControl in
@@ -211,7 +230,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             pickerView.centerY == pickerView.superview!.centerY / 2
         }
         constrain(pickerView, finishCircleButton) { pickerView, finishCircleButton in
-            pickerView.bottom == finishCircleButton.top
+            pickerViewConstraint = pickerView.bottom == finishCircleButton.top
         }
     }
 
@@ -225,13 +244,13 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             index = nil
         }
         
-        if let newIndex = index, let typeOfTimer = TimerItem(rawValue: segmentedControl.titleForSegmentAtIndex(newIndex) ?? "")?.timerKind where identifier != "" && (duration != 0 || typeOfTimer == .InfiniteTimer) {
+        if let newIndex = index, let typeOfTimer = TimerItem(rawValue: segmentedControl.titleForSegment(at: newIndex) ?? "")?.timerKind, identifier != "" && (duration != 0 || typeOfTimer == .InfiniteTimer) {
             
             if finishCircleButton.labelText == "Cancel" {
                 finishCircleButton.labelText = "Finish"
             }
             
-            if textBox.isFirstResponder() {
+            if textBox.isFirstResponder {
                 view.endEditing(true)
             }
             
@@ -248,27 +267,27 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     
     func rejectAnimation() {
         let animation = CAKeyframeAnimation(keyPath: "transform")
-        let initialValue = NSValue(CATransform3D: CATransform3DMakeTranslation(-2.0, 0.0, 0.0))
-        let finalValue = NSValue(CATransform3D: CATransform3DMakeTranslation(2.0, 0.0, 0.0))
+        let initialValue = NSValue(caTransform3D: CATransform3DMakeTranslation(-2.0, 0.0, 0.0))
+        let finalValue = NSValue(caTransform3D: CATransform3DMakeTranslation(2.0, 0.0, 0.0))
         animation.values = [initialValue, finalValue]
         animation.autoreverses = true
         animation.duration = 0.1
         animation.repeatCount = 2.0
-        enterCircleButton.layer.addAnimation(animation, forKey:nil)
+        enterCircleButton.layer.add(animation, forKey:nil)
     }
     
     func finishButtonTapped() {
         if finishCircleButton.labelText == "Finish" {
-            let controller = UIAlertController(title: "Enter Round Name", message: nil, preferredStyle: .Alert)
-            controller.addTextFieldWithConfigurationHandler(nil)
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Default, handler: nil)
-            let doneAction = UIAlertAction(title: "Done", style: .Default) { action in
+            let controller = UIAlertController(title: "Enter Round Name", message: nil, preferredStyle: .alert)
+            controller.addTextField(configurationHandler: nil)
+            let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+            let doneAction = UIAlertAction(title: "Done", style: .default) { action in
                 let text = controller.textFields![0].text!
                 let didFinish = self.plistCreator.finish(name: text)
                 if didFinish {
                     let round = Round.roundForName(text)!
                     let pVC = self.presentingViewController!
-                    self.presentingViewController?.dismissViewControllerAnimated(true) {
+                    self.presentingViewController?.dismiss(animated: true) {
                         (pVC as! RoundCollectionViewController).addRound(round)
                     }
                 }
@@ -276,10 +295,10 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
             controller.addAction(cancelAction)
             controller.addAction(doneAction)
             controller.preferredAction = doneAction
-            presentViewController(controller, animated: true, completion: nil)
+            present(controller, animated: true, completion: nil)
         } else {
-            let delegate = UIApplication.sharedApplication().delegate as! AppDelegate
-            delegate.window?.rootViewController!.dismissViewControllerAnimated(true, completion: nil)
+            let delegate = UIApplication.shared.delegate as! AppDelegate
+            delegate.window?.rootViewController!.dismiss(animated: true, completion: nil)
         }
     }
 }
@@ -295,23 +314,23 @@ class PickerViewHandler: NSObject, UIPickerViewDelegate, UIPickerViewDataSource 
         super.init()
     }
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 3
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return dataSource[component].count
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         let title = dataSource[component][row]
         return title
     }
     
-    func calculatedDurationFromPickerView(pickerView: UIPickerView) -> Int {
-        let minutes = Int(dataSource[0][pickerView.selectedRowInComponent(0)])! * 60
-        let tenths = Int(dataSource[1][pickerView.selectedRowInComponent(1)])! * 10
-        let seconds = Int(dataSource[2][pickerView.selectedRowInComponent(2)])!
+    func calculatedDurationFromPickerView(_ pickerView: UIPickerView) -> Int {
+        let minutes = Int(dataSource[0][pickerView.selectedRow(inComponent: 0)])! * 60
+        let tenths = Int(dataSource[1][pickerView.selectedRow(inComponent: 1)])! * 10
+        let seconds = Int(dataSource[2][pickerView.selectedRow(inComponent: 2)])!
         
         return minutes + tenths + seconds
     }

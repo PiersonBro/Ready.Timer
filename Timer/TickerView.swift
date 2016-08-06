@@ -11,16 +11,16 @@ import QuartzCore
 import Cartography
 
 private extension Position {
-    static let staticCenter: Position = Position.Center((xMultiplier: 1, yMultiplier: 0.5))
-    static let staticRight: Position = Position.Right((xMultiplier: 1.5, yMultiplier: 0.8))
-    static let staticLeft: Position = Position.Left((xMultiplier: 0.5, yMultiplier: 0.8))
-    static let staticBottom: Position = Position.Bottom((xMultiplier: 1, yMultiplier: 1.5))
+    static let staticCenter: Position = Position.center((xMultiplier: 1, yMultiplier: 0.5))
+    static let staticRight: Position = Position.right((xMultiplier: 1.5, yMultiplier: 0.8))
+    static let staticLeft: Position = Position.left((xMultiplier: 0.5, yMultiplier: 0.8))
+    static let staticBottom: Position = Position.bottom((xMultiplier: 1, yMultiplier: 1.5))
     
-    static func positionForMultipliers(xMultiplier: CGFloat, yMultiplier: CGFloat) -> Position? {
+    static func positionForMultipliers(_ xMultiplier: CGFloat, yMultiplier: CGFloat) -> Position? {
         return positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
     }
     
-    static func positionForMultipliers(xMultiplier: Float, yMultiplier: Float) -> Position? {
+    static func positionForMultipliers(_ xMultiplier: Float, yMultiplier: Float) -> Position? {
         switch (xMultiplier, yMultiplier) {
         case (self.staticCenter.positionTuple.xMultiplier, self.staticCenter.positionTuple.yMultiplier):
             return self.staticCenter
@@ -66,11 +66,11 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     var machineRotated = false
     
     let dataSource: TickerViewDataSource
-    var accentColor: UIColor = .cyanColor() {
+    var accentColor: UIColor = .cyan {
         didSet {
             labels.forEach {$0.textColor = accentColor}
             removeLines()
-            addLines(rect: bounds)
+            addLines(bounds)
         }
     }
     required init(coder aDecoder: NSCoder) {
@@ -137,7 +137,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         animator.delegate = self
         layer.masksToBounds = true
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
-        contentMode = .Redraw
+        contentMode = .redraw
         #if DEBUG
         animator.debugEnabled = true
         #endif
@@ -147,15 +147,15 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         topmostLabel = configureLabel(topmostLabel, text: dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticCenter)
         topmostLabel.index = speechCount
         
-        speechCount = speechCount.successor()
+        speechCount = (speechCount + 1)
         leftmostLabel = configureLabel(leftmostLabel, text: dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticLeft)
         leftmostLabel.index = speechCount
         
-        speechCount = speechCount.successor()
+        speechCount = (speechCount + 1)
         bottommostLabel = configureLabel(bottommostLabel, text: dataSource.stringForIndex(speechCount) ?? "E", positions: Position.staticBottom)
         bottommostLabel.index = speechCount
         
-        speechCount = speechCount.successor()
+        speechCount = (speechCount + 1)
         rightmostLabel = configureLabel(rightmostLabel, text: dataSource.stringForIndex(speechCount) ?? "E", positions:Position.staticRight)
         rightmostLabel.index = speechCount
     }
@@ -168,8 +168,8 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         dragHandler?.deactivate()
     }
     
-    private func configureLabel(label: TickerLabel, text: String, positions: Position) -> TickerLabel {
-        label.font = UIFont.systemFontOfSize(50)
+    private func configureLabel(_ label: TickerLabel, text: String, positions: Position) -> TickerLabel {
+        label.font = UIFont.systemFont(ofSize: 50)
         label.textColor = accentColor
         label.text = text
         
@@ -179,7 +179,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         return label
     }
     
-   private func layoutLabel(label: TickerLabel, position: Position) {
+   private func layoutLabel(_ label: TickerLabel, position: Position) {
         var xConstraint: NSLayoutConstraint? = nil
         var yConstraint: NSLayoutConstraint? = nil
         var leftConstraint: NSLayoutConstraint? = nil
@@ -196,16 +196,16 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
             yConstraint = label.centerY == label.superview!.centerY * CGFloat(position.positionTuple.yMultiplier)
             
             switch position {
-            case .Center:
+            case .center:
                 leftConstraint = label.left >= leftDivider.right
                 rightConstraint = label.right <= rightDivider.left
-            case .Bottom:
+            case .bottom:
                 leftConstraint = label.left <= leftDivider.right
                 rightConstraint = label.right <= rightDivider.left
-            case .Right:
+            case .right:
                 leftConstraint = label.left == rightDivider.right
                 rightConstraint = label.right == rightEdgeDivider.right
-            case .Left:
+            case .left:
                 leftConstraint = label.left == leftEdgeDivider.left
                 rightConstraint = label.right == leftDivider.left
             }
@@ -217,19 +217,19 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         rightConstraint?.identifier = "Right Constraint for label: \(label.hash)"
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         removeLines()
         
         let mask = CAShapeLayer()
         mask.frame = bounds;
-        let point = CGPointMake(CGRectGetMidX(rect), CGRectGetMidY(rect))
+        let point = CGPoint(x: rect.midX, y: rect.midY)
         let bezierPath = UIBezierPath()
-        bezierPath.moveToPoint(point)
-        bezierPath.addArcWithCenter(point, radius: rect.size.width / 2, startAngle:CGFloat(M_PI), endAngle: CGFloat(M_PI) * 2, clockwise: true)
-        mask.path = bezierPath.CGPath
+        bezierPath.move(to: point)
+        bezierPath.addArc(withCenter: point, radius: rect.size.width / 2, startAngle:CGFloat(M_PI), endAngle: CGFloat(M_PI) * 2, clockwise: true)
+        mask.path = bezierPath.cgPath
         layer.mask = mask
         
-        addLines(rect: rect)
+        addLines(rect)
         
         if dragHandler == nil {
             dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
@@ -240,26 +240,26 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         dragHandler?.activate()
     }
     
-    func addLines(rect rect: CGRect) {
+    func addLines(_ rect: CGRect) {
         let leftLineShapeLayer = CAShapeLayer()
         leftLineShapeLayer.name = "leftLineShapeLayer"
         let leftLinePath = UIBezierPath()
-        leftLinePath.moveToPoint(CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMaxY(rect)))
-        leftLinePath.addLineToPoint(CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMinY(rect)))
+        leftLinePath.move(to: CGPoint(x: rect.maxX, y: rect.maxY))
+        leftLinePath.addLine(to: CGPoint(x: rect.minX, y: rect.minY))
         
-        leftLineShapeLayer.path = leftLinePath.CGPath
-        leftLineShapeLayer.strokeColor = accentColor.CGColor
+        leftLineShapeLayer.path = leftLinePath.cgPath
+        leftLineShapeLayer.strokeColor = accentColor.cgColor
         leftLineShapeLayer.lineWidth = 5
         layer.addSublayer(leftLineShapeLayer)
         
         let rightLineShapeLayer = CAShapeLayer()
         rightLineShapeLayer.name = "rightLineShapeLayer"
         let rightLinePath = UIBezierPath()
-        rightLinePath.moveToPoint(CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMaxY(rect)))
-        rightLinePath.addLineToPoint(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)))
-        rightLinePath.addLineToPoint(CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMinY(rect)))
-        rightLineShapeLayer.path = rightLinePath.CGPath
-        rightLineShapeLayer.strokeColor = accentColor.CGColor
+        rightLinePath.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+        rightLinePath.addLine(to: CGPoint(x: rect.midX, y: rect.midY))
+        rightLinePath.addLine(to: CGPoint(x: rect.maxX, y: rect.minY))
+        rightLineShapeLayer.path = rightLinePath.cgPath
+        rightLineShapeLayer.strokeColor = accentColor.cgColor
         rightLineShapeLayer.lineWidth = 5
         layer.addSublayer(rightLineShapeLayer)
     }
@@ -278,11 +278,11 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     }
     
     func rotateToNextSegment() {
-        rotate(ascending: true)
+        rotate(true)
     }
     
     func rotateToPreviousSegment() {
-        rotate(ascending: false)
+        rotate(false)
     }
     
     func reset() {
@@ -295,19 +295,19 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         setupInitialLabelState()
-        addLines(rect: bounds)
+        addLines(bounds)
         dragHandler?.deactivate()
         dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             self.dragHandler?.delegate = self
             self.dragHandler?.activate()
         }
     }
     
-    private func rotate(ascending ascending: Bool) {
-        let labelsToEnumerate = ascending ? labels : labels.reverse()
+    private func rotate(_ ascending: Bool) {
+        let labelsToEnumerate = ascending ? labels : labels.reversed()
         animator.removeAllBehaviors()
         
         enumerate(labelsToEnumerate) { (label, nextLabel) in
@@ -326,13 +326,13 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     }
     
     //MARK: DragHandler Delegate
-    func didFinishDrag(wasShift: Bool) {
+    func didFinishDrag(_ wasShift: Bool) {
         if wasShift {
             labelConstraintsNeedUpdate = true
         }
     }
     
-    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
+    func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
         animator.removeAllBehaviors()
         if machineRotated {
             dragHandler!.labelsExternallyShifted()
@@ -340,7 +340,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         }
     }
     
-    func enumerate<T>(array: [T], block: (value: T, nextValue: T) -> Void) {
+    func enumerate<T>(_ array: [T], block: (value: T, nextValue: T) -> Void) {
         for i in 0..<array.count {
             let value = array[i]
             let next: T
@@ -367,9 +367,9 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         if finalSpeechIsAtCenter {
             dataSource.tickerViewDidRotateStringAtIndexToCenterPosition(centerLabel.index, wasDragged: dragHandler?.didRotateUsingThisSystem ?? false, wasLast: true)
             removeLines()
-            rightLabel.hidden = true
-            bottomLabel.hidden = true
-            leftLabel.hidden = true
+            rightLabel.isHidden = true
+            bottomLabel.isHidden = true
+            leftLabel.isHidden = true
             
             finalSpeechIsAtCenter = false
             return
@@ -383,7 +383,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     
         rightLabel.consumed = true
         if (bottomLabel.consumed) {
-            speechCount = speechCount.successor()
+            speechCount = (speechCount + 1)
             let optionalSpeechName = dataSource.stringForIndex(speechCount)
             let speechName: String
             
@@ -397,12 +397,12 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         }
     }
 
-    func labelForPosition(positionToFind: Position) -> TickerLabel {
+    func labelForPosition(_ positionToFind: Position) -> TickerLabel {
         for label in labels  {
             let constraints = positioningConstraintsForLabel(label, constraints: self.constraints)
             let position = Position.positionForMultipliers(constraints.xConstraint.multiplier, yMultiplier: constraints.yConstraint.multiplier)
             
-            if let position = position where position == positionToFind  {
+            if let position = position, position == positionToFind  {
                 return label
             }
         }
@@ -419,7 +419,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
                 let yMultiplier = newConstraints.yConstraint.multiplier
                 let newPosition = Position.positionForMultipliers(Float(xMultiplier), yMultiplier: Float(yMultiplier))
                 
-                NSLayoutConstraint.deactivateConstraints(self.constraintsForLabel(label, superviewConstraints: unmodifiedConstraints))
+                NSLayoutConstraint.deactivate(self.constraintsForLabel(label, superviewConstraints: unmodifiedConstraints))
                 self.layoutLabel(label, position:newPosition!)
             })
             makeDataSourceCalls()
@@ -428,18 +428,18 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         super.updateConstraints()
     }
     
-    func constraintsForLabel(label: TickerLabel, superviewConstraints: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
+    func constraintsForLabel(_ label: TickerLabel, superviewConstraints: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
         var labelConstraints = [NSLayoutConstraint]()
         for constraint in superviewConstraints {
             let identifierNSString: NSString = constraint.identifier ?? ""
-            if (identifierNSString.containsString(label.hash.description)) {
+            if (identifierNSString.contains(label.hash.description)) {
                 labelConstraints.append(constraint)
             }
         }
         return labelConstraints
     }
         
-    func positioningConstraintsForLabel(label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
+    func positioningConstraintsForLabel(_ label: TickerLabel, constraints: [NSLayoutConstraint]) -> (xConstraint: NSLayoutConstraint, yConstraint: NSLayoutConstraint) {
         var xConstraint: NSLayoutConstraint? = nil
         var yConstraint: NSLayoutConstraint? = nil
         
@@ -464,6 +464,6 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
 
 protocol TickerViewDataSource {
     // Index - Starts from Zero .
-    func stringForIndex(index: Int) -> String?
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool)
+    func stringForIndex(_ index: Int) -> String?
+    func tickerViewDidRotateStringAtIndexToCenterPosition(_ index: Int, wasDragged: Bool, wasLast: Bool)
 }

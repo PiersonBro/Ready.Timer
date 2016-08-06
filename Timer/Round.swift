@@ -43,31 +43,31 @@ struct Round: Equatable {
         }
                 
         if first.isEmpty {
-            overtimeTimer = Array(count: count, repeatedValue: nil)
+            overtimeTimer = Array(repeating: nil, count: count)
         } else {
             overtimeTimer = first
         }
         
         if second.isEmpty {
-            infiniteTimer = Array(count: count, repeatedValue: nil)
+            infiniteTimer = Array(repeating: nil, count: count)
         } else {
             infiniteTimer = second
         }
         
         if third.isEmpty {
-            countUpTimer = Array(count: count, repeatedValue: nil)
+            countUpTimer = Array(repeating: nil, count: count)
         } else {
             countUpTimer = third
         }
         
         if fourth.isEmpty {
-            countDownTimer = Array(count: count, repeatedValue: nil)
+            countDownTimer = Array(repeating: nil, count: count)
         } else {
             countDownTimer = fourth
         }
         
         if fifth.isEmpty {
-            countUpSegmentReference = Array(count: count, repeatedValue: nil)
+            countUpSegmentReference = Array(repeating: nil, count: count)
         } else {
             countUpSegmentReference = fifth
         }
@@ -78,14 +78,14 @@ struct Round: Equatable {
         }
     }
     
-    private static func nextSpeech(inout overtimeTimer: OvertimeArray, inout infiniteTimer: InfiniteTimerArray, inout countUpTimer: CountUpTimerArray, inout countDownTimer: CountDownTimerArray, inout countUpSegmentReference: CountUpSegmentReferenceArray) -> SegmentProxy? {
+    private static func nextSpeech( _ overtimeTimer: inout OvertimeArray, infiniteTimer: inout InfiniteTimerArray, countUpTimer: inout CountUpTimerArray, countDownTimer: inout CountDownTimerArray, countUpSegmentReference: inout CountUpSegmentReferenceArray) -> SegmentProxy? {
         let first = overtimeTimer.first
         let second = infiniteTimer.first
         let third = countUpTimer.first
         let fourth = countDownTimer.first
         let fifth = countUpSegmentReference.first
 
-        guard let firstSegment = first, secondSegment = second, thirdSegment = third, fourthSegment = fourth, fifthSegment = fifth else {
+        guard let firstSegment = first, let secondSegment = second, let thirdSegment = third, let fourthSegment = fourth, let fifthSegment = fifth else {
             return nil
         }
         

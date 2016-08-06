@@ -48,7 +48,7 @@ extension TimerUIEngineType where Segment.SegmentTimer.Status == OvertimeStatus 
     }
 }
 
-private func initialDisplayTextForStatus<T: TimerType>(status: TimerStatus, timer: T) -> String {
+private func initialDisplayTextForStatus<T: TimerType>(_ status: TimerStatus, timer: T) -> String {
     if status == .Paused {
         if let pauseDuration = timer.pauseDuration {
             return .formattedStringForDuration(pauseDuration)

@@ -19,15 +19,15 @@ final class ViewProducer {
         return vcs
     }
     
-    private static func produceViews(viewControllers: [ViewController]) -> [UIView] {
+    private static func produceViews(_ viewControllers: [ViewController]) -> [UIView] {
         let views = viewControllers.map { vc -> UIView in
             vc.updateTheme(CurrentTheme().currentTheme)
-            let view = vc.view.snapshotViewAfterScreenUpdates(true)
-            view.bounds.size = CGSize(width: 384, height: 512)
-            view.bounds.origin = CGPoint(x: 0, y: 0)
-            return view
+            let view = vc.view.snapshotView(afterScreenUpdates: true)
+            view?.bounds.size = CGSize(width: 384, height: 512)
+            view?.bounds.origin = CGPoint(x: 0, y: 0)
+            return view!
             }.map { view -> UIView in
-                return view.snapshotViewAfterScreenUpdates(true)
+                return view.snapshotView(afterScreenUpdates: true)!
         }
         
         return views
@@ -57,12 +57,12 @@ final class ViewProducer {
     }
     
     // Remove the view without deleting it, this is a performance optimazation.
-    func removeViewAtIndex(index: Int) {
+    func removeViewAtIndex(_ index: Int) {
         if let storage = views {
             var newStorage = storage
-            newStorage.removeAtIndex(index)
+            newStorage.remove(at: index)
             self.views = newStorage
-            viewControllers?.removeAtIndex(index)
+            viewControllers?.remove(at: index)
         }
     }
     

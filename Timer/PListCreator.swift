@@ -52,9 +52,9 @@ class PlistCreator {
             }
         }
     }
-    
     // FIXME: Consider renaming this to writeToDisk.
-    func finish(name name: String) -> Bool {
+    @discardableResult
+    func finish(name: String) -> Bool {
         guard let dictionary = dictionary else {
             return false
         }
@@ -63,27 +63,27 @@ class PlistCreator {
             return false
         }
         
-        let defaultManager = NSFileManager.defaultManager()
-        if !defaultManager.fileExistsAtPath(FSKeys.folderPath) {
-            try! defaultManager.createDirectoryAtPath(FSKeys.folderPath, withIntermediateDirectories: false, attributes: nil)
+        let defaultManager = FileManager.default
+        if !defaultManager.fileExists(atPath: FSKeys.folderPath) {
+            try! defaultManager.createDirectory(atPath: FSKeys.folderPath, withIntermediateDirectories: false, attributes: nil)
         }
         
-        return (dictionary as NSDictionary).writeToFile(FSKeys.pathForName(name), atomically: false)
+        return (dictionary as NSDictionary).write(toFile: FSKeys.pathForName(name), atomically: false)
     }
     
     // FIXME: Handle aprostophes!
-    static func sanitizeIdentifier(identifier: String) -> String {
-        let placeHolder = "z" + identifier.stringByReplacingOccurrencesOfString(" ", withString: "_")
-        return placeHolder.stringByReplacingOccurrencesOfString("-", withString: "__")
+    static func sanitizeIdentifier(_ identifier: String) -> String {
+        let placeHolder = "z" + identifier.replacingOccurrences(of: " ", with: "_")
+        return placeHolder.replacingOccurrences(of: "-", with: "__")
     }
     
-    static func desanitizeIdentifier(identifier: String) -> String {
+    static func desanitizeIdentifier(_ identifier: String) -> String {
         var string = identifier
-        if let placeholder = identifier.rangeOfString("z") {
-            string = identifier.stringByReplacingCharactersInRange(placeholder, withString: "")
+        if let placeholder = identifier.range(of: "z") {
+            string = identifier.replacingCharacters(in: placeholder, with: "")
         }
-        let fire = string.stringByReplacingOccurrencesOfString("__", withString: "-")
-        return fire.stringByReplacingOccurrencesOfString("_", withString: " ")
+        let fire = string.replacingOccurrences(of: "__", with: "-")
+        return fire.replacingOccurrences(of: "_", with: " ")
     }
 }
 
@@ -104,22 +104,22 @@ enum FSKeys: String {
     case Plist = ".plist"
     case FolderPath = "/Rounds/"
     
-    static let folderPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true).first! + FSKeys.FolderPath.rawValue
-    static func pathForName(name: String) -> String {
+    static let folderPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first! + FSKeys.FolderPath.rawValue
+    static func pathForName(_ name: String) -> String {
         return folderPath + name + FSKeys.Plist.rawValue
     }
 }
 
 extension Round {
-    static func roundForName(name: String) -> Round? {
-        guard let dictionary = NSDictionary(contentsOfFile: FSKeys.pathForName(name)) where dictionary.count != 0 else {
+    static func roundForName(_ name: String) -> Round? {
+        guard let dictionary = NSDictionary(contentsOfFile: FSKeys.pathForName(name)), dictionary.count != 0 else {
             return nil
         }
         
         return roundFromDictionary(dictionary, name: name)
     }
     
-    static func roundFromDictionary(dictionary: NSDictionary, name: String) -> Round {
+    static func roundFromDictionary(_ dictionary: NSDictionary, name: String) -> Round {
         let names = dictionary[PlistKeys.Speeches.rawValue] as! [String]
         let numbers = names.map {
             dictionary[$0] as! Int
@@ -136,13 +136,14 @@ extension Round {
         return roundFromData(names: userNames, numbers: numbers, typeOfTimers: typeOfTimers, name: name)
     }
     
-    static func roundFromData(names names: [String], numbers: [Int], typeOfTimers: [TimerKind], name: String) -> Round {
+    static func roundFromData(names: [String], numbers: [Int], typeOfTimers: [TimerKind], name: String) -> Round {
         var overtimeSegments = [OvertimeSegment?]()
         var countDownSegments = [CountDownSegment?]()
         var countUpSegments = [CountUpSegment?]()
         var infiniteSegments = [InfiniteSegment?]()
         var countUpSegmentReferences = [CountUpSegmentReference?]()
-       
+        var countUpSegmentReferencesToInsert = [String: CountUpSegmentReference]()
+        
         zip(zip(typeOfTimers, numbers), names).forEach { kindAndDuration, name in
             let round = createTimersOfType(kindAndDuration.0, durationInSeconds: kindAndDuration.1, name: name)
             if let overtimeSegment = round.0 {
@@ -174,7 +175,14 @@ extension Round {
                 countDownSegments.append(nil)
                 countUpSegments.append(nil)
                 infiniteSegments.append(nil)
-                countUpSegmentReferences.append(countUpSegmentReference)
+                
+                let timer = countUpSegmentReferencesToInsert[name]
+                if let timer = timer, countUpSegmentReference.name == timer.name {
+                    countUpSegmentReferences.append(timer)
+                } else {
+                    countUpSegmentReferencesToInsert[countUpSegmentReference.name] = countUpSegmentReference
+                    countUpSegmentReferences.append(countUpSegmentReference)
+                }
             } else {
                 fatalError()
             }
@@ -186,23 +194,23 @@ extension Round {
     
     func delete() {
         let path = FSKeys.pathForName(name)
-        let fileManager = NSFileManager.defaultManager()
-        try! fileManager.removeItemAtPath(path)
+        let fileManager = FileManager.default
+        try! fileManager.removeItem(atPath: path)
         Round.removeRoundNameToUpload(name)
-        let database = CKContainer.defaultContainer().privateCloudDatabase
+        let database = CKContainer.default().privateCloudDatabase
         let record = convertToCKRecord()
-        database.deleteRecordWithID(record.recordID) { recordID, error in
+        database.delete(withRecordID: record.recordID) { recordID, error in
             if (error != nil) {
                 Round.addRoundNameToDelete(self.name)
             }
         }
     }
     
-    private static func createTimersOfType(timerType: TimerKind, durationInMinutes: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?, CountUpSegmentReference?) {
+    private static func createTimersOfType(_ timerType: TimerKind, durationInMinutes: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?, CountUpSegmentReference?) {
         return Round.createTimersOfType(timerType, durationInSeconds: durationInMinutes * 60, name: name)
     }
     
-    private static func createTimersOfType(timerType: TimerKind, durationInSeconds: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?, CountUpSegmentReference?) {
+    private static func createTimersOfType(_ timerType: TimerKind, durationInSeconds: Int, name: String) -> (OvertimeSegment?, CountDownSegment?,  CountUpSegment?, InfiniteSegment?, CountUpSegmentReference?) {
         switch timerType {
             case .OvertimeTimer:
                 let segment = OvertimeSegment(sketch: TimerSketch(durationInSeconds: durationInSeconds),  name: name)

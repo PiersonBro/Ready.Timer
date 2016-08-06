@@ -12,50 +12,50 @@ enum ButtonShape {
     case plus
     case i
     
-    func image(colorTheme: ColorTheme) -> UIImage {
+    func image(_ colorTheme: ColorTheme) -> UIImage {
         if self == .i {
             let rect = CGRect(x: 0.0, y: 0.0, width: 200, height: 200)
             UIGraphicsBeginImageContext(rect.size)
             let context = UIGraphicsGetCurrentContext()
-            let movePoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
-            CGContextMoveToPoint(context, movePoint.x, movePoint.y)
+            let movePoint = CGPoint(x: rect.midX, y: rect.maxY)
+            context?.moveTo(x: movePoint.x, y: movePoint.y)
         
-            let linePoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect) - 60)
-            CGContextAddLineToPoint(context, linePoint.x, linePoint.y)
-            CGContextSetStrokeColorWithColor(context, colorTheme.accentColor.CGColor)
-            CGContextSetLineWidth(context, 10)
-            CGContextStrokePath(context)
+            let linePoint = CGPoint(x: rect.midX, y: rect.midY - 60)
+            context?.addLineTo(x: linePoint.x, y: linePoint.y)
+            context?.setStrokeColor(colorTheme.accentColor.cgColor)
+            context?.setLineWidth(10)
+            context?.strokePath()
         
-            let olinePoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect) - 90)
-            CGContextMoveToPoint(context, olinePoint.x, olinePoint.y)
-            CGContextAddLineToPoint(context, olinePoint.x, olinePoint.y - 80)
-            CGContextStrokePath(context)
+            let olinePoint = CGPoint(x: rect.midX, y: rect.midY - 90)
+            context?.moveTo(x: olinePoint.x, y: olinePoint.y)
+            context?.addLineTo(x: olinePoint.x, y: olinePoint.y - 80)
+            context?.strokePath()
             let image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
 
-            return image
+            return image!
         } else if self == .plus {
             let rect = CGRect(x: 0.0, y: 0.0, width: 200, height: 200)
             UIGraphicsBeginImageContext(rect.size)
             let context = UIGraphicsGetCurrentContext()
-            let movePoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMaxY(rect))
-            CGContextMoveToPoint(context, movePoint.x, movePoint.y)
+            let movePoint = CGPoint(x: rect.midX, y: rect.maxY)
+            context?.moveTo(x: movePoint.x, y: movePoint.y)
             
-            let linePoint = CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMinY(rect))
-            CGContextAddLineToPoint(context, linePoint.x, linePoint.y)
-            CGContextSetStrokeColorWithColor(context, colorTheme.accentColor.CGColor)
-            CGContextSetLineWidth(context, 5)
-            CGContextStrokePath(context)
+            let linePoint = CGPoint(x: rect.midX, y: rect.minY)
+            context?.addLineTo(x: linePoint.x, y: linePoint.y)
+            context?.setStrokeColor(colorTheme.accentColor.cgColor)
+            context?.setLineWidth(5)
+            context?.strokePath()
             
-            let rightMovePoint = CGPoint(x: CGRectGetMaxX(rect), y: CGRectGetMidY(rect))
-            CGContextMoveToPoint(context, rightMovePoint.x, rightMovePoint.y)
-            let pointToMoveTo = CGPoint(x: CGRectGetMinX(rect), y: CGRectGetMidY(rect))
-            CGContextAddLineToPoint(context, pointToMoveTo.x, pointToMoveTo.y)
-            CGContextStrokePath(context)
+            let rightMovePoint = CGPoint(x: rect.maxX, y: rect.midY)
+            context?.moveTo(x: rightMovePoint.x, y: rightMovePoint.y)
+            let pointToMoveTo = CGPoint(x: rect.minX, y: rect.midY)
+            context?.addLineTo(x: pointToMoveTo.x, y: pointToMoveTo.y)
+            context?.strokePath()
             let image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
             
-            return image
+            return image!
         } else {
             fatalError()
         }
@@ -64,15 +64,15 @@ enum ButtonShape {
 }
 
 extension UIButton {
-    static func buttonOfShape(shape: ButtonShape) -> UIButton {
+    static func buttonOfShape(_ shape: ButtonShape) -> UIButton {
         let image = shape.image(CurrentTheme().currentTheme)
-        let button = UIButton(type: .Custom)
-        button.setImage(image, forState: .Normal)
+        let button = UIButton(type: .custom)
+        button.setImage(image, for: UIControlState())
         return button
     }
     
-    func updateTheme(theme: ColorTheme, shape: ButtonShape) {
+    func updateTheme(_ theme: ColorTheme, shape: ButtonShape) {
         let image = shape.image(CurrentTheme().currentTheme)
-        setImage(image, forState: .Normal)
+        setImage(image, for: UIControlState())
     }
 }

@@ -11,10 +11,10 @@
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "CBAD05E1-7580-402D-9F7C-138AD2937635",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
-    "64D9193D901B8B1E1D67C697742877728DA72EA8" : "Ready%20Timer\/Din\/",
-    "DD25B9E902E46CE83FDE35C1A3F2D1B9E6D1E355" : "Ready%20Timer",
-    "B94099762A6CCA1CC3C3AA8AD781B8919D57F48E" : "Ready%20Timer\/TimerKit",
-    "364D2E5F611143E7C4D0A99C691B1988FBD5381F" : "Ready%20TimerCartography"
+    "64D9193D901B8B1E1D67C697742877728DA72EA8" : "Ready.Timer\/Din\/",
+    "DD25B9E902E46CE83FDE35C1A3F2D1B9E6D1E355" : "Ready.Timer\/",
+    "B94099762A6CCA1CC3C3AA8AD781B8919D57F48E" : "Ready.Timer\/TimerKit\/",
+    "364D2E5F611143E7C4D0A99C691B1988FBD5381F" : "Ready.Timer\/Cartography\/"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "Timer",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,

@@ -44,9 +44,9 @@ struct TimerSketch {
 extension TimerSketch: Equatable {}
 
 func ==(lhs: TimerSketch, rhs: TimerSketch) -> Bool {
-    if let leftDurationInSeconds = lhs.durationInSeconds, rightDurationInSeconds = rhs.durationInSeconds {
+    if let leftDurationInSeconds = lhs.durationInSeconds, let rightDurationInSeconds = rhs.durationInSeconds {
         return leftDurationInSeconds == rightDurationInSeconds
-    } else if let leftDurationInMinutes = lhs.durationInMinutes, rightDurationInMinutes = rhs.durationInMinutes {
+    } else if let leftDurationInMinutes = lhs.durationInMinutes, let rightDurationInMinutes = rhs.durationInMinutes {
         return leftDurationInMinutes == rightDurationInMinutes
     } else {
         return lhs.durationInSeconds ?? (lhs.durationInMinutes! * 60) == rhs.durationInSeconds ?? (rhs.durationInMinutes! * 60)
@@ -62,7 +62,7 @@ extension TimerSketch: Hashable {
 
 // MARK: SegmentType Conformance
 struct CountDownSegment: SegmentType {
-    typealias SegmentTimer = Timer<CountDownBlueprint>
+    typealias SegmentTimer = SimpleTimer<CountDownBlueprint>
     
     let sketch: TimerSketch
     let name: String
@@ -76,7 +76,7 @@ struct CountDownSegment: SegmentType {
             blueprint = CountDownBlueprint(countDownFromInMinutes: sketch.durationInMinutes!)
         }
         
-        return Timer(blueprint: blueprint)
+        return SimpleTimer(blueprint: blueprint)
     }
 }
 
@@ -85,7 +85,7 @@ func ==(lhs: CountDownSegment, rhs: CountDownSegment) -> Bool {
 }
 
 struct CountUpSegment: SegmentType {
-    typealias SegmentTimer = Timer<CountUpBlueprint>
+    typealias SegmentTimer = SimpleTimer<CountUpBlueprint>
 
     let sketch: TimerSketch
     let name: String
@@ -95,7 +95,7 @@ struct CountUpSegment: SegmentType {
     }
 }
 
-private func createTimerFromSketch(sketch: TimerSketch) -> Timer<CountUpBlueprint> {
+private func createTimerFromSketch(_ sketch: TimerSketch) -> SimpleTimer<CountUpBlueprint> {
     let blueprint: CountUpBlueprint
     
     if let durationInSeconds = sketch.durationInSeconds {
@@ -104,7 +104,7 @@ private func createTimerFromSketch(sketch: TimerSketch) -> Timer<CountUpBlueprin
         blueprint = CountUpBlueprint(upperLimitInMinutes: sketch.durationInMinutes!)
     }
     
-    return Timer(blueprint: blueprint)
+    return SimpleTimer(blueprint: blueprint)
 }
 
 
@@ -113,7 +113,7 @@ func ==(lhs: CountUpSegment, rhs: CountUpSegment) -> Bool {
 }
 
 class CountUpSegmentReference: SegmentType {
-    typealias SegmentTimer = Timer<CountUpBlueprint>
+    typealias SegmentTimer = SimpleTimer<CountUpBlueprint>
     
     let sketch: TimerSketch
     let name: String
@@ -140,13 +140,13 @@ func ==(lhs: CountUpSegmentReference, rhs: CountUpSegmentReference) -> Bool {
 }
 
 struct InfiniteSegment: SegmentType {
-    typealias SegmentTimer = Timer<InfiniteBlueprint>
+    typealias SegmentTimer = SimpleTimer<InfiniteBlueprint>
 
     let sketch: TimerSketch
     let name: String
     
     func generateTimer() -> SegmentTimer {
-        return Timer(blueprint: InfiniteBlueprint())
+        return SimpleTimer(blueprint: InfiniteBlueprint())
     }
 }
 

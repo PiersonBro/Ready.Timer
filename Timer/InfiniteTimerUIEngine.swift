@@ -9,7 +9,7 @@
 import Foundation
 import TimerKit
 
-final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<InfiniteBlueprint>>: TimerUIEngineType {
+final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == SimpleTimer<InfiniteBlueprint>>: TimerUIEngineType {
     typealias Segment = T
     typealias Configuration = InfiniteUIConfiguration
     
@@ -52,7 +52,7 @@ final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<I
         }
     }
     
-    private func changeTimerToState(state: TimerButtonState) {
+    private func changeTimerToState(_ state: TimerButtonState) {
         if state == .Start || state == .Resume {
             timer.onTick { elapsedTime in
                 self.viewController.setTimerLabelText(.formattedStringForDuration(elapsedTime))

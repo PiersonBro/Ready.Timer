@@ -77,7 +77,7 @@ struct EngineProxy /* TimerUIEngineType */ {
         }
     }
     
-    static func engineForSegment(segmentProxy: SegmentProxy, viewController: TimerViewControllerType) -> EngineProxy {
+    static func engineForSegment(_ segmentProxy: SegmentProxy, viewController: TimerViewControllerType) -> EngineProxy {
         let segments = segmentProxy.segments
         let overtimeSegment = segments.0
         let infiniteSegment = segments.1

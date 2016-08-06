@@ -13,7 +13,7 @@ class CircleButton: UIControl {
     private let label: UILabel
     private let overlayView: UIView
     
-    var accentColor: UIColor = .cyanColor() {
+    var accentColor: UIColor = .cyan {
         didSet {
             label.textColor = accentColor
         }
@@ -35,15 +35,15 @@ class CircleButton: UIControl {
         super.init(frame: frame)
         setupLabel(label)
         // FIXME: This leads to janky rotation animations, and should be fixed before release.
-        contentMode = .Redraw
+        contentMode = .redraw
     }
     
-    func setupLabel(label: UILabel) {
+    func setupLabel(_ label: UILabel) {
         label.textColor = accentColor
-        label.font = UIFont.systemFontOfSize(20)
+        label.font = UIFont.systemFont(ofSize: 20)
         // The baseline keeps the label vertically aligned in the center of the circle, while the textAlignment property keeps the label horizontally aligned.
-        label.baselineAdjustment = .AlignCenters
-        label.textAlignment = .Center
+        label.baselineAdjustment = .alignCenters
+        label.textAlignment = .center
         label.adjustsFontSizeToFitWidth = true
 
         addSubview(label)
@@ -57,15 +57,15 @@ class CircleButton: UIControl {
         fatalError("init(coder:) is not supported")
     }
     
-    override func drawRect(rect: CGRect) {
+    override func draw(_ rect: CGRect) {
         let bezierPath = UIBezierPath()
-        bezierPath.moveToPoint(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)))
+        bezierPath.move(to: CGPoint(x: rect.midX, y: rect.midY))
         
-        bezierPath.addArcWithCenter(CGPoint(x: CGRectGetMidX(rect), y: CGRectGetMidY(rect)), radius: rect.size.width / 2, startAngle: CGFloat(M_PI), endAngle: CGFloat(-M_PI), clockwise: false)
+        bezierPath.addArc(withCenter: CGPoint(x: rect.midX, y: rect.midY), radius: rect.size.width / 2, startAngle: CGFloat(M_PI), endAngle: CGFloat(-M_PI), clockwise: false)
 
         let shapeLayer = CAShapeLayer()
         shapeLayer.frame = bounds
-        shapeLayer.path = bezierPath.CGPath
+        shapeLayer.path = bezierPath.cgPath
         
         layer.mask = shapeLayer
     }
@@ -74,25 +74,25 @@ class CircleButton: UIControl {
         backgroundColor = superview?.tintColor
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         addSubview(overlayView)
         overlayView.frame = bounds
-        overlayView.backgroundColor = UIColor.grayColor()
+        overlayView.backgroundColor = UIColor.gray
         overlayView.alpha = 0.5
     }
     
-    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Mask ends here.
         overlayView.removeFromSuperview()
-        sendActionsForControlEvents(.TouchUpInside)
+        sendActions(for: .touchUpInside)
     }
 
     // As per documentation, implement these so as to prevent the iOS from moving up the responder chain.
-    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
     
     }
 
-    override func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         
     }
 }

@@ -24,30 +24,30 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: identifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let collectionViewController = presentingViewController as? RoundCollectionViewController
-        currentTheme.currentTheme = colorThemes[indexPath.row]
+        currentTheme.currentTheme = colorThemes[(indexPath as NSIndexPath).row]
         collectionViewController!.themeDidChange(currentTheme.currentTheme)
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return colorThemes.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath)
-        cell.textLabel!.text = colorThemes[indexPath.row].identifier
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: identifier, for: indexPath)
+        cell.textLabel!.text = colorThemes[(indexPath as NSIndexPath).row].identifier
         //FIXME: ColorTheme isn't equtable.
-        if currentTheme.currentTheme.backgroundColor == colorThemes[indexPath.row].backgroundColor {
-            cell.accessoryType = .Checkmark
+        if currentTheme.currentTheme.backgroundColor == colorThemes[(indexPath as NSIndexPath).row].backgroundColor {
+            cell.accessoryType = .checkmark
         }
         return cell
     }
@@ -56,18 +56,18 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 class CurrentTheme {
     var currentTheme = CurrentTheme.getCurrentTheme() {
         didSet {
-            let catfish = NSUserDefaults.standardUserDefaults()
+            let catfish = UserDefaults.standard
             catfish.setValue(currentTheme.identifier, forKey: currentThemeIdentifier)
         }
     }
 
     static private func getCurrentTheme() -> ColorTheme {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        let identifier = defaults.stringForKey(currentThemeIdentifier) ?? "Default"
+        let defaults = UserDefaults.standard
+        let identifier = defaults.string(forKey: currentThemeIdentifier) ?? "Default"
         return CurrentTheme.colorThemeForIdentifier(identifier)
     }
     
-    static func colorThemeForIdentifier(identifier: String) -> ColorTheme {
+    static func colorThemeForIdentifier(_ identifier: String) -> ColorTheme {
         let result: [ColorTheme] = [DefaultTheme(), SecondTheme(), ThirdTheme(), FourthTheme()].filter { theme in
             return theme.identifier == identifier
         }

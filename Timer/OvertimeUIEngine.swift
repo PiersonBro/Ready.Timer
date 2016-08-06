@@ -57,7 +57,7 @@ final class OvertimeUIEngine<T: SegmentType where T.SegmentTimer == OvertimeTime
         }
     }
     
-    private func changeTimerToState(state: TimerButtonState) {
+    private func changeTimerToState(_ state: TimerButtonState) {
         if state == .Start || state == .Resume {
             timer.onTick { elapsedTime in
                 self.viewController.setTimerLabelText(.formattedStringForDuration(elapsedTime))

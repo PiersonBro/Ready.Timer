@@ -14,8 +14,8 @@ import TimerKit
 
 protocol TimerViewControllerType {
     // FIXME: Change these to properties.
-    func setTimerLabelText(text: String)
-    func setTimerButtonText(text: String)
+    func setTimerLabelText(_ text: String)
+    func setTimerButtonText(_ text: String)
     func timerDidFinish()
 }
 
@@ -59,13 +59,13 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         constrain(tickerView, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
-            tickerView.width == view.width * 1 ~ 750
+            tickerView.width == view.width * 1 ~ LayoutPriority(750)
             tickerView.width == view.width * 0.8 ~ 500
             tickerView.height == tickerView.width
             tickerView.height <= view.height * 0.8
         }
 
-        startButton.addTarget(self, action: #selector(timerButtonPressed), forControlEvents: .TouchUpInside)
+        startButton.addTarget(self, action: #selector(timerButtonPressed), for: .touchUpInside)
         startButton.labelText = "Start"
         view.addSubview(startButton)
         constrain(startButton, view, tickerView) { (startButton, view, tickerView) in
@@ -76,7 +76,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             startButton.height == startButton.width
         }
         
-        clockwiseButton.addTarget(self, action: #selector(selectRound), forControlEvents: .TouchUpInside)
+        clockwiseButton.addTarget(self, action: #selector(selectRound), for: .touchUpInside)
         clockwiseButton.labelText = "Select Round"
         view.addSubview(clockwiseButton)
         constrain(clockwiseButton, view, tickerView) { (counterClockwiseButton, view, tickerView) in
@@ -88,7 +88,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             counterClockwiseButton.height == counterClockwiseButton.width
         }
         
-        timerLabel.font = UIFont.systemFontOfSize(160)
+        timerLabel.font = UIFont.systemFont(ofSize: 160)
         view.addSubview(timerLabel)
         constrain(timerLabel, view) { (timerLabel, view) in
             timerLabel.centerX == view.centerX
@@ -98,7 +98,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         tickerViewDidRotateStringAtIndexToCenterPosition(0, wasDragged: false, wasLast: false)
     }
     
-    func updateTheme(theme: ColorTheme) {
+    func updateTheme(_ theme: ColorTheme) {
         // MARK: Themeing
         view.backgroundColor = theme.backgroundColor
         view.tintColor = theme.dominantTheme
@@ -107,11 +107,11 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         clockwiseButton.accentColor = theme.accentColor
     }
     
-    func setTimerLabelText(text: String) {
+    func setTimerLabelText(_ text: String) {
         timerLabel.text = text
     }
     
-    func setTimerButtonText(text: String) {
+    func setTimerButtonText(_ text: String) {
         //FIXME: Add proper localization support:
         startButton.labelText = text
     }
@@ -126,7 +126,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         engine!.doubleTapped()
     }
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         if touch.view == view || touch.view == timerLabel {
             return true
         } else {
@@ -135,20 +135,20 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     }
     
     //MARK: TickerView DataSource
-    func stringForIndex(index: Int) -> String? {
+    func stringForIndex(_ index: Int) -> String? {
         return engine!.displayNameForSegmentIndex(index)
     }
 
     var wasLast = false
     
-    func tickerViewDidRotateStringAtIndexToCenterPosition(index: Int, wasDragged: Bool, wasLast: Bool) {
+    func tickerViewDidRotateStringAtIndexToCenterPosition(_ index: Int, wasDragged: Bool, wasLast: Bool) {
         if wasDragged {
             engine!.userFinished()
             engine!.next()
             
             if self.wasLast {
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2 * Double(NSEC_PER_SEC)))
-                dispatch_after(delayTime, dispatch_get_main_queue()) {
+                let delayTime = DispatchTime.now() + Double(Int64(2 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+                DispatchQueue.main.asyncAfter(deadline: delayTime) {
                     self.tickerView?.reset()
                     self.wasLast = false
                 }
@@ -173,7 +173,7 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             soundManager = nil
         }
 
-        let action = UIAlertAction(title: "Done", style: .Default) { action in
+        let action = UIAlertAction(title: "Done", style: .default) { action in
             if self.deviceIsSimulator == false {
                 soundManager?.stop()
             }
@@ -189,13 +189,13 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
             }
         }
         
-        let actionController = UIAlertController(title: "Timer Done", message: nil, preferredStyle: .Alert)
+        let actionController = UIAlertController(title: "Timer Done", message: nil, preferredStyle: .alert)
         actionController.addAction(action)
-        presentViewController(actionController, animated: true, completion: nil)
+        present(actionController, animated: true, completion: nil)
     }
     
     func selectRound() {
         transitioningDelegate = presentingViewController! as! RoundCollectionViewController
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

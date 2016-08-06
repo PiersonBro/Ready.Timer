@@ -12,21 +12,21 @@ public typealias PositionTuple = (xMultiplier: Float, yMultiplier: Float)
 
 // The idea of Position is that you privately extend it with your own value.
 public enum Position {
-    case Center(PositionTuple)
-    case Right(PositionTuple)
-    case Left(PositionTuple)
-    case Bottom(PositionTuple)
+    case center(PositionTuple)
+    case right(PositionTuple)
+    case left(PositionTuple)
+    case bottom(PositionTuple)
     
     // Convenience access to the associated values of the enum.
     var positionTuple: PositionTuple {
         switch (self) {
-        case .Center(let xMultiplier, let yMultiplier):
+        case .center(let xMultiplier, let yMultiplier):
             return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-        case .Right(let xMultiplier, let yMultiplier):
+        case .right(let xMultiplier, let yMultiplier):
             return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-        case .Left(let xMultiplier, let yMultiplier):
+        case .left(let xMultiplier, let yMultiplier):
             return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
-        case .Bottom(let xMultiplier, let yMultiplier):
+        case .bottom(let xMultiplier, let yMultiplier):
             return (xMultiplier: xMultiplier, yMultiplier: yMultiplier)
         }
     }

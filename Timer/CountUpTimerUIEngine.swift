@@ -9,7 +9,7 @@
 import Foundation
 import TimerKit
 
-final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<CountUpBlueprint>>: TimerUIEngineType {
+final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == SimpleTimer<CountUpBlueprint>>: TimerUIEngineType {
     typealias Segment = T
     typealias Configuration = DefaultConfiguration
     let segment: Segment
@@ -57,7 +57,7 @@ final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == Timer<Co
         }
     }
     
-    private func changeTimerToState(state: TimerButtonState) {
+    private func changeTimerToState(_ state: TimerButtonState) {
         if state == .Start || state == .Resume {
             timer.onTick { elapsedTime in
                 self.viewController.setTimerLabelText(.formattedStringForDuration(elapsedTime))

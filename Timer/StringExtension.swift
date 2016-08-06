@@ -10,7 +10,7 @@ import Foundation
 
 public extension String {
     
-    public static func formattedStringForDuration(duration: Int) -> String {
+    public static func formattedStringForDuration(_ duration: Int) -> String {
         let minute = duration / 60
         let second = duration % 60
         let secondString: String
