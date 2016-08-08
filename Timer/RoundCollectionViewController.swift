@@ -124,16 +124,15 @@ final class RoundCollectionViewController: UIViewController, UICollectionViewDat
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath as IndexPath) as! RoundCollectionViewCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellReuseIdentifier, for: indexPath) as! RoundCollectionViewCell
         cell.draggingHandler = draggingHandler
-        let view =
-            viewProducer.getViews()[(indexPath as NSIndexPath).row]
+        let view = viewProducer.getViews()[indexPath.row]
         cell.contentView.addSubview(view)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let viewController = viewProducer.getViewControllers()[(indexPath as NSIndexPath).row]
+        let viewController = viewProducer.getViewControllers()[indexPath.row]
         viewController.transitioningDelegate = self
         present(viewController, animated: true, completion: nil)
     }
