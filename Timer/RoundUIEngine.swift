@@ -13,7 +13,7 @@ protocol RoundUIEngineType {
     var configuration: UIConfigurationType { get }
     var segment: SegmentProxy { get }
     var name: String { get }
-    static func createEngine(_ round: Round) -> (viewController: TimerViewControllerType) -> Self
+    static func createEngine(_ round: Round) -> (_ viewController: TimerViewControllerType) -> Self
     // UI Interaction
     func buttonTapped()
     func doubleTapped()
@@ -36,8 +36,8 @@ final class RoundUIEngine: RoundUIEngineType {
     private var mutableSegmentProxies: [SegmentProxy?]
     private(set) var segment: SegmentProxy
 
-    static func createEngine(_ round: Round) -> (viewController: TimerViewControllerType) -> RoundUIEngine {
-        let block: (viewController: TimerViewControllerType) -> RoundUIEngine = { viewController in
+    static func createEngine(_ round: Round) -> (_ viewController: TimerViewControllerType) -> RoundUIEngine {
+        let block: (_ viewController: TimerViewControllerType) -> RoundUIEngine = { viewController in
             RoundUIEngine(round: round, viewController: viewController)
         }
         return block

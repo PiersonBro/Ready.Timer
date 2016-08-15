@@ -95,7 +95,7 @@ struct CountUpSegment: SegmentType {
     }
 }
 
-private func createTimerFromSketch(_ sketch: TimerSketch) -> SimpleTimer<CountUpBlueprint> {
+fileprivate func createTimerFromSketch(_ sketch: TimerSketch) -> SimpleTimer<CountUpBlueprint> {
     let blueprint: CountUpBlueprint
     
     if let durationInSeconds = sketch.durationInSeconds {
@@ -117,7 +117,7 @@ class CountUpSegmentReference: SegmentType {
     
     let sketch: TimerSketch
     let name: String
-    private var timer: SegmentTimer
+    fileprivate var timer: SegmentTimer
     
     init(sketch: TimerSketch, name: String) {
         self.sketch = sketch

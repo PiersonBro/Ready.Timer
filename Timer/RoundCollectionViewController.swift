@@ -63,7 +63,7 @@ final class RoundCollectionViewController: UIViewController, UICollectionViewDat
     
     var roundToDelete: Round? = nil
     
-    func delete(_ indexPath: IndexPath, completion: (shouldDelete: Bool) -> ()) {
+    func delete(_ indexPath: IndexPath, completion: @escaping (_ shouldDelete: Bool) -> ()) {
         //FIXME: Remove these buttons as soon as the drag is started.
         iButton.removeFromSuperview()
         addButton.removeFromSuperview()
@@ -72,12 +72,12 @@ final class RoundCollectionViewController: UIViewController, UICollectionViewDat
         
         alertController.addAction(UIAlertAction(title: "Delete", style: .destructive, handler: { action in
             self.viewProducer.removeViewAtIndex((indexPath as NSIndexPath).row)
-            completion(shouldDelete: true)
+            completion(true)
             self.collectionView.deleteItems(at: [indexPath])
             self.collectionView.reloadData()
         }))
         alertController.addAction(UIAlertAction(title: "Cancel", style: .default, handler: { action in
-            completion(shouldDelete: false)
+            completion(false)
         }))
         present(alertController, animated: true, completion: nil)
     }
@@ -162,8 +162,8 @@ final class RoundCollectionViewController: UIViewController, UICollectionViewDat
         let indexPath = collectionView.indexPathsForSelectedItems![0]
         let cell = collectionView.cellForItem(at: indexPath)
         let containerView = transitionContext.containerView
-        let viewControllerFrom = transitionContext.viewController(forKey: UITransitionContextFromViewControllerKey)!
-        let viewControllerTo = transitionContext.viewController(forKey: UITransitionContextToViewControllerKey)!
+        let viewControllerFrom = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.from)!
+        let viewControllerTo = transitionContext.viewController(forKey: UITransitionContextViewControllerKey.to)!
         let fromView = viewControllerFrom.view
         let toView = viewControllerTo.view
         let beginFrame = containerView.convert(cell!.bounds, from: cell)

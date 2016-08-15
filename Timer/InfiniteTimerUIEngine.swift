@@ -9,7 +9,7 @@
 import Foundation
 import TimerKit
 
-final class InfiniteTimerUIEngine<T: SegmentType where T.SegmentTimer == SimpleTimer<InfiniteBlueprint>>: TimerUIEngineType {
+final class InfiniteTimerUIEngine<T: SegmentType>: TimerUIEngineType where T.SegmentTimer == SimpleTimer<InfiniteBlueprint> {
     typealias Segment = T
     typealias Configuration = InfiniteUIConfiguration
     

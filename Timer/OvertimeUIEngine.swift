@@ -9,7 +9,7 @@
 import Foundation
 import TimerKit
 
-final class OvertimeUIEngine<T: SegmentType where T.SegmentTimer == OvertimeTimer>: TimerUIEngineType {
+final class OvertimeUIEngine<T: SegmentType>: TimerUIEngineType where T.SegmentTimer == OvertimeTimer {
     typealias Segment = T
     typealias Configuration = DefaultConfiguration
     let segment: Segment

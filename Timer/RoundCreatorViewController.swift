@@ -76,9 +76,9 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
         
         constrain(tickerView!, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
-            tickerView.centerY == view.centerY * 2 ~ LayoutPriority(750)
-            tickerView.width == view.width * 1 ~ LayoutPriority(750)
-            tickerView.width == view.width * 0.8 ~ 500
+            (tickerView.centerY == view.centerY * 2) ~ LayoutPriority(750)
+            (tickerView.width == view.width * 1) ~ LayoutPriority(750)
+            (tickerView.width == view.width * 0.8) ~ 500
             tickerView.height == tickerView.width
             tickerView.height <= view.height * 0.8
         }
@@ -160,7 +160,7 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
     func keyboardWillShow(_ notification: Notification) {
         
         func isExternalKeyboard() -> Bool {
-            let kbFrame = (notification as NSNotification).userInfo![UIKeyboardFrameEndUserInfoKey]!.cgRectValue
+            let kbFrame = ((notification as NSNotification).userInfo![UIKeyboardFrameEndUserInfoKey]! as AnyObject).cgRectValue
             let kb = view.convert(kbFrame!, from: view)
             let height = view.superview!.superview!.frame.size.height
             if kb.origin.y + kb.size.height > height {
@@ -190,21 +190,21 @@ class CreateRoundViewController: UIViewController, TickerViewDataSource, UITextF
                 }
                 keyboardConstraint?.identifier = "Keyboard Constraint"
             }
-            animateWithKeyboardLayout((notification as NSNotification).userInfo)
+            animateWithKeyboardLayout((notification as NSNotification).userInfo as [NSObject : AnyObject]?)
         }
     }
     
     func keyboardDidHide(_ notification: Notification) {
         keyboardConstraint = nil
         pickerView.isHidden = false
-        animateWithKeyboardLayout((notification as NSNotification).userInfo)
+        animateWithKeyboardLayout((notification as NSNotification).userInfo as [NSObject : AnyObject]?)
         pickerViewConstraint?.isActive = true
     }
     
     func animateWithKeyboardLayout(_ userInfo: [NSObject: AnyObject]?) {
         UIView.beginAnimations(nil, context: nil)
-        UIView.setAnimationDuration(userInfo![UIKeyboardAnimationDurationUserInfoKey]!.doubleValue)
-        UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: userInfo![UIKeyboardAnimationCurveUserInfoKey]!.intValue)!)
+        UIView.setAnimationDuration((userInfo![UIKeyboardAnimationDurationUserInfoKey as NSString]! as AnyObject).doubleValue)
+        UIView.setAnimationCurve(UIViewAnimationCurve(rawValue: (userInfo![UIKeyboardAnimationCurveUserInfoKey as NSString]! as AnyObject).intValue)!)
         UIView.setAnimationBeginsFromCurrentState(true)
         view.layoutIfNeeded()
         UIView.commitAnimations()

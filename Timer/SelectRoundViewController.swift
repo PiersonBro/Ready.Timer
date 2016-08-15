@@ -15,7 +15,7 @@ class SelectRoundViewController: UIViewController, UITableViewDataSource, UITabl
     private let tableView = UITableView(frame: CGRect(), style: .plain)
     private let toolbar = UIToolbar(frame: CGRect())
     let toolbarDelegate = BarPositionDelegate()
-    let statusBarView = UIView(frame: UIApplication.shared.statusBarFrame ?? CGRect())
+    let statusBarView = UIView(frame: UIApplication.shared.statusBarFrame)
     var topConstraint: NSLayoutConstraint? = nil
     let theme: ColorTheme
     

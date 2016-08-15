@@ -110,7 +110,7 @@ public class CellDraggingHandler: NSObject, UIDynamicAnimatorDelegate, UIGesture
 }
 
 protocol CellDraggingDelegate {
-    func delete(_ indexPath: IndexPath, completion: (shouldDelete: Bool) -> ())
+    func delete(_ indexPath: IndexPath, completion: @escaping (_ shouldDelete: Bool) -> ())
     func deleteDidOccur()
 }
 

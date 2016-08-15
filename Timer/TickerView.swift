@@ -192,7 +192,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
             let rightEdgeDivider = layoutProxies[3]
             let leftEdgeDivider = layoutProxies[4]
             
-            xConstraint = label.centerX == label.superview!.centerX * CGFloat(position.positionTuple.xMultiplier) ~ 750
+            xConstraint = (label.centerX == label.superview!.centerX * CGFloat(position.positionTuple.xMultiplier)) ~ 750
             yConstraint = label.centerY == label.superview!.centerY * CGFloat(position.positionTuple.yMultiplier)
             
             switch position {
@@ -340,7 +340,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         }
     }
     
-    func enumerate<T>(_ array: [T], block: (value: T, nextValue: T) -> Void) {
+    func enumerate<T>(_ array: [T], block: (_ value: T, _ nextValue: T) -> Void) {
         for i in 0..<array.count {
             let value = array[i]
             let next: T
@@ -352,7 +352,7 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
                 next = array.first!
             }
 
-            block(value: value, nextValue: next)
+            block(value, next)
         }
     }
     
@@ -431,8 +431,8 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
     func constraintsForLabel(_ label: TickerLabel, superviewConstraints: [NSLayoutConstraint]) -> [NSLayoutConstraint] {
         var labelConstraints = [NSLayoutConstraint]()
         for constraint in superviewConstraints {
-            let identifierNSString: NSString = constraint.identifier ?? ""
-            if (identifierNSString.contains(label.hash.description)) {
+            let identifier = constraint.identifier ?? ""
+            if (identifier.contains(label.hash.description)) {
                 labelConstraints.append(constraint)
             }
         }

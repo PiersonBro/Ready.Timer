@@ -9,7 +9,7 @@
 import Foundation
 import TimerKit
 
-final class CountUpTimerUIEngine<T: SegmentType where T.SegmentTimer == SimpleTimer<CountUpBlueprint>>: TimerUIEngineType {
+final class CountUpTimerUIEngine<T: SegmentType>: TimerUIEngineType where T.SegmentTimer == SimpleTimer<CountUpBlueprint> {
     typealias Segment = T
     typealias Configuration = DefaultConfiguration
     let segment: Segment

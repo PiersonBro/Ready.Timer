@@ -98,15 +98,15 @@ extension Round {
         case noInternet
     }
     
-    func uploadToCloudKit(errorBlock: (error: CloudError) -> ()) {
+    func uploadToCloudKit(errorBlock: @escaping (_ error: CloudError) -> ()) {
         let record = convertToCKRecord()
         let privateDatabase = CKContainer.default().privateCloudDatabase
         privateDatabase.save(record) { record, error in
             if let error = (error as? NSError) {
                 if error.code == 3 {
-                    errorBlock(error: .noInternet)
+                    errorBlock(.noInternet)
                 } else {
-                    errorBlock(error: .unkown)
+                    errorBlock(.unkown)
                 }
             }
         }
@@ -139,8 +139,8 @@ extension Round {
             let durationInSeconds = segmentValue.durationInSeconds ?? (segmentValue.durationInMinutes! * 60)
             plistCreator.addTimer(ofType: segmentValue.kind, identifier: segmentValue.name, durationInSeconds: durationInSeconds)
         }
-        
-        record[CloudKitString.name] = name
+
+        record[CloudKitString.name] = (name as NSString)
         return record
     }
     

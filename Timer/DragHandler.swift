@@ -106,7 +106,8 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     
     func configureSnapBehaviors() {
         dynamicAnimator.removeAllBehaviors()
-        positionTracker.shiftToPoints(centers!, updatingExternalAnimator: dynamicAnimator, shifted: { didShift = $0 }) {
+        positionTracker.shiftToPoints(centers!, updatingExternalAnimator: dynamicAnimator, shifted: { self.didShift = $0 }) {
+            
             self.panGestureRecognizer?.isEnabled = true
             self.snapBehaviorsActive = false
             self.configureAttachmentBehaviors()
@@ -132,7 +133,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
         }
     }
     
-    func enumerate<T>(_ array: [T], block: (value: T, nextValue: T) -> Void) {
+    func enumerate<T>(_ array: [T], block: (_ value: T, _ nextValue: T) -> Void) {
         for i in 0..<array.count {
             let value = array[i]
             let next: T
@@ -144,7 +145,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
                 next = array.first!
             }
             
-            block(value: value, nextValue: next)
+            block(value, next)
         }
     }
     
@@ -426,7 +427,7 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
     
     let dynamicAnimator: UIDynamicAnimator
     var externalAnimator: UIDynamicAnimator? = nil
-    var callback: (() -> ())? = nil
+    var callback: (@escaping () -> ())? = nil
     
     // `labels` -- The four labels that make up the PositionTracker
     // `centers` -- The locations where the labels should be at the end of animation.
@@ -441,7 +442,7 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
         dynamicAnimator.delegate = self
     }
 
-    func shiftToPoints(_ centers: Centers, updatingExternalAnimator: UIDynamicAnimator?, shifted: @noescape (shifted: Bool) -> (), callback: () -> ()) {
+    func shiftToPoints(_ centers: Centers, updatingExternalAnimator: UIDynamicAnimator?, shifted: @escaping (_ shifted: Bool) -> (), callback: @escaping () -> ()) {
         externalAnimator = updatingExternalAnimator
         self.callback = callback
         
@@ -469,7 +470,7 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
             pureShift()
         }
         
-        shifted(shifted: shouldShift)
+        shifted(shouldShift)
         
         if shouldCleanUpAfterFailure == nil {
             callback()

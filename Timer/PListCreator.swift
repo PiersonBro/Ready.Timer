@@ -31,24 +31,30 @@ class PlistCreator {
     func addTimer(ofType typeOfTimer: TimerKind, identifier: String, durationInSeconds: Int) {
         let newIdentifier = PlistCreator.sanitizeIdentifier(identifier)
         if dictionary != nil {
-            dictionary![PlistKeys.TypeOfTimer.rawValue + newIdentifier] = typeOfTimer.rawValue
-            dictionary![newIdentifier] = durationInSeconds
+            dictionary![PlistKeys.TypeOfTimer.rawValue + newIdentifier] = (typeOfTimer.rawValue as NSString)
+            dictionary![newIdentifier] = durationInSeconds as NSNumber
             let speeches = dictionary![PlistKeys.Speeches.rawValue] as? [String]
         
             if let speeches = speeches {
-                dictionary![PlistKeys.Speeches.rawValue] = speeches + [newIdentifier]
+                let newSpeeches = speeches + [newIdentifier]
+                let finalArray = newSpeeches.map { $0 as NSString }
+                dictionary![PlistKeys.Speeches.rawValue] = finalArray as NSArray
             } else {
-                dictionary![PlistKeys.Speeches.rawValue] = [newIdentifier]
+                let nI = newIdentifier as NSString
+                dictionary![PlistKeys.Speeches.rawValue] = [nI] as NSArray
             }
         } else if record != nil {
-            record![PlistKeys.TypeOfTimer.rawValue + newIdentifier] = typeOfTimer.rawValue
-            record![newIdentifier] = durationInSeconds
+            record![PlistKeys.TypeOfTimer.rawValue + newIdentifier] = (typeOfTimer.rawValue as NSString)
+            record![newIdentifier] = durationInSeconds as NSNumber
             let speeches = record![PlistKeys.Speeches.rawValue] as? [String]
             
             if let speeches = speeches {
-                record![PlistKeys.Speeches.rawValue] = speeches + [newIdentifier]
+                let newSpeeches = speeches + [newIdentifier]
+                let finalArray = newSpeeches.map { $0 as NSString }
+                record![PlistKeys.Speeches.rawValue] = finalArray as NSArray
             } else {
-                record![PlistKeys.Speeches.rawValue] = [newIdentifier]
+                let nI = newIdentifier as NSString
+                record![PlistKeys.Speeches.rawValue] = [nI] as NSArray
             }
         }
     }

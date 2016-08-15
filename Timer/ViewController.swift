@@ -28,13 +28,13 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
     private var doubleTapGestureRecognizer: UITapGestureRecognizer? = nil
     private var engine: RoundUIEngine? = nil
     
-    init(partialEngine: (viewController: TimerViewControllerType) -> RoundUIEngine) {
+    init(partialEngine: (_ viewController: TimerViewControllerType) -> RoundUIEngine) {
         timerLabel = UILabel(frame: CGRect())
         startButton = CircleButton(frame: CGRect())
         clockwiseButton = CircleButton(frame: CGRect())
     
         super.init(nibName: nil, bundle: nil)
-        engine = partialEngine(viewController: self)
+        engine = partialEngine(self)
         tickerView = TickerView(dataSource: self)
         doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(tapped))
         doubleTapGestureRecognizer!.numberOfTapsRequired = 2
@@ -59,8 +59,8 @@ class ViewController : UIViewController, TickerViewDataSource, TimerViewControll
         constrain(tickerView, view) { (tickerView, view) in
             tickerView.centerX == view.centerX
             tickerView.centerY == view.centerY * 2
-            tickerView.width == view.width * 1 ~ LayoutPriority(750)
-            tickerView.width == view.width * 0.8 ~ 500
+            (tickerView.width == view.width * 1) ~ LayoutPriority(750)
+            (tickerView.width == view.width * 0.8) ~ 500
             tickerView.height == tickerView.width
             tickerView.height <= view.height * 0.8
         }
