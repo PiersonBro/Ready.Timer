@@ -296,8 +296,18 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         labels = [leftmostLabel, topmostLabel, rightmostLabel, bottommostLabel]
         setupInitialLabelState()
         addLines(bounds)
+        resetDragHandler()
+    }
+    
+    func resetDragHandler(positionLabels: DragHandler.OrderedLabels? = nil) {
         dragHandler?.deactivate()
-        dragHandler = DragHandler(orderedLabels: (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel))
+        let orderedLabels: DragHandler.OrderedLabels
+        if let positionLabels = positionLabels {
+            orderedLabels = positionLabels
+        } else {
+            orderedLabels = (left: leftmostLabel, right: rightmostLabel, top: topmostLabel, bottom: bottommostLabel)
+        }
+        dragHandler = DragHandler(orderedLabels: orderedLabels)
         
         let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         DispatchQueue.main.asyncAfter(deadline: delayTime) {
@@ -324,11 +334,22 @@ class TickerView: UIView, UIDynamicAnimatorDelegate, DragHandlerDelegate {
         labelConstraintsNeedUpdate = true
         machineRotated = true
     }
-    
+    var shouldReset = true
     //MARK: DragHandler Delegate
-    func didFinishDrag(_ wasShift: Bool) {
+    func didFinishDrag(_ wasShift: Bool, positionLabels: DragHandler.OrderedLabels) {
         if wasShift {
             labelConstraintsNeedUpdate = true
+        }
+        
+        if shouldReset {
+            let delayTime = DispatchTime.now() + Double(Int64(1 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+                self.resetDragHandler(positionLabels: positionLabels)
+            }
+        }
+        
+        if finalSpeechIsAtCenter {
+            shouldReset = false
         }
     }
     

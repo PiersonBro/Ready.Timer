@@ -12,6 +12,7 @@ import UIKit
 @available(iOS 9.0, *)
 public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
     public typealias OrderedLabels = (left: UILabel, right: UILabel, top: UILabel, bottom: UILabel)
+    // public typealias OrderedPoints = (left: CGPoint, right: CGPoint, top: CGPoint, bottom: CGPoint)
     
     private let labels: [UILabel]
     
@@ -61,7 +62,9 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
         if panGestureRecognizer == nil {
             panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didDrag(_:)))
         }
-
+        //FIXME: This is super fragile.
+        positionTracker.dragHandler = self
+        
         dynamicAnimator.removeAllBehaviors()
         configureAttachmentBehaviors()
         if view.gestureRecognizers == nil || !view.gestureRecognizers!.contains(panGestureRecognizer!) {
@@ -111,6 +114,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
             self.panGestureRecognizer?.isEnabled = true
             self.snapBehaviorsActive = false
             self.configureAttachmentBehaviors()
+            self.centers = nil
         }
         centers = nil
         snapBehaviorsActive = true
@@ -128,7 +132,11 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
             snapBehaviorsActive = false
             animator.removeAllBehaviors()
             if let delegate = delegate {
-                delegate.didFinishDrag(didShift!)
+                let orderedLabels = OrderedLabels(left: positionTracker.leftLabel, right: positionTracker.rightLabel, bottom: positionTracker.bottomLabel, top: positionTracker.topLabel)
+                delegate.didFinishDrag(didShift!, positionLabels: orderedLabels)
+/*                self.deactivate()
+                panGestureRecognizer = nil
+                self.activate() */
             }
         }
     }
@@ -215,7 +223,7 @@ public class DragHandler: NSObject, UIDynamicAnimatorDelegate {
 }
 
 public protocol DragHandlerDelegate {
-    func didFinishDrag(_ wasShift: Bool)
+    func didFinishDrag(_ wasShift: Bool, positionLabels: DragHandler.OrderedLabels)
 }
 
 public final class Inverter {
@@ -427,7 +435,8 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
     
     let dynamicAnimator: UIDynamicAnimator
     var externalAnimator: UIDynamicAnimator? = nil
-    var callback: (@escaping () -> ())? = nil
+    var callback: (() -> ())? = nil
+    var dragHandler: DragHandler? = nil
     
     // `labels` -- The four labels that make up the PositionTracker
     // `centers` -- The locations where the labels should be at the end of animation.
@@ -458,7 +467,7 @@ class PositionTracker: NSObject, UIDynamicAnimatorDelegate {
             }.filter { bool in
                 return bool == false
             }.first
-       
+//        let shouldCleanUpAfterFailure: Bool? = true
         let shouldShift: Bool
         if shouldCleanUpAfterFailure != nil {
             shouldShift = cleanUpAfterFailure(centers)
